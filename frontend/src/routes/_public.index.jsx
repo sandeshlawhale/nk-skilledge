@@ -1,8 +1,14 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Clock } from 'lucide-react'
+import { Monitor, Smartphone, Share2, Check, Clock } from 'lucide-react'
 import { FEATURED_COURSES, SERVICES, TESTIMONIALS, FAQS } from '@/constants'
+
+const ICON_MAP = {
+  globe: Monitor,
+  mobile: Smartphone,
+  megaphone: Share2,
+};
 
 export const Route = createFileRoute('/_public/')({
   component: HomePage,
@@ -46,9 +52,9 @@ function HomePage() {
       {/* 2. Featured Courses Section */}
       <section className="bg-slate-50 border-y border-slate-200">
         <div className="w-full max-w-7xl py-16 px-4 mx-auto">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-8">
             <div className="text-left flex-1 space-y-2">
-              <p className="font-black text-xs tracking-[0.2em] text-primary uppercase">Courses</p>
+              <p className="font-bold text-xs tracking-wide text-primary capitalize">Courses</p>
               <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Build Skills That Companies Actually Hire For.</h2>
               <p className="text-xl text-slate-500 max-w-2xl font-light">
                 Hands-on training programs designed with real projects, industry tools, and mentorship to help you become job-ready.
@@ -93,37 +99,76 @@ function HomePage() {
       </section>
 
       {/* 3. Services Section */}
-      <section className="py-32 bg-white px-4">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-20 gap-8">
-            <div className="text-left flex-1">
-              <p className="font-black text-xs tracking-[0.2em] text-primary mb-6 uppercase">SOLUTIONS</p>
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">Engineering excellence.</h2>
-              <p className="text-xl text-slate-500 max-w-2xl font-light">
-                We craft high-performance digital ecosystems for businesses that demand the absolute best.
-              </p>
-            </div>
-            <Link to="/services">
-              <Button variant="brutal-outline" size="hero">
-                Browse all services
-              </Button>
-            </Link>
+      <section className="w-full max-w-7xl py-16 px-4 mx-auto">
+        <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-8">
+          <div className="text-left flex-1 space-y-2">
+            <p className="font-bold text-xs tracking-wide text-primary capitalize">Services we provide</p>
+            <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Solutions We Build for Businesses.</h2>
+            <p className="text-xl text-slate-500 max-w-2xl font-light">
+              We offer professional design and development services to help your business grow in the digital era.
+            </p>
           </div>
+          <Link to="/services">
+            <Button variant="brutal-outline" size="hero">
+              Browse all services
+            </Button>
+          </Link>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-slate-200 border border-slate-200">
-            {SERVICES.map((service, i) => (
-              <div key={i} className="flex flex-col p-12 bg-white hover:bg-slate-50 transition-colors group">
-                <div className="h-16 w-16 bg-slate-900 text-white flex items-center justify-center mb-8 shadow-[8px_8px_0px_0px_rgba(37,99,235,0.2)] group-hover:shadow-[8px_8px_0px_0px_rgba(37,99,235,0.4)] transition-all">
-                  <service.icon className="h-8 w-8" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-slate-200 border border-slate-200">
+          {SERVICES.map((service, i) => {
+            const Icon = ICON_MAP[service.icon] || Monitor;
+            return (
+              <div key={i} className="flex flex-col p-8 md:p-12 bg-white hover:bg-slate-50 transition-colors group relative">
+                <div className="h-16 w-16 bg-slate-900 text-white flex items-center justify-center mb-4 shadow-[6px_6px_0px_0px_rgba(37,99,235,0.2)] group-hover:shadow-[6px_6px_0px_0px_rgba(37,99,235,0.4)] transition-all">
+                  <Icon className="h-8 w-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">{service.title}</h3>
-                <p className="text-lg text-slate-500 leading-relaxed font-light mb-8">{service.desc}</p>
-                <Link to="/services" className="text-base font-black text-slate-900 hover:text-primary transition-colors flex items-center gap-2 group/link">
-                  Learn more <span className="text-2xl transition-transform group-hover/link:translate-x-1">&rsaquo;</span>
-                </Link>
+
+                <h3 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">{service.title}</h3>
+                <p className="text-lg text-slate-500 leading-relaxed font-light mb-4">{service.description}</p>
+
+                <div className="space-y-4 mb-4 mt-auto">
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">What this service provides</p>
+                  <ul className="space-y-2">
+                    {service.features.slice(0, 4).map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-3 text-slate-600 font-light">
+                        <Check className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                        <span className="text-base">{feature}</span>
+                      </li>
+                    ))}
+                    {service.features.length > 4 && (
+                      <li className="flex items-start gap-3 text-slate-400 font-light italic">
+                        <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                          <span className="text-xl leading-none">...</span>
+                        </div>
+                        <span className="text-sm">Check details to see more</span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex flex-col gap-4">
+                  <Link to="/services" className="block w-full">
+                    <Button variant="brutal" className="w-full justify-between h-16 px-6 text-sm font-black group/btn bg-slate-900 hover:bg-primary transition-all duration-300">
+                      <span>{service.price}</span>
+                      <span className="text-2xl transition-transform group-hover/btn:translate-x-1">&rsaquo;</span>
+                    </Button>
+                  </Link>
+                  <Link
+                    to="/services"
+                    className="text-sm font-semibold text-slate-400 hover:text-primary transition-colors flex items-center justify-center tracking-wide group/details"
+                  >
+                    See details
+                    <span className="transition-transform group-hover/details:translate-x-1 mt-0.5">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" strokeLinejoin="miter">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </span>
+                  </Link>
+                </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </section>
 

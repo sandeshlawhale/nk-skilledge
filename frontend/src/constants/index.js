@@ -1,54 +1,103 @@
 import { MonitorPlay, Smartphone, BrainCircuit, Code } from 'lucide-react'
 
 export const FEATURED_COURSES = [
-  { 
-    id: 'fullstack-dev', 
-    title: 'Full-Stack Development', 
+  {
+    id: 'fullstack-dev',
+    title: 'Full-Stack Development',
     description: 'Master frontend and backend with modern industry tools.',
     duration: '12 Weeks',
-    price: '₹29,999', 
-    rating: '4.8', 
-    category: 'Development', 
-    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/full_stack_course_1773318774799.png' 
+    price: '₹29,999',
+    rating: '4.8',
+    category: 'Development',
+    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/full_stack_course_1773318774799.png'
   },
-  { 
-    id: 'android-dev', 
-    title: 'Android App Development', 
+  {
+    id: 'android-dev',
+    title: 'Android App Development',
     description: 'Build high-performance native Android applications.',
     duration: '10 Weeks',
-    price: '₹24,999', 
-    rating: '4.9', 
-    category: 'Mobile', 
-    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/mobile_app_course_1773318791972.png' 
+    price: '₹24,999',
+    rating: '4.9',
+    category: 'Mobile',
+    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/mobile_app_course_1773318791972.png'
   },
-  { 
-    id: 'ui-ux-design', 
-    title: 'UI/UX Design Masterclass', 
+  {
+    id: 'ui-ux-design',
+    title: 'UI/UX Design Masterclass',
     description: 'Design stunning user interfaces and seamless experiences.',
     duration: '8 Weeks',
-    price: '₹19,999', 
-    rating: '4.7', 
-    category: 'Design', 
-    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/ui_ux_course_1773318812721.png' 
+    price: '₹19,999',
+    rating: '4.7',
+    category: 'Design',
+    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/ui_ux_course_1773318812721.png'
   },
-  { 
-    id: 'data-science', 
-    title: 'Data Science with Python', 
+  {
+    id: 'data-science',
+    title: 'Data Science with Python',
     description: 'Unlock insights from data using Python and AI.',
     duration: '14 Weeks',
-    price: '₹34,999', 
-    rating: '4.9', 
-    category: 'Data', 
-    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/data_science_course_1773318830386.png' 
+    price: '₹34,999',
+    rating: '4.9',
+    category: 'Data',
+    img: '/brain/4cabaed3-a5e4-41df-bbd0-4b795a90aa25/data_science_course_1773318830386.png'
   },
 ];
 
 export const SERVICES = [
-  { title: 'Web Development', desc: 'Custom enterprise applications built with cutting-edge frameworks for maximum velocity and scale.', icon: MonitorPlay },
-  { title: 'Android Development', desc: 'Precision-engineered mobile experiences that redefine user engagement on every screen.', icon: Smartphone },
-  { title: 'AI Integration', desc: 'Next-generation intelligence integration to automate complexity and drive decision-making.', icon: BrainCircuit },
-  { title: 'Cloud Infrastructure', desc: 'Fortified, globally distributed architectures to ensure your digital future is unbreakable.', icon: Code },
-];
+  {
+    id: "web-development",
+    title: "Website Development",
+    description:
+      "Professional, responsive, and SEO-optimized websites tailored to your business needs. From landing pages to complex web applications, we deliver excellence.",
+    icon: "globe",
+    highlight: false,
+    price: "Starting from ₹15,000",
+    features: [
+      "Custom Design & Development",
+      "E-commerce Solutions",
+      "API & Payment Gateway Integrations",
+      "AI Integration",
+      "CMS Integration",
+      "Admin Panels",
+      "Landing Pages",
+      "Maintenance & Support",
+    ],
+    style: "default",
+  },
+  {
+    id: "application-development",
+    title: "Application Development",
+    description:
+      "Native and cross-platform mobile applications that deliver seamless user experiences. Turn your ideas into powerful digital products.",
+    icon: "mobile",
+    highlight: true,
+    badge: "Most Popular",
+    price: "Starting from ₹25,000",
+    features: [
+      "iOS & Android Apps",
+      "Cross-Platform Development",
+      "API Integration",
+      "App Store Deployment",
+    ],
+    style: "featured",
+  },
+  {
+    id: "social-media-services",
+    title: "Social Media Services",
+    description:
+      "Boost your online presence with strategic social media marketing, content creation, and brand management services.",
+    icon: "megaphone",
+    highlight: false,
+    price: "Starting from ₹8,000/month",
+    features: [
+      "Social Media Strategy",
+      "Content Creation & Posting",
+      "Paid Advertising Campaigns",
+      "Analytics & Reporting",
+    ],
+    style: "default",
+  },
+];;
 
 export const DASHBOARD_COURSES = [
   { id: 1, title: 'Advanced React Patterns & Architecture', progress: 65, totalLessons: 42, completedLessons: 27 },
