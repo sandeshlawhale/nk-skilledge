@@ -6,7 +6,7 @@ export const Route = createRootRouteWithContext()({
 
 function RootComponent() {
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans w-full">
       <Outlet />
     </div>
   )

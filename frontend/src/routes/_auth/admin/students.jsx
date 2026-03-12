@@ -4,18 +4,13 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { MoreHorizontal, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ADMIN_STUDENTS } from '@/constants'
 
 export const Route = createFileRoute('/_auth/admin/students')({
   component: AdminStudents,
 })
 
-const STUDENTS = [
-  { id: 1, name: 'Alex Johnson', email: 'alex@example.com', enrolled: 4, status: 'Active', joined: '2023-10-12' },
-  { id: 2, name: 'Sarah Miller', email: 'sarah@example.com', enrolled: 2, status: 'Active', joined: '2023-11-05' },
-  { id: 3, name: 'Michael Chen', email: 'michael@example.com', enrolled: 5, status: 'Inactive', joined: '2023-08-22' },
-  { id: 4, name: 'Emily Davis', email: 'emily@example.com', enrolled: 1, status: 'Active', joined: '2024-01-15' },
-  { id: 5, name: 'James Wilson', email: 'james@example.com', enrolled: 3, status: 'Active', joined: '2023-09-30' },
-]
+
 
 function AdminStudents() {
   return (
@@ -27,11 +22,11 @@ function AdminStudents() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline">Export CSV</Button>
-          <Button className="bg-indigo-600 hover:bg-indigo-700">Add Student</Button>
+          <Button>Add Student</Button>
         </div>
       </div>
 
-      <div className="rounded-xl border bg-white shadow-xs overflow-hidden">
+      <div className="border bg-white shadow-xs overflow-hidden">
         <div className="p-4 border-b flex items-center justify-between gap-4 bg-slate-50/50">
           <div className="relative w-full max-w-sm">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
@@ -53,7 +48,7 @@ function AdminStudents() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {STUDENTS.map((student) => (
+            {ADMIN_STUDENTS.map((student) => (
               <TableRow key={student.id}>
                 <TableCell>
                   <div className="flex flex-col">

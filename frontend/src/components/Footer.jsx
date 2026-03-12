@@ -4,13 +4,13 @@ import { BookOpen, Github, Twitter, Linkedin } from 'lucide-react'
 export function Footer() {
   return (
     <footer className="border-t bg-white pt-16 pb-8">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 mb-12">
           
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-indigo-600 mb-4">
-              <BookOpen className="h-6 w-6" />
-              <span>Premium LMS</span>
+            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-slate-900 mb-4">
+              <img src="/logo.png" alt="NK Skilledge" className="h-8 w-auto" />
+              <span>NK SKILLEDGE</span>
             </Link>
             <p className="text-slate-500 text-sm leading-relaxed mb-6">
               Empowering learners worldwide with cutting-edge courses and expert mentorship.
@@ -60,7 +60,7 @@ export function Footer() {
         </div>
 
         <div className="border-t pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} Premium LMS Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} NK Skilledge. All rights reserved.</p>
           <div className="flex gap-6">
             <span>Designed with ✨</span>
           </div>

@@ -38,13 +38,13 @@ function Login() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link to="/" className="text-sm font-medium text-indigo-600 hover:underline">
+                <Link to="/" className="text-sm font-medium text-primary hover:underline">
                   Forgot password?
                 </Link>
               </div>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+            <Button type="submit" className="w-full">
               Log in
             </Button>
           </form>
@@ -52,7 +52,7 @@ function Login() {
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-center text-slate-500">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-indigo-600 hover:underline">
+            <Link to="/register" className="font-semibold text-primary hover:underline">
               Sign up
             </Link>
           </div>

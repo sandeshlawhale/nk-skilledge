@@ -49,7 +49,7 @@ function Register() {
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+            <Button type="submit" className="w-full">
               Create account
             </Button>
           </form>
@@ -57,7 +57,7 @@ function Register() {
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-center text-slate-500">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-indigo-600 hover:underline">
+            <Link to="/login" className="font-semibold text-primary hover:underline">
               Log in
             </Link>
           </div>

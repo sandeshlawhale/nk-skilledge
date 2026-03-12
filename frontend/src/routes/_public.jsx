@@ -12,10 +12,11 @@ function PublicLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            {/* Minimal Logo matching wireframe styling (Logo text for now) */}
-            <span className="font-serif italic text-2xl tracking-tighter">Logo</span>
+            {/* Minimal Logo matching wireframe styling */}
+            <img src="/logo.png" alt="NK Skilledge" className="h-10 w-auto" />
+            <span className="font-bold text-xl tracking-tight">NK SKILLEDGE</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8">
             <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">About</Link>
@@ -28,8 +29,8 @@ function PublicLayout() {
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
-                <Link to="/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 rounded-md transition-colors hover:bg-slate-50">
-                  Dashboard
+                <Link to="/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50">
+                  inline-block                  Dashboard
                 </Link>
                 <button
                   onClick={logout}
@@ -45,7 +46,7 @@ function PublicLayout() {
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-black px-6 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors"
+                  className="bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
                 >
                   Enroll now
                 </Link>
@@ -54,11 +55,11 @@ function PublicLayout() {
           </div>
         </div>
       </header>
-      
-      <main className="flex-1 flex flex-col">
+
+      <main className="flex-1 flex flex-col w-full mx-auto">
         <Outlet />
       </main>
-      
+
       <Footer />
     </div>
   )

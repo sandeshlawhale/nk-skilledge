@@ -55,7 +55,7 @@ function DashboardSidebar() {
       <SidebarHeader className="h-16 flex items-center justify-center border-b border-slate-200">
          <div className="flex items-center gap-2 px-4 w-full">
            {/* Logo Icon */}
-           <div className="h-8 w-8 rounded-md bg-linear-to-br from-indigo-600 to-orange-500 flex items-center justify-center text-white font-bold text-xl shrink-0">
+           <div className="h-8 w-8 bg-linear-to-br from-indigo-600 to-orange-500 flex items-center justify-center text-white font-bold text-xl shrink-0">
              N
            </div>
            <span className="font-bold text-slate-900 truncate group-data-[collapsible=icon]:hidden">
@@ -75,7 +75,7 @@ function DashboardSidebar() {
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
                       <Link to={item.href} className="flex items-center gap-3">
-                        <item.icon className={`h-4 w-4 ${isActive ? 'text-indigo-600' : 'text-slate-500'}`} />
+                        <item.icon className={`h-4 w-4 ${isActive ? 'text-primary' : 'text-slate-500'}`} />
                         <span>{item.name}</span>
                       </Link>
                     </SidebarMenuButton>
@@ -114,8 +114,8 @@ function DashboardSidebar() {
          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton size="lg" className="w-full justify-start data-[state=open]:bg-slate-100">
-                <Avatar className="h-8 w-8 shrink-0 rounded-md">
-                  <AvatarFallback className="bg-indigo-100 text-indigo-700 rounded-md">
+                <Avatar className="h-8 w-8 shrink-0">
+                  <AvatarFallback className="bg-primary/10 text-primary">
                     {user?.name?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>

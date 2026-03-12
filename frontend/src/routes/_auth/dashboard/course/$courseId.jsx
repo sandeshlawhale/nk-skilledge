@@ -56,7 +56,7 @@ function CourseLayout() {
                   <Link
                     key={lesson.id}
                     to={`/dashboard/course/${courseId}/lesson/${lesson.id}`}
-                    className={`flex items-start gap-3 p-3 rounded-lg transition-colors ${
+                    className={`flex items-start gap-3 p-3 transition-colors ${
                       lesson.status === 'current' ? 'bg-indigo-50 border border-indigo-100' :
                       lesson.status === 'locked' ? 'opacity-60 cursor-not-allowed grayscale' :
                       'hover:bg-slate-50'
