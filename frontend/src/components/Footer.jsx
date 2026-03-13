@@ -8,59 +8,58 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 mb-12">
           
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-indigo-600 mb-4">
-              <BookOpen className="h-6 w-6" />
-              <span>Premium LMS</span>
+            <Link to="/" className="flex items-center gap-2 text-xl font-bold mb-4">
+               <span className="font-heading font-black text-2xl tracking-tighter"><span className="text-sky-500">N</span><span className="text-orange-500">K</span><span className="text-slate-900">Skilledge.</span></span>
             </Link>
-            <p className="text-slate-500 text-sm leading-relaxed mb-6">
-              Empowering learners worldwide with cutting-edge courses and expert mentorship.
+            <p className="text-slate-500 text-sm leading-relaxed mb-6 font-medium">
+              Empowering learners worldwide with cutting-edge courses and expert technology solutions.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors">
+              <a href="#" className="text-slate-400 hover:text-sky-500 transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors">
+              <a href="#" className="text-slate-400 hover:text-sky-500 transition-colors">
                 <Github className="h-5 w-5" />
               </a>
-              <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors">
+              <a href="#" className="text-slate-400 hover:text-sky-500 transition-colors">
                 <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-slate-900 mb-4">Product</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Courses</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Services</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Pricing</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Mentorship</Link></li>
+            <h4 className="font-semibold font-heading hover:text-sky-600 text-slate-900 mb-4 transition-colors">Product</h4>
+            <ul className="space-y-3 text-sm text-slate-500 font-medium">
+              <li><Link to="/courses" className="hover:text-orange-500 transition-colors">Courses</Link></li>
+              <li><Link to="/services" className="hover:text-orange-500 transition-colors">Services</Link></li>
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Pricing</Link></li>
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Mentorship</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-slate-900 mb-4">Company</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">About Us</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Careers</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Blog</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Contact</Link></li>
+            <h4 className="font-semibold font-heading hover:text-sky-600 text-slate-900 mb-4 transition-colors">Company</h4>
+            <ul className="space-y-3 text-sm text-slate-500 font-medium">
+              <li><Link to="/about" className="hover:text-orange-500 transition-colors">About Us</Link></li>
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Careers</Link></li>
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Blog</Link></li>
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Contact</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-slate-900 mb-4">Legal</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Terms of Service</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Cookie Policy</Link></li>
+            <h4 className="font-semibold font-heading hover:text-sky-600 text-slate-900 mb-4 transition-colors">Legal</h4>
+            <ul className="space-y-3 text-sm text-slate-500 font-medium">
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Terms of Service</Link></li>
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/" className="hover:text-orange-500 transition-colors">Cookie Policy</Link></li>
             </ul>
           </div>
 
         </div>
 
-        <div className="border-t pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} Premium LMS Inc. All rights reserved.</p>
+        <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500 font-medium gap-4">
+          <p>© {new Date().getFullYear()} NKSkilledge. All rights reserved.</p>
           <div className="flex gap-6">
             <span>Designed with ✨</span>
           </div>

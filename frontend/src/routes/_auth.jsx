@@ -55,11 +55,11 @@ function DashboardSidebar() {
       <SidebarHeader className="h-16 flex items-center justify-center border-b border-slate-200">
          <div className="flex items-center gap-2 px-4 w-full">
            {/* Logo Icon */}
-           <div className="h-8 w-8 rounded-md bg-linear-to-br from-indigo-600 to-orange-500 flex items-center justify-center text-white font-bold text-xl shrink-0">
-             N
+           <div className="h-8 w-8 rounded-md bg-gradient-to-br from-sky-400 to-orange-500 flex items-center justify-center text-white font-bold text-xl shrink-0 shadow-sm">
+             <span className="font-heading">N</span>
            </div>
-           <span className="font-bold text-slate-900 truncate group-data-[collapsible=icon]:hidden">
-             SKILLEDGE
+           <span className="font-heading font-black text-xl tracking-tighter truncate group-data-[collapsible=icon]:hidden">
+             <span className="text-sky-500">N</span><span className="text-orange-500">K</span><span className="text-slate-900">Skilledge.</span>
            </span>
          </div>
       </SidebarHeader>
@@ -75,8 +75,8 @@ function DashboardSidebar() {
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
                       <Link to={item.href} className="flex items-center gap-3">
-                        <item.icon className={`h-4 w-4 ${isActive ? 'text-indigo-600' : 'text-slate-500'}`} />
-                        <span>{item.name}</span>
+                        <item.icon className={`h-4 w-4 ${isActive ? 'text-sky-600' : 'text-slate-500'}`} />
+                        <span className={isActive ? 'font-bold text-sky-700' : 'font-medium text-slate-600'}>{item.name}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -88,7 +88,7 @@ function DashboardSidebar() {
 
         {isAdmin && (
           <SidebarGroup>
-            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+            <SidebarGroupLabel className="font-bold text-orange-600/80">Administration</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {adminNavigation.map((item) => {
@@ -97,8 +97,8 @@ function DashboardSidebar() {
                     <SidebarMenuItem key={item.name}>
                       <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
                         <Link to={item.href} className="flex items-center gap-3">
-                          <item.icon className={`h-4 w-4 ${isActive ? 'text-orange-500' : 'text-slate-500'}`} />
-                          <span>{item.name}</span>
+                          <item.icon className={`h-4 w-4 ${isActive ? 'text-orange-600' : 'text-slate-500'}`} />
+                          <span className={isActive ? 'font-bold text-orange-700' : 'font-medium text-slate-600'}>{item.name}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -115,7 +115,7 @@ function DashboardSidebar() {
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton size="lg" className="w-full justify-start data-[state=open]:bg-slate-100">
                 <Avatar className="h-8 w-8 shrink-0 rounded-md">
-                  <AvatarFallback className="bg-indigo-100 text-indigo-700 rounded-md">
+                  <AvatarFallback className="bg-sky-100 text-sky-700 font-bold rounded-md">
                     {user?.name?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>
