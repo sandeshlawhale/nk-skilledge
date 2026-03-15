@@ -2,7 +2,8 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Monitor, Smartphone, Share2, Check, Clock } from 'lucide-react'
-import { FEATURED_COURSES, SERVICES, TESTIMONIALS, FAQS } from '@/constants'
+import { FEATURED_COURSES, SERVICES, TRANSITION_STATS, TESTIMONIALS, FAQS, impacts } from '@/constants'
+import CountUp from '@/components/ui/count-up'
 
 const ICON_MAP = {
   globe: Monitor,
@@ -67,7 +68,7 @@ function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {FEATURED_COURSES.map((course, i) => (
               <div key={i} className="group flex flex-col bg-white border border-slate-200 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.05)] transition-all relative z-1 hover:z-10">
                 <div className="w-full aspect-video bg-slate-100 relative overflow-hidden">
@@ -95,11 +96,36 @@ function HomePage() {
               </div>
             ))}
           </div>
+          <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-2">
+            <div className="text-center">
+              <p className="font-bold text-xs tracking-wide text-primary capitalize mb-2">Our Students</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">Making a <span className="text-primary italic">Real Impact</span></h2>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
+              {impacts.map((stat, i) => (
+                <div key={i} className="px-8 py-6">
+                  <p className="text-4xl font-black text-slate-900 mb-1">
+                    <CountUp
+                      from={0}
+                      to={stat.number}
+                      direction="up"
+                      duration={0.5}
+                      className="text-primary"
+                      startWhen={true}
+                      separator=""
+                    />+
+                  </p>
+                  <p className="text-sm font-semibold text-primary capitalize tracking-wide">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* 3. Services Section */}
-      <section className="w-full max-w-7xl py-16 px-4 mx-auto">
+      <section className="w-full max-w-7xl py-12 px-4 mx-auto">
         <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-8">
           <div className="text-left flex-1 space-y-2">
             <p className="font-bold text-xs tracking-wide text-primary capitalize">Services we provide</p>
@@ -169,6 +195,34 @@ function HomePage() {
               </div>
             );
           })}
+        </div>
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-2 mt-12">
+          <div className="text-left flex-1 space-y-2 flex items-center flex-col">
+            <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">From Learning to <span className="text-primary italic">Real Solutions</span></h2>
+            <p className="text-xl text-slate-500 max-w-2xl font-light text-center">
+              At NK SkillEdge, we don't just teach technology.<br className="hidden md:block" />
+              We apply it to build real digital products for businesses and startups.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
+            {TRANSITION_STATS.map((stat, i) => (
+              <div key={i} className="px-8 py-6">
+                <p className="text-4xl font-black text-slate-900 mb-1">
+                  <CountUp
+                    from={0}
+                    to={stat.value}
+                    direction="up"
+                    duration={0.5}
+                    className="text-primary"
+                    startWhen={true}
+                    separator=""
+                  />+
+                </p>
+                <p className="text-sm font-semibold text-primary capitalize tracking-wide">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

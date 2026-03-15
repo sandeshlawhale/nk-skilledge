@@ -99,6 +99,13 @@ export const SERVICES = [
   },
 ];;
 
+export const TRANSITION_STATS = [
+  { label: 'Projects Delivered', value: '50+' },
+  { label: 'Happy Clients', value: '30+' },
+  { label: 'Active Projects', value: '15+' },
+  { label: 'Upcomming Projects', value: '10+' },
+];
+
 export const DASHBOARD_COURSES = [
   { id: 1, title: 'Advanced React Patterns & Architecture', progress: 65, totalLessons: 42, completedLessons: 27 },
   { id: 2, title: 'Fullstack Next.js and Prisma', progress: 30, totalLessons: 55, completedLessons: 16 },
@@ -194,5 +201,38 @@ export const FAQS = [
   {
     question: "Do you provide industry certifications?",
     answer: "Yes, all our major programs come with industry-backed certifications that are recognized by our partner companies."
+  }
+];
+
+export const impacts = [
+  {
+    number: "200+",
+    label: "Students Trained",
+    description: "Students empowered with practical tech skills through hands-on learning."
+  },
+  {
+    number: "50+",
+    label: "Successful Placements",
+    description: "Students placed in companies after completing industry-ready training."
+  },
+  // {
+  //   number: "30+",
+  //   label: "Happy Clients",
+  //   description: "Businesses and startups trust us for reliable digital solutions."
+  // },
+  // {
+  //   number: "50+",
+  //   label: "Projects Delivered",
+  //   description: "Websites, applications, and digital products built for real-world needs."
+  // },
+  // {
+  //   number: "10+",
+  //   label: "Upcoming Projects",
+  //   description: "New innovative digital solutions currently under development."
+  // },
+  {
+    number: "100%",
+    label: "Youth Led",
+    description: "Driven by a passionate team of young innovators and developers."
   }
 ];
