@@ -4,6 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Monitor, Smartphone, Share2, Check, Clock } from 'lucide-react'
 import { FEATURED_COURSES, SERVICES, TRANSITION_STATS, TESTIMONIALS, FAQS, impacts } from '@/constants'
 import CountUp from '@/components/ui/count-up'
+import { Marquee } from '@/components/ui/marquee'
 
 const ICON_MAP = {
   globe: Monitor,
@@ -306,35 +307,61 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 4. Customer Testimonials */}
-      <section className="py-32 bg-slate-900 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-20">
-            <p className="font-black text-xs tracking-[0.2em] text-primary mb-6 uppercase">SOCIAL PROOF</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Trusted by pioneers.</h2>
-          </div>
+      {/* 4. Testimonials Section */}
+      <section className="py-12 bg-white overflow-hidden border-t border-slate-100 flex flex-col h-screen max-h-[800px] justify-center">
+        <div className="text-center space-y-2 mb-8 px-4">
+          <p className="font-bold text-sm tracking-wide text-primary capitalize">What People Say About Us</p>
+          <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Voices of Trust & Excellence.</h2>
+          <p className="text-base text-slate-500 max-w-2xl mx-auto w-full font-light">
+            Don't just take our word for it. Here's what our clients and students have to say about their experience with NK SkillEdge.
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-slate-800 border border-slate-800">
-            {TESTIMONIALS.map((testimonial, i) => (
-              <div key={i} className="flex flex-col p-12 bg-slate-900">
-                <div className="flex items-center gap-3 mb-10 text-2xl font-black text-white italic">
-                  NK <span className="text-primary not-italic">SKILLEDGE</span>
+        <div className="relative flex flex-col items-center justify-center overflow-hidden w-full">
+          <Marquee pauseOnHover className="[--duration:40s] [--gap:0px] border-l border-slate-200">
+            {TESTIMONIALS.slice(0, Math.ceil(TESTIMONIALS.length / 2)).map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="w-[350px] flex flex-col p-6 bg-white border-y border-r border-slate-200 hover:bg-slate-50 transition-colors h-full"
+              >
+                <div className="flex-1 mb-4">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed italic line-clamp-4">
+                    "{testimonial.testimonial}"
+                  </p>
                 </div>
-                <p className="text-slate-300 font-light text-xl leading-relaxed italic mb-10">
-                  "{testimonial.quote}"
-                </p>
-                <div className="flex items-center gap-4 mt-auto">
-                  <div className="w-14 h-14 bg-slate-800 border border-slate-700 flex items-center justify-center text-white font-bold">
-                    {testimonial.author[0]}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white text-lg">{testimonial.author}</h4>
-                    <p className="text-primary text-xs font-black tracking-widest uppercase">{testimonial.role}</p>
-                  </div>
+                <div className="pt-4 border-t border-slate-100">
+                  <h4 className="font-bold text-slate-900 text-sm">{testimonial.clientName}</h4>
+                  <p className="text-xs text-slate-500">
+                    {testimonial.designation} <span className="text-primary font-semibold">@{testimonial.company}</span>
+                  </p>
                 </div>
               </div>
             ))}
-          </div>
+          </Marquee>
+
+          <Marquee reverse pauseOnHover className="[--duration:45s] [--gap:0px] border-l border-slate-200 mt-[-1px]">
+            {TESTIMONIALS.slice(Math.ceil(TESTIMONIALS.length / 2)).map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="w-[350px] flex flex-col p-6 bg-white border-y border-r border-slate-200 hover:bg-slate-50 transition-colors h-full"
+              >
+                <div className="flex-1 mb-4">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed italic line-clamp-4">
+                    "{testimonial.testimonial}"
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-slate-100">
+                  <h4 className="font-bold text-slate-900 text-sm">{testimonial.clientName}</h4>
+                  <p className="text-xs text-slate-500">
+                    {testimonial.designation} <span className="text-primary font-semibold">@{testimonial.company}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </Marquee>
+
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white"></div>
         </div>
       </section>
 
