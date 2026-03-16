@@ -1,7 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { FOOTER_SOCIALS, FOOTER_LINKS } from '../constants/footer'
-
-
+import { FOOTER_SOCIALS, FOOTER_LINKS } from '../../constants/footer'
 
 export function Footer() {
   return (
