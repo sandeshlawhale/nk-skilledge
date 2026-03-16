@@ -11,7 +11,7 @@ export function Footer() {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-8">
           <div className="flex items-center gap-6">
             <Link to="/" className="flex items-center gap-2 text-lg font-bold text-slate-900 tracking-tight hover:opacity-80 transition-opacity">
-              <img src="/logo.png" alt="NK Skilledge" className="h-6 w-auto" />
+              <img src="/logo.png" alt="NK Skilledge" className="h-8 w-auto" />
               <span>NK SKILLEDGE</span>
             </Link>
 

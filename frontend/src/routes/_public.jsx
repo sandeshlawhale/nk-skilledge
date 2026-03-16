@@ -15,7 +15,7 @@ function PublicLayout() {
         <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="text-xl font-bold text-slate-900 flex items-center gap-2">
             {/* Minimal Logo matching wireframe styling */}
-            <img src="/logo.png" alt="NK Skilledge" className="h-10 w-auto" />
+            <img src="/logo.png" alt="NK Skilledge" className="h-8 w-auto" />
             <span className="font-bold text-xl tracking-tight">NK SKILLEDGE</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8">

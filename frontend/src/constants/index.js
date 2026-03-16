@@ -99,65 +99,11 @@ export const SERVICES = [
   },
 ];;
 
-export const TRANSITION_STATS = [
+export const SERVICES_STATS = [
   { label: 'Projects Delivered', value: '50+' },
   { label: 'Happy Clients', value: '30+' },
   { label: 'Active Projects', value: '15+' },
   { label: 'Upcomming Projects', value: '10+' },
-];
-
-export const DASHBOARD_COURSES = [
-  { id: 1, title: 'Advanced React Patterns & Architecture', progress: 65, totalLessons: 42, completedLessons: 27 },
-  { id: 2, title: 'Fullstack Next.js and Prisma', progress: 30, totalLessons: 55, completedLessons: 16 },
-  { id: 3, title: 'UI/UX Design Fundamentals', progress: 100, totalLessons: 20, completedLessons: 20 },
-];
-
-export const ENROLLED_COURSES = [
-  {
-    id: 'course-1',
-    title: 'Advanced React Patterns & Architecture',
-    instructor: 'Sarah Jenkins',
-    progress: 35,
-    totalLessons: 42,
-    completedLessons: 15,
-    lastAccessed: '2 hours ago',
-    image: 'https://placehold.co/600x400/e2e8f0/4f46e5?text=React+Pro'
-  },
-  {
-    id: 'course-2',
-    title: 'Fullstack Next.js Masterclass',
-    instructor: 'Michael Chen',
-    progress: 8,
-    totalLessons: 55,
-    completedLessons: 4,
-    lastAccessed: '3 days ago',
-    image: 'https://placehold.co/600x400/e2e8f0/f97316?text=Next.js+Pro'
-  },
-  {
-    id: 'course-4',
-    title: 'Go Microservices Boot-camp',
-    instructor: 'David Kim',
-    progress: 100,
-    totalLessons: 38,
-    completedLessons: 38,
-    lastAccessed: '1 week ago',
-    image: 'https://placehold.co/600x400/e2e8f0/10b981?text=Go+Bootcamp'
-  }
-];
-
-export const ADMIN_STUDENTS = [
-  { id: 1, name: 'Alex Johnson', email: 'alex@example.com', enrolled: 4, status: 'Active', joined: '2023-10-12' },
-  { id: 2, name: 'Sarah Miller', email: 'sarah@example.com', enrolled: 2, status: 'Active', joined: '2023-11-05' },
-  { id: 3, name: 'Michael Chen', email: 'michael@example.com', enrolled: 5, status: 'Inactive', joined: '2023-08-22' },
-  { id: 4, name: 'Emily Davis', email: 'emily@example.com', enrolled: 1, status: 'Active', joined: '2024-01-15' },
-  { id: 5, name: 'James Wilson', email: 'james@example.com', enrolled: 3, status: 'Active', joined: '2023-09-30' },
-];
-
-export const ADMIN_COURSES = [
-  { id: 1, title: 'Advanced React Patterns & Architecture', status: 'Published', students: 342, lessons: 42, price: 99 },
-  { id: 2, title: 'Fullstack Next.js Masterclass', status: 'Published', students: 289, lessons: 55, price: 149 },
-  { id: 3, title: 'UI/UX Design for Developers', status: 'Draft', students: 0, lessons: 12, price: 79 },
-  { id: 4, title: 'Go Microservices Boot-camp', status: 'Published', students: 156, lessons: 38, price: 199 },
 ];
 
 export const TESTIMONIALS = [
@@ -252,7 +198,7 @@ export const FAQS = [
   }
 ];
 
-export const impacts = [
+export const COURSES_STATS = [
   {
     number: "200+",
     label: "Students Trained",
@@ -290,4 +236,59 @@ export const TRUSTED_COMPANIES = [
   { name: "CodeNest Solutions", logo: "/companies/CodeNest.png" },
   { name: "CloudBridge Systems", logo: "/companies/CloudBridge.png" },
   { name: "NextByte Technologies", logo: "/companies/NextByte.png" },
+];
+
+
+export const DASHBOARD_COURSES = [
+  { id: 1, title: 'Advanced React Patterns & Architecture', progress: 65, totalLessons: 42, completedLessons: 27 },
+  { id: 2, title: 'Fullstack Next.js and Prisma', progress: 30, totalLessons: 55, completedLessons: 16 },
+  { id: 3, title: 'UI/UX Design Fundamentals', progress: 100, totalLessons: 20, completedLessons: 20 },
+];
+
+export const ENROLLED_COURSES = [
+  {
+    id: 'course-1',
+    title: 'Advanced React Patterns & Architecture',
+    instructor: 'Sarah Jenkins',
+    progress: 35,
+    totalLessons: 42,
+    completedLessons: 15,
+    lastAccessed: '2 hours ago',
+    image: 'https://placehold.co/600x400/e2e8f0/4f46e5?text=React+Pro'
+  },
+  {
+    id: 'course-2',
+    title: 'Fullstack Next.js Masterclass',
+    instructor: 'Michael Chen',
+    progress: 8,
+    totalLessons: 55,
+    completedLessons: 4,
+    lastAccessed: '3 days ago',
+    image: 'https://placehold.co/600x400/e2e8f0/f97316?text=Next.js+Pro'
+  },
+  {
+    id: 'course-4',
+    title: 'Go Microservices Boot-camp',
+    instructor: 'David Kim',
+    progress: 100,
+    totalLessons: 38,
+    completedLessons: 38,
+    lastAccessed: '1 week ago',
+    image: 'https://placehold.co/600x400/e2e8f0/10b981?text=Go+Bootcamp'
+  }
+];
+
+export const ADMIN_STUDENTS = [
+  { id: 1, name: 'Alex Johnson', email: 'alex@example.com', enrolled: 4, status: 'Active', joined: '2023-10-12' },
+  { id: 2, name: 'Sarah Miller', email: 'sarah@example.com', enrolled: 2, status: 'Active', joined: '2023-11-05' },
+  { id: 3, name: 'Michael Chen', email: 'michael@example.com', enrolled: 5, status: 'Inactive', joined: '2023-08-22' },
+  { id: 4, name: 'Emily Davis', email: 'emily@example.com', enrolled: 1, status: 'Active', joined: '2024-01-15' },
+  { id: 5, name: 'James Wilson', email: 'james@example.com', enrolled: 3, status: 'Active', joined: '2023-09-30' },
+];
+
+export const ADMIN_COURSES = [
+  { id: 1, title: 'Advanced React Patterns & Architecture', status: 'Published', students: 342, lessons: 42, price: 99 },
+  { id: 2, title: 'Fullstack Next.js Masterclass', status: 'Published', students: 289, lessons: 55, price: 149 },
+  { id: 3, title: 'UI/UX Design for Developers', status: 'Draft', students: 0, lessons: 12, price: 79 },
+  { id: 4, title: 'Go Microservices Boot-camp', status: 'Published', students: 156, lessons: 38, price: 199 },
 ];
