@@ -9,38 +9,7 @@ export const Route = createFileRoute('/_auth/dashboard/my-courses')({
   component: MyCourses,
 })
 
-const ENROLLED_COURSES = [
-  {
-    id: 'course-1',
-    title: 'Advanced React Patterns & Architecture',
-    instructor: 'Sarah Jenkins',
-    progress: 35,
-    totalLessons: 42,
-    completedLessons: 15,
-    lastAccessed: '2 hours ago',
-    image: 'https://placehold.co/600x400/e2e8f0/4f46e5?text=React+Pro'
-  },
-  {
-    id: 'course-2',
-    title: 'Fullstack Next.js Masterclass',
-    instructor: 'Michael Chen',
-    progress: 8,
-    totalLessons: 55,
-    completedLessons: 4,
-    lastAccessed: '3 days ago',
-    image: 'https://placehold.co/600x400/e2e8f0/f97316?text=Next.js+Pro'
-  },
-  {
-    id: 'course-4',
-    title: 'Go Microservices Boot-camp',
-    instructor: 'David Kim',
-    progress: 100,
-    totalLessons: 38,
-    completedLessons: 38,
-    lastAccessed: '1 week ago',
-    image: 'https://placehold.co/600x400/e2e8f0/10b981?text=Go+Bootcamp'
-  }
-]
+import { ENROLLED_COURSES } from '@/constants'
 
 function MyCourses() {
   return (
@@ -99,7 +68,7 @@ function MyCourses() {
             </CardContent>
             
             <CardFooter className="p-5 pt-0 border-t border-slate-100 mt-auto flex items-end">
-              <Button asChild className={`w-full ${course.progress === 100 ? 'bg-slate-900 hover:bg-slate-800' : 'bg-indigo-600 hover:bg-indigo-700'}`}>
+              <Button asChild className="w-full" variant={course.progress === 100 ? 'secondary' : 'default'}>
                 <Link to={`/dashboard/course/${course.id}`} className="flex items-center justify-center">
                    {course.progress === 100 ? (
                      <>Review Course <FileText className="ml-2 h-4 w-4" /></>

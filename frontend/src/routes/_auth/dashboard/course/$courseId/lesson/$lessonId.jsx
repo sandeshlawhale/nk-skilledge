@@ -16,7 +16,7 @@ function LessonPlayer() {
       <div className="relative w-full aspect-video bg-black flex items-center justify-center border-b border-slate-800">
         {/* Placeholder for Video Player */}
         <div className="text-center space-y-4 max-w-md px-6">
-          <div className="h-20 w-20 rounded-full bg-slate-800 flex items-center justify-center mx-auto ring-4 ring-slate-800/50">
+          <div className="h-20 w-20 bg-slate-800 flex items-center justify-center mx-auto ring-4 ring-slate-800/50">
             <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-white border-b-[12px] border-b-transparent ml-2" />
           </div>
           <p className="text-slate-400 font-medium">Video Player Placeholder (ID: {lessonId})</p>
@@ -24,7 +24,7 @@ function LessonPlayer() {
         
         {/* Mock Controls */}
         <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/80 to-transparent flex items-end px-4 pb-4">
-          <div className="w-full bg-slate-600/50 h-1 rounded-full overflow-hidden">
+          <div className="w-full bg-slate-600/50 h-1 overflow-hidden">
             <div className="w-1/3 h-full bg-indigo-500" />
           </div>
         </div>
@@ -42,7 +42,7 @@ function LessonPlayer() {
               <Button variant="outline" className="text-slate-600">
                 <ChevronLeft className="mr-2 h-4 w-4" /> Previous
               </Button>
-              <Button className="bg-indigo-600 hover:bg-indigo-700">
+              <Button>
                 Complete & Next <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -58,7 +58,7 @@ function LessonPlayer() {
               </TabsTrigger>
               <TabsTrigger value="assignment" className="data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600 border-b-2 border-transparent rounded-none px-4 py-3 font-semibold h-full shadow-none relative pr-8">
                 Assignment
-                <div className="absolute top-3 right-2 h-2 w-2 rounded-full bg-indigo-500" />
+                <div className="absolute top-3 right-2 h-2 w-2 bg-indigo-500" />
               </TabsTrigger>
               <TabsTrigger value="discussion" className="data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600 border-b-2 border-transparent rounded-none px-4 py-3 font-semibold h-full shadow-none">
                 Discussion
@@ -78,23 +78,23 @@ function LessonPlayer() {
             </TabsContent>
             
             <TabsContent value="assignment" className="space-y-6">
-              <div className="p-6 border rounded-xl bg-slate-50 border-slate-200">
+              <div className="p-6 border bg-slate-50 border-slate-200">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-lg font-bold text-slate-900">Knowledge Check</h3>
                     <p className="text-slate-500 text-sm mt-1">Answer the following questions to complete this lesson.</p>
                   </div>
-                  <div className="bg-indigo-100 text-indigo-700 px-3 py-1 text-sm font-bold rounded-full">
+                  <div className="bg-indigo-100 text-indigo-700 px-3 py-1 text-sm font-bold">
                     3 Questions
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                   <div className="bg-white p-5 rounded-lg border shadow-xs">
+                   <div className="bg-white p-5 border shadow-xs">
                      <h4 className="font-semibold text-slate-900 mb-4">1. What triggers a React component to re-render naturally?</h4>
                      <div className="space-y-3">
                        {['State or props change', 'Parent re-renders', 'Calling forceUpdate()', 'All of the above'].map((opt, i) => (
-                         <label key={i} className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${i === 3 ? 'border-indigo-600 bg-indigo-50' : 'hover:bg-slate-50 border-slate-200'}`}>
+                         <label key={i} className={`flex items-center p-3 border cursor-pointer transition-colors ${i === 3 ? 'border-indigo-600 bg-indigo-50' : 'hover:bg-slate-50 border-slate-200'}`}>
                            <input type="radio" name="q1" className="h-4 w-4 text-indigo-600 mr-3" defaultChecked={i === 3} />
                            <span className={i === 3 ? 'font-medium text-indigo-900' : 'text-slate-700'}>{opt}</span>
                          </label>
@@ -102,15 +102,15 @@ function LessonPlayer() {
                      </div>
                    </div>
 
-                   <Button className="w-full bg-indigo-600 hover:bg-indigo-700">Submit Answers & Continue</Button>
+                   <Button className="w-full">Submit Answers & Continue</Button>
                 </div>
               </div>
             </TabsContent>
             
             <TabsContent value="resources" className="space-y-4">
-              <div className="rounded-lg border bg-white p-4 flex items-center justify-between">
+               <div className="border bg-white p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-indigo-50 text-indigo-600 flex items-center justify-center rounded-lg">
+                  <div className="h-10 w-10 bg-indigo-50 text-indigo-600 flex items-center justify-center">
                     <FileText className="h-5 w-5" />
                   </div>
                   <div>
@@ -118,18 +118,18 @@ function LessonPlayer() {
                     <p className="text-xs text-slate-500">2.4 MB</p>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm" className="text-indigo-600">
+                <Button variant="ghost" size="sm">
                   <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
               </div>
             </TabsContent>
 
             <TabsContent value="discussion">
-              <div className="flex items-center justify-center p-12 border-2 border-dashed rounded-xl bg-slate-50 text-slate-500 flex-col text-center">
+               <div className="flex items-center justify-center p-12 border-2 border-dashed bg-slate-50 text-slate-500 flex-col text-center">
                 <MessageSquare className="h-12 w-12 mb-4 text-slate-400" />
                 <h3 className="font-bold text-slate-900 mb-2">Join the Discussion</h3>
                 <p className="text-sm max-w-md">Connect with other students taking this course and ask questions to our expert mentors.</p>
-                <Button className="mt-6 bg-slate-900 text-white">Join Discord Community</Button>
+                <Button className="mt-6" variant="secondary">Join Discord Community</Button>
               </div>
             </TabsContent>
           </Tabs>
