@@ -60,7 +60,7 @@ function HomePage() {
         <div className="relative w-full">
           <Marquee className="[--duration:40s] [--gap:5rem] py-4" pauseOnHover>
             {TRUSTED_COMPANIES.map((company, i) => (
-              <div key={i} className="flex items-center gap-2 filter grayscale transition-all duration-500 cursor-default">
+              <div key={i} className="flex items-center gap-2 filter grayscale transition-all hover:grayscale-0 duration-500 cursor-default">
                 <div className="h-6 md:h-8 flex items-center justify-center">
                   <img
                     src={company.logo}
