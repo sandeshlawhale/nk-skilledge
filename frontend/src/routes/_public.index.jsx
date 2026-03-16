@@ -448,7 +448,7 @@ function HomePage() {
             <p className="text-lg md:text-xl text-slate-300 font-light max-w-xl">
               Join our industry-focused courses or partner with us to build innovative digital solutions.
             </p>
-            <div className="pt-4 flex flex-col sm:flex-row gap-6">
+            <div className="pt-4 flex flex-row gap-6">
               <Link to="/courses">
                 <Button size="xl" variant="secondary" className="border border-background">
                   View Courses

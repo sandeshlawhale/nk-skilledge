@@ -1,69 +1,59 @@
 import { Link } from '@tanstack/react-router'
-import { BookOpen, Github, Twitter, Linkedin } from 'lucide-react'
+import { FOOTER_SOCIALS, FOOTER_LINKS } from '../constants/footer'
+
+
 
 export function Footer() {
   return (
-    <footer className="border-t bg-white pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 mb-12">
-          
-          <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-slate-900 mb-4">
-              <img src="/logo.png" alt="NK Skilledge" className="h-8 w-auto" />
+    <footer className="bg-white text-slate-500 py-8 border-t border-slate-300">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Top Row: Logo, Socials, and Links */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-8">
+          <div className="flex items-center gap-6">
+            <Link to="/" className="flex items-center gap-2 text-lg font-bold text-slate-900 tracking-tight hover:opacity-80 transition-opacity">
+              <img src="/logo.png" alt="NK Skilledge" className="h-6 w-auto" />
               <span>NK SKILLEDGE</span>
             </Link>
-            <p className="text-slate-500 text-sm leading-relaxed mb-6">
-              Empowering learners worldwide with cutting-edge courses and expert mentorship.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors">
-                <Github className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </a>
+
+            <div className="h-6 w-px bg-slate-500" />
+
+            <div className="flex items-center gap-4">
+              {FOOTER_SOCIALS.map((social) => {
+                const Icon = social.icon
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    className={`p-2 -m-2 text-slate-400 rounded-full transition-all duration-300 ${social.hoverColor} ${social.hoverBg}`}
+                    aria-label={social.label}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                )
+              })}
             </div>
           </div>
 
-          <div>
-            <h4 className="font-semibold text-slate-900 mb-4">Product</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Courses</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Services</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Pricing</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Mentorship</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-slate-900 mb-4">Company</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">About Us</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Careers</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Blog</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-slate-900 mb-4">Legal</h4>
-            <ul className="space-y-3 text-sm text-slate-500">
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Terms of Service</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/" className="hover:text-indigo-600 transition-colors">Cookie Policy</Link></li>
-            </ul>
-          </div>
-
+          <nav className="flex flex-col md:flex-row items-start md:items-center gap-x-8 gap-y-2 text-sm font-semibold text-slate-600 pl-4 md:pl-0">
+            {FOOTER_LINKS.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                className={`hover:text-primary transition-colors py-1 ${link.showBorder ? 'md:border-r-2 md:border-slate-500 md:pr-8' : ''
+                  } ${link.label === 'Privacy Policy' || link.label === 'Terms & Conditions' ? 'whitespace-nowrap' : ''
+                  }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
 
-        <div className="border-t pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} NK Skilledge. All rights reserved.</p>
-          <div className="flex gap-6">
-            <span>Designed with ✨</span>
-          </div>
+        {/* Bottom Row: Status and Copyright */}
+        <div className="pt-4 border-t border-slate-50">
+          <p className="text-sm font-medium text-slate-400 text-center md:text-start">
+            © {new Date().getFullYear()} NK Skilledge Pvt. Ltd. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
