@@ -214,83 +214,41 @@ export const TESTIMONIALS = [
     "testimonial": "NKSKILLEDGE Pvt Ltd delivered a powerful fleet management and tracking solution for our company. The system improved our delivery efficiency. Kartik Mendhe and his team provided excellent technical support throughout the project.",
     "clientName": "David Anderson",
     "designation": "Logistics Director"
-  },
-  {
-    "id": 7,
-    "company": "Mahalakshmi Retail Pvt Ltd",
-    "location": "Mumbai, India",
-    "project": "E-Commerce Marketplace Development",
-    "testimonial": "NKSKILLEDGE Pvt Ltd delivered an excellent e-commerce platform for our retail business. The website is fast, secure and easy to manage. Special thanks to Kartik Mendhe for providing great support and understanding our business requirements.",
-    "clientName": "Rajesh Sharma",
-    "designation": "Director"
-  },
-  {
-    "id": 8,
-    "company": "SpeedX Logistics Solutions",
-    "location": "Pune, India",
-    "project": "Logistics & Delivery Tracking Platform",
-    "testimonial": "We are very satisfied with the logistics tracking system developed by NKSKILLEDGE Pvt Ltd. The admin panel and shipment tracking features improved our operations significantly. Kartik Mendhe and his team provided timely delivery and professional service.",
-    "clientName": "Rohit Mehta",
-    "designation": "Operations Manager"
-  },
-  {
-    "id": 9,
-    "company": "UrbanNest Developers Pvt Ltd",
-    "location": "Bengaluru, India",
-    "project": "Real Estate Property Management Platform",
-    "testimonial": "NKSKILLEDGE Pvt Ltd created a modern property listing website for our company. The CRM integration and inquiry system helped us manage leads efficiently. We appreciate the hard work of Kartik Mendhe and the development team.",
-    "clientName": "Amit Kapoor",
-    "designation": "Managing Director"
-  },
-  {
-    "id": 10,
-    "company": "TechNova Solutions Inc.",
-    "location": "San Francisco, USA",
-    "project": "Custom CRM & Business Automation Software",
-    "testimonial": "Working with NKSKILLEDGE Pvt Ltd was a great experience. They developed a reliable CRM system that improved our internal workflow. Kartik Mendhe ensured smooth communication and delivered the project on time.",
-    "clientName": "Michael Johnson",
-    "designation": "CTO"
-  },
-  {
-    "id": 15,
-    "company": "SkyBridge E-Commerce LLC",
-    "location": "New York, USA",
-    "project": "Multi-Vendor E-Commerce Platform",
-    "testimonial": "The multi-vendor marketplace developed by NKSKILLEDGE Pvt Ltd works perfectly for our online business. The platform is scalable and user-friendly. Special thanks to Kartik Mendhe for his technical expertise and dedication.",
-    "clientName": "Sarah Williams",
-    "designation": "Founder"
-  },
-  {
-    "id": 16,
-    "company": "Apex Logistics Corporation",
-    "location": "Chicago, USA",
-    "project": "Logistics Tracking & Fleet Management System",
-    "testimonial": "NKSKILLEDGE Pvt Ltd delivered a powerful fleet management and tracking solution for our company. The system improved our delivery efficiency. Kartik Mendhe and his team provided excellent technical support throughout the project.",
-    "clientName": "David Anderson",
-    "designation": "Logistics Director"
   }
 ]
 
 export const FAQS = [
   {
-    question: "How long does a typical project take?",
-    answer: "Our delivery timelines vary based on complexity, but most enterprise solutions are delivered within 8-12 weeks. We follow a strict agile methodology with weekly milestones to ensure total transparency."
+    "question": "What does NK SkillEdge specialize in?",
+    "answer": "NK SkillEdge provides industry-focused technology training and builds digital solutions for businesses, including websites, mobile applications, and custom software platforms."
   },
   {
-    question: "What technologies do you specialize in?",
-    answer: "We specialize in modern web and mobile stacks, including React, Next.js, Node.js, Go, and high-performance Android development."
+    "question": "Do your courses include practical projects?",
+    "answer": "Yes. All courses are designed with hands-on learning and real-world projects to help students gain practical experience with modern tools and technologies."
   },
   {
-    question: "Do you offer post-project support?",
-    answer: "Yes, we provide comprehensive maintenance and support packages to ensure your digital ecosystem remains robust and up-to-date."
+    "question": "Who can enroll in NK SkillEdge courses?",
+    "answer": "Students, beginners, and professionals who want to build practical tech skills in areas like full-stack development, Android development, UI/UX design, and data science can enroll."
   },
   {
-    question: "Can I enroll in multiple courses at once?",
-    answer: "Absolutely! Our platform allows you to manage multiple learning paths simultaneously with a unified dashboard."
+    "question": "Does NK SkillEdge provide development services for businesses?",
+    "answer": "Yes. We build custom websites, applications, and digital platforms for startups and businesses, tailored to their specific requirements."
   },
   {
-    question: "Do you provide industry certifications?",
-    answer: "Yes, all our major programs come with industry-backed certifications that are recognized by our partner companies."
+    "question": "What technologies do you work with?",
+    "answer": "Our team works with modern technologies including React, Node.js, Android, UI/UX tools, and other industry-standard development frameworks."
+  },
+  {
+    "question": "How can businesses start a project with NK SkillEdge?",
+    "answer": "Businesses can contact us through the website to discuss their requirements, and our team will guide them through the planning, development, and deployment process."
+  },
+  {
+    "question": "Do students get exposure to real-world development?",
+    "answer": "Yes. Students often work on real project scenarios and industry-style assignments to understand how professional development environments work."
+  },
+  {
+    "question": "How can I get in touch with NK SkillEdge?",
+    "answer": "You can reach us through the contact form on our website or connect with our team directly for course inquiries or development projects."
   }
 ];
 

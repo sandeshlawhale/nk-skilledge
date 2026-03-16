@@ -53,10 +53,13 @@ function HomePage() {
 
       {/* 2. Featured Courses Section */}
       <section className="bg-slate-50 border-y border-slate-200">
-        <div className="w-full max-w-7xl py-16 px-4 mx-auto">
+        <div className="w-full max-w-7xl py-12 px-4 mx-auto">
+          <div className="mb-4 flex items-center gap-3 w-full justify-center">
+            <div className="h-px w-8 bg-primary"></div>
+            <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">Courses</p>
+          </div>
           <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-8">
             <div className="text-left flex-1 space-y-2">
-              <p className="font-bold text-xs tracking-wide text-primary capitalize">Courses</p>
               <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Build Skills That Companies Actually Hire For.</h2>
               <p className="text-xl text-slate-500 max-w-2xl font-light">
                 Hands-on training programs designed with real projects, industry tools, and mentorship to help you become job-ready.
@@ -127,9 +130,12 @@ function HomePage() {
 
       {/* 3. Services Section */}
       <section className="w-full max-w-7xl py-12 px-4 mx-auto">
+        <div className="mb-4 flex items-center gap-3 w-full justify-center">
+          <div className="h-px w-8 bg-primary"></div>
+          <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">Services we provide</p>
+        </div>
         <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-8">
           <div className="text-left flex-1 space-y-2">
-            <p className="font-bold text-xs tracking-wide text-primary capitalize">Services we provide</p>
             <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Solutions We Build for Businesses.</h2>
             <p className="text-xl text-slate-500 max-w-2xl font-light">
               We offer professional design and development services to help your business grow in the digital era.
@@ -206,9 +212,9 @@ function HomePage() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
+          <div className="grid grid-cols-2 md:flex md:flex-row gap-4 md:gap-6 w-full md:w-auto">
             {TRANSITION_STATS.map((stat, i) => (
-              <div key={i} className="px-8 py-6">
+              <div key={i} className="px-8 py-3">
                 <p className="text-4xl font-black text-slate-900 mb-1">
                   <CountUp
                     from={0}
@@ -284,7 +290,7 @@ function HomePage() {
                 <h2 className="text-3xl md:text-2xl font-semibold text-slate-900 tracking-tight">Making a <span className="text-primary italic">Real Impact</span></h2>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-12 w-full sm:w-auto">
+              <div className="grid grid-cols-2 md:flex md:flex-row gap-8 md:gap-12 w-full md:w-auto">
                 {impacts.map((stat, i) => (
                   <div key={i} className="">
                     <p className="text-4xl font-black text-slate-900 mb-1">
@@ -310,7 +316,10 @@ function HomePage() {
       {/* 4. Testimonials Section */}
       <section className="py-12 bg-white overflow-hidden border-t border-slate-100 flex flex-col h-screen max-h-[800px] justify-center">
         <div className="text-center space-y-2 mb-8 px-4">
-          <p className="font-bold text-sm tracking-wide text-primary capitalize">What People Say About Us</p>
+          <div className="flex items-center gap-3 w-full justify-center">
+            <div className="h-px w-8 bg-primary"></div>
+            <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">What People Say About Us</p>
+          </div>
           <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Voices of Trust & Excellence.</h2>
           <p className="text-base text-slate-500 max-w-2xl mx-auto w-full font-light">
             Don't just take our word for it. Here's what our clients and students have to say about their experience with NK SkillEdge.
@@ -366,32 +375,58 @@ function HomePage() {
       </section>
 
       {/* 5. FAQs Section */}
-      <section className="py-32 bg-white px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">Questions.</h2>
-            <p className="text-xl text-slate-500 font-light">
-              Everything you need to know about our process and platform.
-            </p>
+      <section className="w-full max-w-7xl py-12 px-4 mx-auto border-t border-slate-100">
+        <div className="mb-8 flex items-center gap-3 w-full justify-center">
+          <div className="h-px w-8 bg-primary"></div>
+          <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">FAQ</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-12 items-start">
+          {/* Left Column: Heading & CTA (1/3) */}
+          <div className="md:col-span-1 space-y-8">
+            <div className="space-y-4">
+              {/* <div className="flex items-center gap-3">
+                <div className="h-px w-8 bg-primary"></div>
+                <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">FAQ</p>
+              </div> */}
+              <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight leading-tight">
+                Frequently Asked <span className="text-primary italic">Questions.</span>
+              </h2>
+              <p className="text-lg text-slate-500 font-light leading-relaxed">
+                Find answers to common questions about our courses, services, and how NK SkillEdge helps students and businesses grow.
+              </p>
+            </div>
+
+            {/* CTA - Hidden on mobile as per requirement */}
+            <div className="hidden md:block p-8 bg-white border border-slate-200 space-y-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.05)] hover:shadow-[6px_6px_0px_0px_rgba(37,99,235,0.1)] transition-all duration-300">
+              <p className="text-slate-900 font-bold leading-relaxed">
+                Still have questions?
+              </p>
+              <Link to="/contact">
+                <Button variant="brutal" className="w-full bg-slate-900 hover:bg-primary transition-all duration-300 h-14">
+                  Contact Us
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          <Accordion type="single" collapsible className="w-full space-y-4">
-            {FAQS.map((faq, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border-2 border-slate-900 px-8 py-2">
-                <AccordionTrigger className="text-xl font-bold text-slate-900 hover:no-underline text-left py-6">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-slate-500 text-lg leading-relaxed pb-8 font-light">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-
-          <div className="mt-24 p-12 bg-slate-50 border-2 border-slate-900 text-center">
-            <h3 className="text-3xl font-bold text-slate-900 mb-4">Still have questions?</h3>
-            <p className="text-xl text-slate-500 font-light mb-10">Reach out to our engineering team directly.</p>
-            <Button variant="brutal" size="hero" className="bg-slate-900 hover:bg-slate-800">Contact Us</Button>
+          {/* Right Column: Accordion (2/3) */}
+          <div className="md:col-span-2">
+            <Accordion type="single" collapsible className="w-full">
+              {FAQS.map((faq, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`item-${i}`}
+                  className="border-t border-slate-200 last:border-b"
+                >
+                  <AccordionTrigger className="text-lg md:text-xl font-bold text-slate-900 hover:text-primary hover:no-underline text-left py-5 px-4 transition-colors cursor-pointer">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-slate-500 text-base md:text-lg leading-relaxed pb-5 font-light px-4">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </div>
       </section>
