@@ -284,3 +284,10 @@ export const impacts = [
     description: "Driven by a passionate team of young innovators and developers."
   }
 ];
+
+export const TRUSTED_COMPANIES = [
+  { name: "DataStack Technologies", logo: "/companies/DataStack.png" },
+  { name: "CodeNest Solutions", logo: "/companies/CodeNest.png" },
+  { name: "CloudBridge Systems", logo: "/companies/CloudBridge.png" },
+  { name: "NextByte Technologies", logo: "/companies/NextByte.png" },
+];

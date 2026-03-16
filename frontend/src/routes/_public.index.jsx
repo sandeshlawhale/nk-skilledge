@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Monitor, Smartphone, Share2, Check, Clock } from 'lucide-react'
-import { FEATURED_COURSES, SERVICES, TRANSITION_STATS, TESTIMONIALS, FAQS, impacts } from '@/constants'
+import { FEATURED_COURSES, SERVICES, TRANSITION_STATS, TESTIMONIALS, FAQS, impacts, TRUSTED_COMPANIES } from '@/constants'
 import CountUp from '@/components/ui/count-up'
 import { Marquee } from '@/components/ui/marquee'
 
@@ -48,6 +48,38 @@ function HomePage() {
             alt="Premium Coding Environment"
             className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
           />
+        </div>
+      </section>
+
+      {/* 1.5 Trusted By Section */}
+      <section className="w-full max-w-7xl px-4 mx-auto py-12 flex flex-col items-center border-b border-slate-100 overflow-hidden relative">
+        <div className="mb-4 flex items-center gap-3 w-full justify-center">
+          <div className="h-px w-8 bg-primary/50"></div>
+          <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">Trusted By</p>
+        </div>
+        <div className="relative w-full">
+          <Marquee className="[--duration:40s] [--gap:5rem] py-4" pauseOnHover>
+            {TRUSTED_COMPANIES.map((company, i) => (
+              <div key={i} className="flex items-center gap-2 filter grayscale transition-all duration-500 group cursor-default">
+                <div className="h-6 md:h-8 flex items-center justify-center">
+                  <img
+                    src={company.logo}
+                    alt={company.name}
+                    className="max-h-full w-auto object-contain"
+                    onError={(e) => {
+                      e.target.src = "https://placehold.co/40x40/f1f5f9/94a3b8?text=" + company.name.charAt(0);
+                    }}
+                  />
+                </div>
+                <span className="text-sm md:text-base font-semibold text-slate-400 group-hover:text-slate-900 tracking-tight transition-colors">
+                  {company.name}
+                </span>
+              </div>
+            ))}
+          </Marquee>
+          {/* Gradient Masks */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white mb-2"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white mb-2"></div>
         </div>
       </section>
 
