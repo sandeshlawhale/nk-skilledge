@@ -11,13 +11,24 @@ export const Route = createFileRoute('/register')({
 
 function Register() {
   const navigate = useNavigate()
-  const login = useAuthStore((state) => state.login)
+  const { register, isLoading, error } = useAuthStore()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Mock register logic here
-    login({ id: 2, name: e.target['first-name'].value, role: 'student', email: e.target.email.value })
-    navigate({ to: '/dashboard' })
+    const firstName = e.target['first-name'].value
+    const lastName = e.target['last-name'].value
+    const email = e.target.email.value
+    const password = e.target.password.value
+
+    const result = await register({ 
+      fullName: `${firstName} ${lastName}`, 
+      email, 
+      password 
+    })
+
+    if (result.success) {
+      navigate({ to: '/dashboard' })
+    }
   }
 
   return (
@@ -26,7 +37,11 @@ function Register() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold tracking-tight text-center">Create an account</CardTitle>
           <CardDescription className="text-center">
-            Enter your details below to create your account.
+            {error ? (
+              <span className="text-red-500 font-medium">{error}</span>
+            ) : (
+              'Enter your details below to create your account.'
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -34,23 +49,23 @@ function Register() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="first-name">First name</Label>
-                <Input id="first-name" placeholder="John" required />
+                <Input id="first-name" placeholder="John" required disabled={isLoading} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="last-name">Last name</Label>
-                <Input id="last-name" placeholder="Doe" required />
+                <Input id="last-name" placeholder="Doe" required disabled={isLoading} />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input id="email" type="email" placeholder="m@example.com" required disabled={isLoading} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" required disabled={isLoading} />
             </div>
-            <Button type="submit" className="w-full">
-              Create account
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Creating account...' : 'Create account'}
             </Button>
           </form>
         </CardContent>

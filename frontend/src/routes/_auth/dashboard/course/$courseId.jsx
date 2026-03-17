@@ -1,94 +1,228 @@
 import { createFileRoute, Outlet, Link, useParams } from '@tanstack/react-router'
-import { PlayCircle, CheckCircle, Lock, LayoutList } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '@/utils/api'
+import { useAuthStore } from '@/store/auth'
+import { PlayCircle, CheckCircle, Lock, LayoutList, MessageSquare, PhoneCall, Play, Info } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 export const Route = createFileRoute('/_auth/dashboard/course/$courseId')({
   component: CourseLayout,
 })
 
-const MODULES = [
-  {
-    id: 'm1',
-    title: 'Introduction & Setup',
-    lessons: [
-      { id: 'l1', title: 'Course Overview', duration: '5:24', status: 'completed' },
-      { id: 'l2', title: 'Environment Setup', duration: '12:15', status: 'completed' },
-    ]
-  },
-  {
-    id: 'm2',
-    title: 'Core Architecture',
-    lessons: [
-      { id: 'l3', title: 'Understanding the Component Tree', duration: '18:30', status: 'current' },
-      { id: 'l4', title: 'State Management Patterns', duration: '25:40', status: 'locked' },
-    ]
-  }
-]
-
 function CourseLayout() {
   const { courseId } = useParams({ from: '/_auth/dashboard/course/$courseId' })
+  const { user } = useAuthStore()
+  const [course, setCourse] = useState(null)
+  const [enrollment, setEnrollment] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch course details
+        const courseRes = await fetch(`${API_BASE_URL}/courses/${courseId}`)
+        const courseData = await courseRes.json()
+        if (courseData.success) {
+          setCourse(courseData.data)
+        }
+
+        // Fetch enrollment status
+        if (user?._id) {
+          const enrollmentRes = await fetch(`${API_BASE_URL}/enrollments/user/${user._id}`)
+          const enrollmentData = await enrollmentRes.json()
+          if (enrollmentData.success) {
+            const foundEnrollment = enrollmentData.data.find(e => e.courseId._id === courseId || e.courseId === courseId)
+            setEnrollment(foundEnrollment)
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching course data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [courseId, user?._id])
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  const isEnrolled = !!enrollment
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-slate-50 border-t -m-6 md:-m-8">
-      {/* Sidebar / Curriculum */}
-      <aside className="w-full md:w-80 lg:w-96 bg-white border-r flex flex-col h-screen sticky top-0 md:h-[calc(100vh-64px)]">
-        <div className="p-6 border-b">
-          <Link to="/dashboard" className="text-sm font-medium text-indigo-600 hover:underline mb-4 inline-block">
-            &larr; Back to Dashboard
-          </Link>
-          <h2 className="text-xl font-bold text-slate-900 leading-tight">Advanced React Patterns & Architecture</h2>
-          <div className="mt-4">
-            <div className="flex justify-between text-xs font-semibold text-slate-500 mb-2">
-              <span>Overall Progress</span>
-              <span className="text-indigo-600">35%</span>
+    <div className="flex flex-col lg:flex-row h-full gap-6 font-geist">
+      {/* Main Content Area */}
+      <div className="flex-1 min-w-0">
+        {isEnrolled ? (
+          <div className="space-y-6">
+            <Outlet />
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+             <div className="aspect-video relative overflow-hidden bg-slate-100">
+                <img 
+                  src={course?.thumbnail || 'https://placehold.co/1200x600/e2e8f0/4f46e5?text=Course+Preview'} 
+                  alt={course?.title} 
+                  className="object-cover w-full h-full" 
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                   <div className="h-20 w-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white cursor-pointer">
+                      <Play className="h-10 w-10 fill-white" />
+                   </div>
+                </div>
+             </div>
+             
+             <div className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <Badge variant="secondary" className="bg-indigo-50 text-indigo-700 font-bold px-3 py-1 border-0">
+                    {course?.category || 'Professional'}
+                  </Badge>
+                  <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                    <Clock className="h-4 w-4" /> {course?.duration || '12 weeks'}
+                  </span>
+                </div>
+                
+                <h1 className="text-3xl font-bold text-slate-900 mb-6">{course?.title}</h1>
+                
+                <div className="prose prose-slate max-w-none">
+                   <h3 className="text-xl font-bold text-slate-800 mb-3">About this Course</h3>
+                   <p className="text-slate-600 leading-relaxed mb-6">
+                     {course?.description || "Master the skills needed to excel in this field with our comprehensive professional course. Designed for both beginners and intermediate learners."}
+                   </p>
+                   
+                   <h3 className="text-xl font-bold text-slate-800 mb-3">What you'll learn</h3>
+                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-600 list-none p-0">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                        <span>Professional industry-standard techniques</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                        <span>Hands-on practical assignments</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                        <span>Lifetime access to course materials</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                        <span>Dedicated support and community access</span>
+                      </li>
+                   </ul>
+                </div>
+             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Right Sidebar */}
+      <aside className="w-full lg:w-[400px] shrink-0 space-y-6">
+        {/* Course Progress / CTA Card */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          {isEnrolled ? (
+            <div className="space-y-4">
+               <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-slate-900">Your Progress</h3>
+                  <span className="text-indigo-600 font-bold">{enrollment?.progress || 0}%</span>
+               </div>
+               <Progress value={enrollment?.progress || 0} className="h-2.5 bg-slate-100" />
+               <p className="text-xs text-slate-500 text-center">
+                  {Math.floor((course?.lessonsCount || 0) * (enrollment?.progress || 0) / 100)} of {course?.lessonsCount || 0} lessons completed
+               </p>
             </div>
-            <Progress value={35} className="h-2" />
+          ) : (
+            <div className="space-y-6">
+               <div className="text-center pb-4 border-b border-slate-100">
+                  <span className="text-3xl font-bold text-slate-900">₹{course?.price || '29,999'}</span>
+                  <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-semibold">One-time payment</p>
+               </div>
+               
+               <div className="space-y-3">
+                  <Button className="w-full bg-slate-900 hover:bg-primary font-bold py-6 rounded-xl shadow-lg shadow-indigo-100">
+                    <PhoneCall className="mr-2 h-5 w-5" /> Contact to Enroll
+                  </Button>
+                  <p className="text-[11px] text-center text-slate-400">
+                    Get in touch with our team for enrollment details and payment options.
+                  </p>
+               </div>
+               
+               <div className="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100">
+                  <h4 className="text-xs font-bold text-indigo-900 uppercase tracking-tight mb-2 flex items-center gap-1.5">
+                    <Info className="h-3.5 w-3.5" /> Course Includes
+                  </h4>
+                  <ul className="text-xs text-indigo-800 space-y-2">
+                     <li className="flex items-center gap-2">
+                        <PlayCircle className="h-3.5 w-3.5 opacity-70" /> {course?.lessonsCount || '42'} Full HD Lessons
+                     </li>
+                     <li className="flex items-center gap-2">
+                        <MessageSquare className="h-3.5 w-3.5 opacity-70" /> 1-on-1 Mentorship
+                     </li>
+                     <li className="flex items-center gap-2">
+                        <Award className="h-3.5 w-3.5 opacity-70" /> Certificate of Completion
+                     </li>
+                  </ul>
+               </div>
+            </div>
+          )}
+        </div>
+
+        {/* Curriculum Sidebar */}
+        <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 flex flex-col max-h-[600px]">
+          <div className="p-5 border-b bg-slate-50/50 flex items-center justify-between">
+            <h3 className="font-bold text-slate-900 flex items-center gap-2">
+              <LayoutList className="h-5 w-5 text-indigo-600" /> Course Content
+            </h3>
+            <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight">
+              {course?.lessonsCount || 0} Lessons
+            </Badge>
+          </div>
+          
+          <div className="overflow-y-auto flex-1 p-2">
+            {/* Mocking lessons for now as we need to fetch them from backend */}
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div 
+                key={i}
+                className={`flex items-start gap-4 p-4 rounded-xl transition-all ${
+                  !isEnrolled ? 'opacity-50 cursor-not-allowed group' : 'hover:bg-slate-50 cursor-pointer'
+                }`}
+              >
+                <div className="mt-0.5 shrink-0">
+                  {!isEnrolled || i > 2 ? (
+                    <Lock className="h-5 w-5 text-slate-300" />
+                  ) : (
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                   <h4 className="text-sm font-bold text-slate-800 truncate">Lesson {i}: Professional Modules</h4>
+                   <p className="text-xs text-slate-500 mt-1 flex items-center gap-2">
+                      <Clock className="h-3 w-3" /> 12:45
+                   </p>
+                </div>
+                {!isEnrolled && (
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                     <Lock className="h-4 w-4 text-primary" />
+                  </div>
+                )}
+              </div>
+            ))}
+            
+            {!isEnrolled && (
+              <div className="p-4 text-center">
+                <p className="text-xs text-slate-400 italic">Enroll to unlock all lessons</p>
+              </div>
+            )}
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-6">
-          {MODULES.map((module, i) => (
-            <div key={module.id}>
-              <h3 className="text-sm font-bold tracking-wide text-slate-500 uppercase mb-3 flex items-center">
-                <LayoutList className="mr-2 h-4 w-4" /> Module {i + 1}: {module.title}
-              </h3>
-              <div className="space-y-1">
-                {module.lessons.map((lesson) => (
-                  <Link
-                    key={lesson.id}
-                    to={`/dashboard/course/${courseId}/lesson/${lesson.id}`}
-                    className={`flex items-start gap-3 p-3 transition-colors ${
-                      lesson.status === 'current' ? 'bg-indigo-50 border border-indigo-100' :
-                      lesson.status === 'locked' ? 'opacity-60 cursor-not-allowed grayscale' :
-                      'hover:bg-slate-50'
-                    }`}
-                  >
-                    <div className="mt-0.5">
-                      {lesson.status === 'completed' ? (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
-                      ) : lesson.status === 'current' ? (
-                        <PlayCircle className="h-5 w-5 text-indigo-600 fill-indigo-100" />
-                      ) : (
-                        <Lock className="h-5 w-5 text-slate-400" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className={`text-sm font-medium truncate ${lesson.status === 'current' ? 'text-indigo-900 font-bold' : 'text-slate-700'}`}>
-                        {lesson.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-1">{lesson.duration}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
       </aside>
-
-      {/* Main Player Area */}
-      <main className="flex-1 overflow-y-auto bg-slate-950 flex flex-col relative min-h-screen md:min-h-0">
-        <Outlet />
-      </main>
     </div>
   )
 }

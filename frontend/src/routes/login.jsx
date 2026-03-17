@@ -11,13 +11,23 @@ export const Route = createFileRoute('/login')({
 
 function Login() {
   const navigate = useNavigate()
-  const login = useAuthStore((state) => state.login)
+  const { login, isLoading, error } = useAuthStore()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Mock login logic here
-    login({ id: 1, name: 'Demo User', role: 'student', email: e.target.email.value })
-    navigate({ to: '/' })
+    const email = e.target.email.value
+    const password = e.target.password.value
+
+    const result = await login({ email, password })
+    if (result.success) {
+      // Get role from the store after login
+      const user = useAuthStore.getState().user
+      if (user?.role === 'admin') {
+        navigate({ to: '/admin' })
+      } else {
+        navigate({ to: '/dashboard' })
+      }
+    }
   }
 
   return (
@@ -26,14 +36,18 @@ function Login() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold tracking-tight text-center">Sign back in</CardTitle>
           <CardDescription className="text-center">
-            Enter your email and password to access your account.
+            {error ? (
+              <span className="text-red-500 font-medium">{error}</span>
+            ) : (
+              'Enter your email and password to access your account.'
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input id="email" type="email" placeholder="m@example.com" required disabled={isLoading} />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -42,10 +56,10 @@ function Login() {
                   Forgot password?
                 </Link>
               </div>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" required disabled={isLoading} />
             </div>
-            <Button type="submit" className="w-full">
-              Log in
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Log in'}
             </Button>
           </form>
         </CardContent>
