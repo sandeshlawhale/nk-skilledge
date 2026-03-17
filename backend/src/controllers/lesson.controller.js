@@ -2,7 +2,14 @@ const Lesson = require("../models/lesson.model");
 const { ApiError, ApiResponse, asyncHandler } = require("../utils/apiHandler");
 
 const getAllLessonsForCourse = asyncHandler(async (req, res) => {
-  const lessons = await Lesson.find({ courseId: req.params.courseId, status: "published" }).sort("order");
+  const { status } = req.query;
+  const filter = { courseId: req.params.courseId };
+
+  if (status !== "all") {
+    filter.status = "published";
+  }
+
+  const lessons = await Lesson.find(filter).sort("order");
   return res
     .status(200)
     .json(new ApiResponse(200, lessons, "Lessons fetched successfully"));
@@ -31,7 +38,7 @@ const createLesson = asyncHandler(async (req, res) => {
     order,
     content,
     videoUrl,
-    status: "draft",
+    status: "published",
   });
 
   return res
@@ -58,10 +65,32 @@ const deleteLesson = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Lesson deleted successfully"));
 });
 
+const updateLessonStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body;
+  if (!status) {
+    throw new ApiError(400, "Status is required");
+  }
+
+  const lesson = await Lesson.findByIdAndUpdate(
+    req.params.lessonId,
+    { $set: { status } },
+    { new: true }
+  );
+
+  if (!lesson) {
+    throw new ApiError(404, "Lesson not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, lesson, "Lesson status updated successfully"));
+});
+
 module.exports = {
   getAllLessonsForCourse,
   getLessonById,
   createLesson,
   updateLesson,
+  updateLessonStatus,
   deleteLesson,
 };

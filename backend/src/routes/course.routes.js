@@ -19,7 +19,7 @@ router.route("/:courseId").get(getCourseById);
 
 // Secured admin routes
 router.route("/").post(verifyJWT, authorizeRoles("admin"), upload.single("thumbnail"), createCourse);
-router.route("/:courseId").put(verifyJWT, authorizeRoles("admin"), updateCourse).delete(verifyJWT, authorizeRoles("admin"), deleteCourse);
+router.route("/:courseId").put(verifyJWT, authorizeRoles("admin"), upload.single("thumbnail"), updateCourse).delete(verifyJWT, authorizeRoles("admin"), deleteCourse);
 router.route("/:courseId/publish").put(verifyJWT, authorizeRoles("admin"), publishCourse);
 router.route("/:courseId/unpublish").put(verifyJWT, authorizeRoles("admin"), unpublishCourse);
 

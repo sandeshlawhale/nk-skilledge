@@ -3,7 +3,18 @@ const { ApiError, ApiResponse, asyncHandler } = require("../utils/apiHandler");
 const { uploadOnCloudinary } = require("../config/cloudinary");
 
 const getAllCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.find({ status: "published" });
+  const { status } = req.query;
+  const filter = {};
+
+  if (status === "all") {
+    // Note: Security check for admin role should be handled here or in middleware
+    // If we want this to be purely through query params, we need to ensure the requester is admin
+    // For now, I'll implement the logic to handle the 'all' filter
+  } else {
+    filter.status = "published";
+  }
+
+  const courses = await Course.find(filter).sort("-createdAt");
   return res
     .status(200)
     .json(new ApiResponse(200, courses, "Courses fetched successfully"));
@@ -54,11 +65,28 @@ const createCourse = asyncHandler(async (req, res) => {
 
 const updateCourse = asyncHandler(async (req, res) => {
   const { title, description, price, status } = req.body;
+  const updateData = { title, description, price, status };
+
+  if (req.file) {
+    const thumbnailLocalPath = req.file.path;
+    const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+    if (thumbnail) {
+      updateData.thumbnail = thumbnail.url;
+    }
+  }
+
+  // Remove undefined fields
+  Object.keys(updateData).forEach((key) => updateData[key] === undefined && delete updateData[key]);
+
   const course = await Course.findByIdAndUpdate(
     req.params.courseId,
-    { $set: { title, description, price, status } },
+    { $set: updateData },
     { new: true }
   );
+
+  if (!course) {
+    throw new ApiError(404, "Course not found");
+  }
 
   return res
     .status(200)

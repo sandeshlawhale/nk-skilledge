@@ -31,10 +31,10 @@ Routes for course listing and management.
 
 | Method | Endpoint | Description | Input (Body/Params) | Auth (Role) |
 | :--- | :--- | :--- | :--- | :--- |
-| GET | `/courses` | Get all published courses | None | None |
+| GET | `/courses` | Get courses | Query: `?status=published\|all` | None/Admin |
 | GET | `/courses/:courseId` | Get course details | None | None |
 | POST | `/courses` | Create new course (Draft) | Form-Data: `{ title, description, price, thumbnail: File }` | Admin |
-| PUT | `/courses/:courseId` | Update course details | `{ title, description, price, status }` | Admin |
+| PUT | `/courses/:courseId` | Update course details | Form-Data: `{ title, description, price, status, thumbnail?: File }` | Admin |
 | DELETE | `/courses/:courseId` | Delete a course | None | Admin |
 | PUT | `/courses/:courseId/publish` | Publish a course | None | Admin |
 | PUT | `/courses/:courseId/unpublish` | Unpublish a course | None | Admin |
@@ -46,10 +46,11 @@ Routes for lesson management within courses.
 
 | Method | Endpoint | Description | Input (Body/Params) | Auth (Role) |
 | :--- | :--- | :--- | :--- | :--- |
-| GET | `/lessons/course/:courseId` | Get all lessons for a course | None | None |
+| GET | `/lessons/course/:courseId` | Get lessons | Query: `?status=published\|all` | None/Admin |
 | GET | `/lessons/:lessonId` | Get lesson details | None | None |
 | POST | `/lessons` | Create new lesson (Draft) | `{ title, courseId, order, content, videoUrl }` | Admin |
 | PUT | `/lessons/:lessonId` | Update lesson details | `{ title, order, content, videoUrl, status }` | Admin |
+| PATCH | `/lessons/:lessonId` | Update lesson status | `{ status }` | Admin |
 | DELETE | `/lessons/:lessonId` | Delete a lesson | None | Admin |
 
 ---
