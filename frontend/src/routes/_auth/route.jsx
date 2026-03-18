@@ -15,6 +15,7 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarTrigger,
+  SidebarNotch,
   useSidebar
 } from '@/components/ui/sidebar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -55,7 +56,8 @@ function DashboardSidebar() {
   const navItems = isAdmin ? adminNavigation : studentNavigation
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-slate-200">
+    <Sidebar collapsible="icon" className="border-r border-slate-200 relative">
+      <SidebarNotch />
       <SidebarHeader className="h-16 flex items-center border-b border-slate-200 p-0">
         <button
           onClick={() => toggleSidebar()}
@@ -75,11 +77,13 @@ function DashboardSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => {
-                const isActive = router.location.pathname === item.href || (item.href !== '/' && router.location.pathname.startsWith(item.href + '/'))
+                const isActive = (item.href === '/students' || item.href === '/admin')
+                  ? router.location.pathname === item.href
+                  : router.location.pathname === item.href || (item.href !== '/' && router.location.pathname.startsWith(item.href + '/'))
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
-                      <Link to={item.href} className="flex items-center gap-3">
+                      <Link to={item.href} className="flex items-center gap-3 w-full">
                         <item.icon className={`h-4 w-4 ${isActive ? (isAdmin ? 'text-orange-500' : 'text-primary') : 'text-slate-500'}`} />
                         <span className="font-medium">{item.name}</span>
                       </Link>
