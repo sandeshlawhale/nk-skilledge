@@ -6,6 +6,7 @@ export const useAuthStore = create(
   persist(
     (set) => ({
       user: null,
+      accessToken: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
@@ -20,7 +21,7 @@ export const useAuthStore = create(
           })
           const data = await response.json()
           if (data.success) {
-            set({ user: data.data.user, isAuthenticated: true, isLoading: false })
+            set({ user: data.data.user, accessToken: data.data.accessToken, isAuthenticated: true, isLoading: false })
             return { success: true }
           } else {
             set({ error: data.message, isLoading: false })
@@ -42,7 +43,7 @@ export const useAuthStore = create(
           })
           const data = await response.json()
           if (data.success) {
-            set({ user: data.data.user, isAuthenticated: true, isLoading: false })
+            set({ user: data.data.user, accessToken: data.data.accessToken || null, isAuthenticated: true, isLoading: false })
             return { success: true }
           } else {
             set({ error: data.message, isLoading: false })
@@ -60,7 +61,7 @@ export const useAuthStore = create(
         } catch (error) {
           console.error('Logout failed', error)
         } finally {
-          set({ user: null, isAuthenticated: false })
+          set({ user: null, accessToken: null, isAuthenticated: false })
         }
       },
 
