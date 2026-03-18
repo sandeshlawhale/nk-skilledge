@@ -23,7 +23,10 @@ export function Header() {
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              <Link to="/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50">
+              <Link 
+                to={useAuthStore.getState().user?.role === 'admin' ? '/admin' : '/dashboard'} 
+                className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50"
+              >
                 Dashboard
               </Link>
               <button

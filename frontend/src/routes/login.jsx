@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/login')({
   component: Login,
@@ -11,7 +12,17 @@ export const Route = createFileRoute('/login')({
 
 function Login() {
   const navigate = useNavigate()
-  const { login, isLoading, error } = useAuthStore()
+  const { login, isLoading, error, isAuthenticated, user } = useAuthStore()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (user?.role === 'admin') {
+        navigate({ to: '/admin', replace: true })
+      } else {
+        navigate({ to: '/dashboard', replace: true })
+      }
+    }
+  }, [isAuthenticated, user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '@/utils/api'
-import { Users, BookOpen, DollarSign, TrendingUp, Clock, UserPlus, CreditCard } from 'lucide-react'
+import { Users, BookOpen, DollarSign, TrendingUp, Clock, UserPlus, CreditCard, ChevronRight } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Link } from '@tanstack/react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -94,7 +95,9 @@ function AdminOverview() {
               <CardTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" /> Recent Registrations
               </CardTitle>
-              <Button variant="ghost" size="sm" className="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-primary">View All</Button>
+              <Button asChild variant="ghost" size="sm" className="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-primary">
+                <Link to="/admin/students">View All</Link>
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="p-8">

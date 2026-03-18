@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
+import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,7 +12,17 @@ export const Route = createFileRoute('/register')({
 
 function Register() {
   const navigate = useNavigate()
-  const { register, isLoading, error } = useAuthStore()
+  const { register, isLoading, error, isAuthenticated, user } = useAuthStore()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (user?.role === 'admin') {
+        navigate({ to: '/admin', replace: true })
+      } else {
+        navigate({ to: '/dashboard', replace: true })
+      }
+    }
+  }, [isAuthenticated, user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

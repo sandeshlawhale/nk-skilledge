@@ -20,7 +20,7 @@ function AllCourses() {
         const response = await fetch(`${API_BASE_URL}/courses`)
         const data = await response.json()
         if (data.success) {
-          setCourses(data.data)
+          setCourses(data.data.filter(c => c.status === 'published'))
         }
       } catch (error) {
         console.error('Error fetching courses:', error)
@@ -41,56 +41,68 @@ function AllCourses() {
   }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 font-geist">Explore Courses</h1>
-        <p className="text-slate-500 mt-1">Discover our range of professional courses and master new skills.</p>
+    <div className="space-y-10 max-w-7xl mx-auto font-geist">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+          <Badge className="bg-primary/10 text-primary border-primary/20 font-bold mb-3 uppercase tracking-widest">Course Catalog</Badge>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 uppercase italic">Explore Excellence</h1>
+          <p className="text-slate-500 font-medium italic mt-1">Discover industry-leading curriculums designed for your growth.</p>
+        </div>
+        <div className="flex gap-2">
+           <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
+              Filter: All
+           </Badge>
+           <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
+              Sort: Popular
+           </Badge>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {courses.map((course) => (
-          <Card key={course._id} className="group overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm">
-            <div className="relative aspect-video overflow-hidden group-hover:cursor-pointer">
+          <Card key={course._id} className="group overflow-hidden border-0 shadow-sm hover:shadow-2xl transition-all duration-500 bg-white rounded-[2rem] flex flex-col">
+            <div className="relative aspect-video overflow-hidden">
               <img 
                 src={course.thumbnail || 'https://placehold.co/600x400/e2e8f0/4f46e5?text=Course'} 
                 alt={course.title} 
-                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" 
+                className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" 
               />
-              <div className="absolute top-3 right-3">
-                <Badge className="bg-white/90 backdrop-blur text-primary font-bold shadow-sm border-0">
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-4 right-4">
+                <Badge className="bg-white/90 backdrop-blur-md text-slate-900 font-black shadow-lg border-0 px-4 py-1.5 rounded-full uppercase text-[10px] tracking-widest">
                   {course.category || 'Professional'}
                 </Badge>
               </div>
             </div>
             
-            <CardHeader className="p-5 pb-0">
-              <div className="flex items-center gap-2 mb-2 text-primary font-semibold text-xs uppercase tracking-wider">
-                <BookOpen className="h-3.5 w-3.5" />
-                {course.lessonsCount || 0} Lessons
+            <CardHeader className="p-8 pb-0">
+              <div className="flex items-center gap-3 mb-4 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
+                <div className="h-1.5 w-6 bg-primary rounded-full"></div>
+                {course.lessonsCount || 0} Modules
               </div>
-              <CardTitle className="text-xl font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-1">
+              <CardTitle className="text-2xl font-black text-slate-900 group-hover:text-primary transition-colors line-clamp-1 uppercase italic tracking-tighter">
                 {course.title}
               </CardTitle>
-              <CardDescription className="line-clamp-2 text-slate-600 mt-2 min-h-12">
+              <CardDescription className="line-clamp-2 text-slate-500 mt-3 min-h-[48px] font-medium leading-relaxed italic">
                 {course.description}
               </CardDescription>
             </CardHeader>
             
-            <CardContent className="p-5 flex items-center justify-between text-sm">
-              <div className="flex items-center gap-1.5 text-slate-500">
-                <Clock className="h-4 w-4" />
-                <span>{course.duration || 'Flexible'}</span>
+            <CardContent className="px-8 py-6 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                <Clock className="h-3.5 w-3.5" />
+                <span>{course.duration || 'Self-Paced'}</span>
               </div>
-              <div className="flex items-center gap-1 text-amber-500 font-bold">
-                <Star className="h-4 w-4 fill-amber-500" />
-                <span>4.8</span>
+              <div className="flex items-center gap-1.5 text-amber-500 font-black bg-amber-50 px-3 py-1 rounded-full">
+                <Star className="h-3.5 w-3.5 fill-amber-500" />
+                <span className="text-xs">4.9</span>
               </div>
             </CardContent>
             
-            <CardFooter className="p-5 pt-0 mt-auto">
-              <Button asChild className="w-full bg-slate-900 hover:bg-primary transition-all duration-300">
-                <Link to={`/dashboard/course/${course._id}`} className="flex items-center justify-center gap-2">
-                  View Details <Info className="h-4 w-4" />
+            <CardFooter className="p-8 pt-0 mt-auto">
+              <Button asChild className="w-full bg-slate-900 hover:bg-primary transition-all duration-300 h-14 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-indigo-50 group-hover:translate-y-[-2px]">
+                <Link to={`/dashboard/course/${course._id}`} className="flex items-center justify-center gap-3">
+                  Initialize Learning <ChevronRight className="h-4 w-4" />
                 </Link>
               </Button>
             </CardFooter>
@@ -99,8 +111,12 @@ function AllCourses() {
       </div>
       
       {courses.length === 0 && (
-        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
-          <p className="text-slate-500 font-medium">No courses available at the moment.</p>
+        <div className="text-center py-32 bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200">
+          <div className="h-24 w-24 bg-white rounded-3xl flex items-center justify-center text-slate-200 shadow-sm mx-auto mb-8">
+             <BookOpen className="h-12 w-12" />
+          </div>
+          <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tight italic">No courses found</h3>
+          <p className="text-slate-500 font-medium mt-3 italic">We're preparing new content for you. Check back shortly.</p>
         </div>
       )}
     </div>
