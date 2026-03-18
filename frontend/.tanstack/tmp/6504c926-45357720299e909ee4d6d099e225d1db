@@ -14,16 +14,15 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
-import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
+import { Route as AuthStudentsIndexRouteImport } from './routes/_auth/students/index'
 import { Route as AuthAdminIndexRouteImport } from './routes/_auth/admin/index'
-import { Route as AuthDashboardMyCoursesRouteImport } from './routes/_auth/dashboard/my-courses'
-import { Route as AuthDashboardAllCoursesRouteImport } from './routes/_auth/dashboard/all-courses'
+import { Route as AuthStudentsMyCoursesRouteImport } from './routes/_auth/students/my-courses'
+import { Route as AuthStudentsAllCoursesRouteImport } from './routes/_auth/students/all-courses'
 import { Route as AuthAdminStudentsRouteImport } from './routes/_auth/admin/students'
 import { Route as AuthAdminAllCoursesRouteImport } from './routes/_auth/admin/all-courses'
 import { Route as AuthAdminCoursesIndexRouteImport } from './routes/_auth/admin/courses/index'
-import { Route as AuthDashboardCourseCourseIdRouteImport } from './routes/_auth/dashboard/course/$courseId'
+import { Route as AuthStudentsCourseCourseIdRouteImport } from './routes/_auth/students/course/$courseId'
 import { Route as AuthAdminCoursesManageCourseIdRouteImport } from './routes/_auth/admin/courses/manage/$courseId'
-import { Route as AuthDashboardCourseCourseIdLessonLessonIdRouteImport } from './routes/_auth/dashboard/course/$courseId/lesson/$lessonId'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -48,9 +47,9 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRoute,
 } as any)
-const AuthDashboardRoute = AuthDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthStudentsIndexRoute = AuthStudentsIndexRouteImport.update({
+  id: '/students/',
+  path: '/students/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthAdminIndexRoute = AuthAdminIndexRouteImport.update({
@@ -58,15 +57,15 @@ const AuthAdminIndexRoute = AuthAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthDashboardMyCoursesRoute = AuthDashboardMyCoursesRouteImport.update({
-  id: '/my-courses',
-  path: '/my-courses',
-  getParentRoute: () => AuthDashboardRoute,
+const AuthStudentsMyCoursesRoute = AuthStudentsMyCoursesRouteImport.update({
+  id: '/students/my-courses',
+  path: '/students/my-courses',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthDashboardAllCoursesRoute = AuthDashboardAllCoursesRouteImport.update({
-  id: '/all-courses',
-  path: '/all-courses',
-  getParentRoute: () => AuthDashboardRoute,
+const AuthStudentsAllCoursesRoute = AuthStudentsAllCoursesRouteImport.update({
+  id: '/students/all-courses',
+  path: '/students/all-courses',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthAdminStudentsRoute = AuthAdminStudentsRouteImport.update({
   id: '/admin/students',
@@ -83,11 +82,11 @@ const AuthAdminCoursesIndexRoute = AuthAdminCoursesIndexRouteImport.update({
   path: '/admin/courses/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthDashboardCourseCourseIdRoute =
-  AuthDashboardCourseCourseIdRouteImport.update({
-    id: '/course/$courseId',
-    path: '/course/$courseId',
-    getParentRoute: () => AuthDashboardRoute,
+const AuthStudentsCourseCourseIdRoute =
+  AuthStudentsCourseCourseIdRouteImport.update({
+    id: '/students/course/$courseId',
+    path: '/students/course/$courseId',
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthAdminCoursesManageCourseIdRoute =
   AuthAdminCoursesManageCourseIdRouteImport.update({
@@ -95,42 +94,34 @@ const AuthAdminCoursesManageCourseIdRoute =
     path: '/admin/courses/manage/$courseId',
     getParentRoute: () => AuthRouteRoute,
   } as any)
-const AuthDashboardCourseCourseIdLessonLessonIdRoute =
-  AuthDashboardCourseCourseIdLessonLessonIdRouteImport.update({
-    id: '/lesson/$lessonId',
-    path: '/lesson/$lessonId',
-    getParentRoute: () => AuthDashboardCourseCourseIdRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/dashboard': typeof AuthDashboardRouteWithChildren
   '/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/admin/students': typeof AuthAdminStudentsRoute
-  '/dashboard/all-courses': typeof AuthDashboardAllCoursesRoute
-  '/dashboard/my-courses': typeof AuthDashboardMyCoursesRoute
+  '/students/all-courses': typeof AuthStudentsAllCoursesRoute
+  '/students/my-courses': typeof AuthStudentsMyCoursesRoute
   '/admin/': typeof AuthAdminIndexRoute
-  '/dashboard/course/$courseId': typeof AuthDashboardCourseCourseIdRouteWithChildren
+  '/students/': typeof AuthStudentsIndexRoute
+  '/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/admin/courses/': typeof AuthAdminCoursesIndexRoute
   '/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRoute
-  '/dashboard/course/$courseId/lesson/$lessonId': typeof AuthDashboardCourseCourseIdLessonLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/dashboard': typeof AuthDashboardRouteWithChildren
   '/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/admin/students': typeof AuthAdminStudentsRoute
-  '/dashboard/all-courses': typeof AuthDashboardAllCoursesRoute
-  '/dashboard/my-courses': typeof AuthDashboardMyCoursesRoute
+  '/students/all-courses': typeof AuthStudentsAllCoursesRoute
+  '/students/my-courses': typeof AuthStudentsMyCoursesRoute
   '/admin': typeof AuthAdminIndexRoute
-  '/dashboard/course/$courseId': typeof AuthDashboardCourseCourseIdRouteWithChildren
+  '/students': typeof AuthStudentsIndexRoute
+  '/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/admin/courses': typeof AuthAdminCoursesIndexRoute
   '/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRoute
-  '/dashboard/course/$courseId/lesson/$lessonId': typeof AuthDashboardCourseCourseIdLessonLessonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -138,17 +129,16 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/_auth/dashboard': typeof AuthDashboardRouteWithChildren
   '/_public/': typeof PublicIndexRoute
   '/_auth/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/_auth/admin/students': typeof AuthAdminStudentsRoute
-  '/_auth/dashboard/all-courses': typeof AuthDashboardAllCoursesRoute
-  '/_auth/dashboard/my-courses': typeof AuthDashboardMyCoursesRoute
+  '/_auth/students/all-courses': typeof AuthStudentsAllCoursesRoute
+  '/_auth/students/my-courses': typeof AuthStudentsMyCoursesRoute
   '/_auth/admin/': typeof AuthAdminIndexRoute
-  '/_auth/dashboard/course/$courseId': typeof AuthDashboardCourseCourseIdRouteWithChildren
+  '/_auth/students/': typeof AuthStudentsIndexRoute
+  '/_auth/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/_auth/admin/courses/': typeof AuthAdminCoursesIndexRoute
   '/_auth/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRoute
-  '/_auth/dashboard/course/$courseId/lesson/$lessonId': typeof AuthDashboardCourseCourseIdLessonLessonIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,48 +146,45 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/dashboard'
     | '/admin/all-courses'
     | '/admin/students'
-    | '/dashboard/all-courses'
-    | '/dashboard/my-courses'
+    | '/students/all-courses'
+    | '/students/my-courses'
     | '/admin/'
-    | '/dashboard/course/$courseId'
+    | '/students/'
+    | '/students/course/$courseId'
     | '/admin/courses/'
     | '/admin/courses/manage/$courseId'
-    | '/dashboard/course/$courseId/lesson/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
-    | '/dashboard'
     | '/admin/all-courses'
     | '/admin/students'
-    | '/dashboard/all-courses'
-    | '/dashboard/my-courses'
+    | '/students/all-courses'
+    | '/students/my-courses'
     | '/admin'
-    | '/dashboard/course/$courseId'
+    | '/students'
+    | '/students/course/$courseId'
     | '/admin/courses'
     | '/admin/courses/manage/$courseId'
-    | '/dashboard/course/$courseId/lesson/$lessonId'
   id:
     | '__root__'
     | '/_auth'
     | '/_public'
     | '/login'
     | '/register'
-    | '/_auth/dashboard'
     | '/_public/'
     | '/_auth/admin/all-courses'
     | '/_auth/admin/students'
-    | '/_auth/dashboard/all-courses'
-    | '/_auth/dashboard/my-courses'
+    | '/_auth/students/all-courses'
+    | '/_auth/students/my-courses'
     | '/_auth/admin/'
-    | '/_auth/dashboard/course/$courseId'
+    | '/_auth/students/'
+    | '/_auth/students/course/$courseId'
     | '/_auth/admin/courses/'
     | '/_auth/admin/courses/manage/$courseId'
-    | '/_auth/dashboard/course/$courseId/lesson/$lessonId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -244,11 +231,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_auth/dashboard': {
-      id: '/_auth/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthDashboardRouteImport
+    '/_auth/students/': {
+      id: '/_auth/students/'
+      path: '/students'
+      fullPath: '/students/'
+      preLoaderRoute: typeof AuthStudentsIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_auth/admin/': {
@@ -258,19 +245,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/dashboard/my-courses': {
-      id: '/_auth/dashboard/my-courses'
-      path: '/my-courses'
-      fullPath: '/dashboard/my-courses'
-      preLoaderRoute: typeof AuthDashboardMyCoursesRouteImport
-      parentRoute: typeof AuthDashboardRoute
+    '/_auth/students/my-courses': {
+      id: '/_auth/students/my-courses'
+      path: '/students/my-courses'
+      fullPath: '/students/my-courses'
+      preLoaderRoute: typeof AuthStudentsMyCoursesRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/dashboard/all-courses': {
-      id: '/_auth/dashboard/all-courses'
-      path: '/all-courses'
-      fullPath: '/dashboard/all-courses'
-      preLoaderRoute: typeof AuthDashboardAllCoursesRouteImport
-      parentRoute: typeof AuthDashboardRoute
+    '/_auth/students/all-courses': {
+      id: '/_auth/students/all-courses'
+      path: '/students/all-courses'
+      fullPath: '/students/all-courses'
+      preLoaderRoute: typeof AuthStudentsAllCoursesRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/admin/students': {
       id: '/_auth/admin/students'
@@ -293,12 +280,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminCoursesIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/dashboard/course/$courseId': {
-      id: '/_auth/dashboard/course/$courseId'
-      path: '/course/$courseId'
-      fullPath: '/dashboard/course/$courseId'
-      preLoaderRoute: typeof AuthDashboardCourseCourseIdRouteImport
-      parentRoute: typeof AuthDashboardRoute
+    '/_auth/students/course/$courseId': {
+      id: '/_auth/students/course/$courseId'
+      path: '/students/course/$courseId'
+      fullPath: '/students/course/$courseId'
+      preLoaderRoute: typeof AuthStudentsCourseCourseIdRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/admin/courses/manage/$courseId': {
       id: '/_auth/admin/courses/manage/$courseId'
@@ -307,62 +294,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminCoursesManageCourseIdRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/dashboard/course/$courseId/lesson/$lessonId': {
-      id: '/_auth/dashboard/course/$courseId/lesson/$lessonId'
-      path: '/lesson/$lessonId'
-      fullPath: '/dashboard/course/$courseId/lesson/$lessonId'
-      preLoaderRoute: typeof AuthDashboardCourseCourseIdLessonLessonIdRouteImport
-      parentRoute: typeof AuthDashboardCourseCourseIdRoute
-    }
   }
 }
-
-interface AuthDashboardCourseCourseIdRouteChildren {
-  AuthDashboardCourseCourseIdLessonLessonIdRoute: typeof AuthDashboardCourseCourseIdLessonLessonIdRoute
-}
-
-const AuthDashboardCourseCourseIdRouteChildren: AuthDashboardCourseCourseIdRouteChildren =
-  {
-    AuthDashboardCourseCourseIdLessonLessonIdRoute:
-      AuthDashboardCourseCourseIdLessonLessonIdRoute,
-  }
-
-const AuthDashboardCourseCourseIdRouteWithChildren =
-  AuthDashboardCourseCourseIdRoute._addFileChildren(
-    AuthDashboardCourseCourseIdRouteChildren,
-  )
-
-interface AuthDashboardRouteChildren {
-  AuthDashboardAllCoursesRoute: typeof AuthDashboardAllCoursesRoute
-  AuthDashboardMyCoursesRoute: typeof AuthDashboardMyCoursesRoute
-  AuthDashboardCourseCourseIdRoute: typeof AuthDashboardCourseCourseIdRouteWithChildren
-}
-
-const AuthDashboardRouteChildren: AuthDashboardRouteChildren = {
-  AuthDashboardAllCoursesRoute: AuthDashboardAllCoursesRoute,
-  AuthDashboardMyCoursesRoute: AuthDashboardMyCoursesRoute,
-  AuthDashboardCourseCourseIdRoute:
-    AuthDashboardCourseCourseIdRouteWithChildren,
-}
-
-const AuthDashboardRouteWithChildren = AuthDashboardRoute._addFileChildren(
-  AuthDashboardRouteChildren,
-)
 
 interface AuthRouteRouteChildren {
-  AuthDashboardRoute: typeof AuthDashboardRouteWithChildren
   AuthAdminAllCoursesRoute: typeof AuthAdminAllCoursesRoute
   AuthAdminStudentsRoute: typeof AuthAdminStudentsRoute
+  AuthStudentsAllCoursesRoute: typeof AuthStudentsAllCoursesRoute
+  AuthStudentsMyCoursesRoute: typeof AuthStudentsMyCoursesRoute
   AuthAdminIndexRoute: typeof AuthAdminIndexRoute
+  AuthStudentsIndexRoute: typeof AuthStudentsIndexRoute
+  AuthStudentsCourseCourseIdRoute: typeof AuthStudentsCourseCourseIdRoute
   AuthAdminCoursesIndexRoute: typeof AuthAdminCoursesIndexRoute
   AuthAdminCoursesManageCourseIdRoute: typeof AuthAdminCoursesManageCourseIdRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthDashboardRoute: AuthDashboardRouteWithChildren,
   AuthAdminAllCoursesRoute: AuthAdminAllCoursesRoute,
   AuthAdminStudentsRoute: AuthAdminStudentsRoute,
+  AuthStudentsAllCoursesRoute: AuthStudentsAllCoursesRoute,
+  AuthStudentsMyCoursesRoute: AuthStudentsMyCoursesRoute,
   AuthAdminIndexRoute: AuthAdminIndexRoute,
+  AuthStudentsIndexRoute: AuthStudentsIndexRoute,
+  AuthStudentsCourseCourseIdRoute: AuthStudentsCourseCourseIdRoute,
   AuthAdminCoursesIndexRoute: AuthAdminCoursesIndexRoute,
   AuthAdminCoursesManageCourseIdRoute: AuthAdminCoursesManageCourseIdRoute,
 }

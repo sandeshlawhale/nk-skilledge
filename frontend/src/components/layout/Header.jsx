@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 
 export function Header() {
-  const { isAuthenticated, logout } = useAuthStore()
+  const { isAuthenticated, logout, user } = useAuthStore()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
@@ -23,8 +23,8 @@ export function Header() {
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              <Link 
-                to={useAuthStore.getState().user?.role === 'admin' ? '/admin' : '/dashboard'} 
+              <Link
+                to={user?.role === 'admin' ? '/admin' : '/students'}
                 className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50"
               >
                 Dashboard

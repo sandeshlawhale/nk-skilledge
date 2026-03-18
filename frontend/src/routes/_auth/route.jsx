@@ -40,8 +40,9 @@ function DashboardSidebar() {
   const isAdmin = user?.role === 'admin'
 
   const studentNavigation = [
-    { name: 'My Courses', href: '/dashboard/my-courses', icon: BookOpen },
-    { name: 'All Courses', href: '/dashboard/all-courses', icon: Grid },
+    { name: 'Dashboard', href: '/students', icon: LayoutDashboard },
+    { name: 'My Courses', href: '/students/my-courses', icon: BookOpen },
+    { name: 'All Courses', href: '/students/all-courses', icon: Grid },
   ]
 
   const adminNavigation = [

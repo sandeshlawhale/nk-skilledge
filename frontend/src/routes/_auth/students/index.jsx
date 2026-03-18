@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
@@ -7,7 +7,7 @@ import { DASHBOARD_COURSES } from '@/constants'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 
-export const Route = createFileRoute('/_auth/dashboard')({
+export const Route = createFileRoute('/_auth/students/')({
   component: Dashboard,
 })
 
@@ -120,8 +120,10 @@ function Dashboard() {
                     </div>
                     <Progress value={course.progress} className={`h-1.5 bg-slate-100 ${course.progress === 100 ? '[&>div]:bg-green-500' : '[&>div]:bg-primary'}`} />
                   </div>
-                  <Button variant={course.progress === 100 ? 'outline' : 'default'} className={`w-full h-12 rounded-xl font-bold uppercase tracking-wider transition-all ${course.progress !== 100 ? 'bg-slate-900 group-hover:bg-primary shadow-lg shadow-indigo-50' : 'border-slate-200'}`}>
-                    {course.progress === 0 ? 'Initialize Learning' : course.progress === 100 ? 'Review Content' : 'Resume Module'}
+                  <Button asChild variant={course.progress === 100 ? 'outline' : 'default'} className={`w-full h-12 rounded-xl font-bold uppercase tracking-wider transition-all ${course.progress !== 100 ? 'bg-slate-900 group-hover:bg-primary shadow-lg shadow-indigo-50' : 'border-slate-200'}`}>
+                    <Link to={`/students/course/${course.id}`}>
+                      {course.progress === 0 ? 'Initialize Learning' : course.progress === 100 ? 'Review Content' : 'Resume Module'}
+                    </Link>
                   </Button>
                 </div>
               </div>

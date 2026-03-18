@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { PlayCircle, Clock, Award, MoreVertical } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export const Route = createFileRoute('/_auth/dashboard/my-courses')({
+export const Route = createFileRoute('/_auth/students/my-courses')({
   component: MyCourses,
 })
 

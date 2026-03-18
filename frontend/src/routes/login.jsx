@@ -19,7 +19,7 @@ function Login() {
       if (user?.role === 'admin') {
         navigate({ to: '/admin', replace: true })
       } else {
-        navigate({ to: '/dashboard', replace: true })
+        navigate({ to: '/students', replace: true })
       }
     }
   }, [isAuthenticated, user, navigate])
@@ -36,7 +36,7 @@ function Login() {
       if (user?.role === 'admin') {
         navigate({ to: '/admin' })
       } else {
-        navigate({ to: '/dashboard' })
+        navigate({ to: '/students' })
       }
     }
   }

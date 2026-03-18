@@ -19,7 +19,7 @@ function Register() {
       if (user?.role === 'admin') {
         navigate({ to: '/admin', replace: true })
       } else {
-        navigate({ to: '/dashboard', replace: true })
+        navigate({ to: '/students', replace: true })
       }
     }
   }, [isAuthenticated, user, navigate])
@@ -38,7 +38,7 @@ function Register() {
     })
 
     if (result.success) {
-      navigate({ to: '/dashboard' })
+      navigate({ to: '/students' })
     }
   }
 

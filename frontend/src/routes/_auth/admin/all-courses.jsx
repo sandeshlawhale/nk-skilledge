@@ -96,7 +96,7 @@ function AdminAllCourses() {
             
             <CardFooter className="p-6 pt-0 mt-auto">
                <Button asChild className="w-full bg-slate-900 hover:bg-primary transition-all duration-300 h-12 rounded-xl font-black uppercase tracking-widest shadow-xl shadow-slate-200">
-                  <Link to={`/dashboard/course/${course._id}`} className="flex items-center justify-center gap-2">
+                  <Link to={`/students/course/${course._id}`} className="flex items-center justify-center gap-2">
                     Live Preview <Info className="h-4 w-4" />
                   </Link>
                </Button>
