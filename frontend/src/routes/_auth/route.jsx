@@ -139,7 +139,7 @@ function AuthLayout() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-slate-50">
+      <div className="flex h-screen overflow-hidden w-full bg-slate-50">
         <DashboardSidebar />
 
         <div className="flex flex-col flex-1 w-full min-w-0">
