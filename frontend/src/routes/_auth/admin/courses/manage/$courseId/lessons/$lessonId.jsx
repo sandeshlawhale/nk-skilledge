@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import {
   ArrowLeft, Video, FileText, Plus, Trash2, X, Loader2, Edit, Save,
-  CheckSquare, Code2, ClipboardList, ChevronDown, ChevronUp
+  CheckSquare, Code2, ClipboardList, ChevronDown, ChevronUp,
+  PlayCircle, ExternalLink
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
@@ -20,6 +21,17 @@ const TASK_TYPES = [
   { value: 'coding', label: 'Coding', icon: Code2, color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
   { value: 'assignment', label: 'Assignment', icon: ClipboardList, color: 'bg-amber-100 text-amber-700 border-amber-200' },
 ]
+
+function getVideoEmbed(url) {
+  if (!url) return null
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/)
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`
+  const vm = url.match(/vimeo\.com\/(\d+)/)
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}`
+  const gd = url.match(/drive\.google\.com\/file\/d\/([^/]+)/)
+  if (gd) return `https://drive.google.com/file/d/${gd[1]}/preview`
+  return null
+}
 
 function LessonManager() {
   const { courseId, lessonId } = Route.useParams()
@@ -310,6 +322,61 @@ function LessonManager() {
           </div>
         )}
       </div>
+
+      {/* Video Player */}
+      {!isEditingLesson && lesson?.videoUrl && (() => {
+        const embedUrl = getVideoEmbed(lesson.videoUrl)
+        return (
+          <div className="rounded-3xl overflow-hidden bg-black shadow-xl border border-slate-800">
+            {embedUrl ? (
+              <div className="aspect-video">
+                <iframe
+                  src={embedUrl}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title={lesson.title}
+                />
+              </div>
+            ) : (
+              <div className="aspect-video flex flex-col items-center justify-center bg-slate-900 text-white gap-4">
+                <PlayCircle className="h-16 w-16 text-slate-600" />
+                <div className="text-center space-y-2">
+                  <p className="text-sm font-bold text-slate-400">Embedded preview not available for this URL</p>
+                  <a
+                    href={lesson.videoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-indigo-400 text-sm font-bold hover:text-indigo-300 underline"
+                  >
+                    <ExternalLink className="h-4 w-4" /> Open Video
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      })()}
+
+      {/* PDF Card */}
+      {!isEditingLesson && lesson?.pdfUrl && (
+        <Card className="border border-slate-100 rounded-2xl shadow-sm bg-white">
+          <CardContent className="p-5 flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+              <FileText className="h-6 w-6 text-amber-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-slate-900 text-sm">Lesson PDF / Reference Material</p>
+              <p className="text-xs text-slate-500 truncate">{lesson.pdfUrl}</p>
+            </div>
+            <a href={lesson.pdfUrl} target="_blank" rel="noreferrer">
+              <Button variant="outline" className="rounded-xl border-slate-200 h-9 text-xs font-bold shrink-0">
+                <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Open
+              </Button>
+            </a>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Lesson Description */}
       {!isEditingLesson && lesson?.content && (

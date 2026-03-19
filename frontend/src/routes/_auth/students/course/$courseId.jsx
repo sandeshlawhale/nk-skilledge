@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, Link, useParams } from '@tanstack/react-router'
+import { createFileRoute, Outlet, Link, useParams, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '@/utils/api'
 import { useAuthStore } from '@/store/auth'
@@ -21,20 +21,18 @@ function CourseLayout() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch course details
         const courseRes = await fetch(`${API_BASE_URL}/courses/${courseId}`)
         const courseData = await courseRes.json()
-        if (courseData.success) {
-          setCourse(courseData.data)
-        }
+        if (courseData.success) setCourse(courseData.data)
 
-        // Fetch enrollment status
         if (user?._id) {
           const enrollmentRes = await fetch(`${API_BASE_URL}/enrollments/user/${user._id}`)
           const enrollmentData = await enrollmentRes.json()
           if (enrollmentData.success) {
-            const foundEnrollment = enrollmentData.data.find(e => e.courseId._id === courseId || e.courseId === courseId)
-            setEnrollment(foundEnrollment)
+            const found = enrollmentData.data.find(
+              (e) => e.courseId._id === courseId || e.courseId === courseId
+            )
+            setEnrollment(found)
           }
         }
       } catch (error) {
@@ -43,14 +41,13 @@ function CourseLayout() {
         setIsLoading(false)
       }
     }
-
     fetchData()
   }, [courseId, user?._id])
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     )
   }
@@ -59,12 +56,10 @@ function CourseLayout() {
 
   return (
     <div className="flex flex-col lg:flex-row h-full gap-6 font-geist">
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-1 min-w-0">
         {isEnrolled ? (
-          <div className="space-y-6">
-            <Outlet />
-          </div>
+          <Outlet />
         ) : (
           <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200">
             <div className="aspect-video relative overflow-hidden bg-slate-100">
@@ -79,7 +74,6 @@ function CourseLayout() {
                 </div>
               </div>
             </div>
-
             <div className="p-8">
               <div className="flex items-center gap-3 mb-4">
                 <Badge variant="secondary" className="bg-indigo-50 text-indigo-700 font-bold px-3 py-1 border-0">
@@ -89,33 +83,25 @@ function CourseLayout() {
                   <Clock className="h-4 w-4" /> {course?.duration || '12 weeks'}
                 </span>
               </div>
-
               <h1 className="text-3xl font-bold text-slate-900 mb-6">{course?.title}</h1>
-
               <div className="prose prose-slate max-w-none">
                 <h3 className="text-xl font-bold text-slate-800 mb-3">About this Course</h3>
                 <p className="text-slate-600 leading-relaxed mb-6">
-                  {course?.description || "Master the skills needed to excel in this field with our comprehensive professional course. Designed for both beginners and intermediate learners."}
+                  {course?.description || 'Master the skills needed to excel in this field with our comprehensive professional course.'}
                 </p>
-
                 <h3 className="text-xl font-bold text-slate-800 mb-3">What you'll learn</h3>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-600 list-none p-0">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>Professional industry-standard techniques</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>Hands-on practical assignments</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>Lifetime access to course materials</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>Dedicated support and community access</span>
-                  </li>
+                  {[
+                    'Professional industry-standard techniques',
+                    'Hands-on practical assignments',
+                    'Lifetime access to course materials',
+                    'Dedicated support and community access',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -125,7 +111,7 @@ function CourseLayout() {
 
       {/* Right Sidebar */}
       <aside className="w-full lg:w-[400px] shrink-0 space-y-6">
-        {/* Course Progress / CTA Card */}
+        {/* Progress / CTA */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
           {isEnrolled ? (
             <div className="space-y-4">
@@ -144,7 +130,6 @@ function CourseLayout() {
                 <span className="text-3xl font-bold text-slate-900">₹{course?.price || '29,999'}</span>
                 <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-semibold">One-time payment</p>
               </div>
-
               <div className="space-y-3">
                 <Button className="w-full bg-slate-900 hover:bg-primary font-bold py-6 rounded-xl shadow-lg shadow-indigo-100">
                   <PhoneCall className="mr-2 h-5 w-5" /> Contact to Enroll
@@ -153,75 +138,103 @@ function CourseLayout() {
                   Get in touch with our team for enrollment details and payment options.
                 </p>
               </div>
-
               <div className="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100">
                 <h4 className="text-xs font-bold text-indigo-900 uppercase tracking-tight mb-2 flex items-center gap-1.5">
                   <Info className="h-3.5 w-3.5" /> Course Includes
                 </h4>
                 <ul className="text-xs text-indigo-800 space-y-2">
-                  <li className="flex items-center gap-2">
-                    <PlayCircle className="h-3.5 w-3.5 opacity-70" /> {course?.lessonsCount || '42'} Full HD Lessons
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <MessageSquare className="h-3.5 w-3.5 opacity-70" /> 1-on-1 Mentorship
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Award className="h-3.5 w-3.5 opacity-70" /> Certificate of Completion
-                  </li>
+                  <li className="flex items-center gap-2"><PlayCircle className="h-3.5 w-3.5 opacity-70" /> {course?.lessonsCount || '42'} Full HD Lessons</li>
+                  <li className="flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5 opacity-70" /> 1-on-1 Mentorship</li>
+                  <li className="flex items-center gap-2"><Award className="h-3.5 w-3.5 opacity-70" /> Certificate of Completion</li>
                 </ul>
               </div>
             </div>
           )}
         </div>
 
-        {/* Curriculum Sidebar */}
-        <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 flex flex-col max-h-[600px]">
-          <div className="p-5 border-b bg-slate-50/50 flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 flex items-center gap-2">
-              <LayoutList className="h-5 w-5 text-indigo-600" /> Course Content
-            </h3>
-            <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight">
-              {course?.lessonsCount || 0} Lessons
-            </Badge>
+        {/* Lesson Sidebar */}
+        <CourseSidebar courseId={courseId} isEnrolled={isEnrolled} />
+      </aside>
+    </div>
+  )
+}
+
+function CourseSidebar({ courseId, isEnrolled }) {
+  const [lessons, setLessons] = useState([])
+  const [isFetching, setIsFetching] = useState(true)
+
+  useEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/lessons/course/${courseId}?status=published`)
+        const data = await res.json()
+        if (data.success) setLessons(data.data)
+      } catch (err) {
+        console.error('Error fetching lessons:', err)
+      } finally {
+        setIsFetching(false)
+      }
+    }
+    fetchLessons()
+  }, [courseId])
+
+  return (
+    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 flex flex-col max-h-[600px]">
+      <div className="p-5 border-b bg-slate-50/50 flex items-center justify-between shrink-0">
+        <h3 className="font-bold text-slate-900 flex items-center gap-2">
+          <LayoutList className="h-5 w-5 text-indigo-600" /> Course Content
+        </h3>
+        <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight">
+          {lessons.length} Lessons
+        </Badge>
+      </div>
+
+      <div className="overflow-y-auto flex-1 p-2">
+        {isFetching ? (
+          <div className="flex items-center justify-center p-8">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
           </div>
-
-          <div className="overflow-y-auto flex-1 p-2">
-            {/* Mocking lessons for now as we need to fetch them from backend */}
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div
-                key={i}
-                className={`flex items-start gap-4 p-4 rounded-xl transition-all ${!isEnrolled ? 'opacity-50 cursor-not-allowed group' : 'hover:bg-slate-50 cursor-pointer'
-                  }`}
-              >
-                <div className="mt-0.5 shrink-0">
-                  {!isEnrolled || i > 2 ? (
-                    <Lock className="h-5 w-5 text-slate-300" />
-                  ) : (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                  )}
+        ) : lessons.length === 0 ? (
+          <div className="p-6 text-center text-sm text-slate-400 italic">No published lessons yet.</div>
+        ) : (
+          <>
+            {lessons.map((lesson, i) =>
+              !isEnrolled ? (
+                <div
+                  key={lesson._id}
+                  className="flex items-start gap-4 p-4 rounded-xl opacity-60 cursor-not-allowed select-none"
+                >
+                  <Lock className="h-5 w-5 text-slate-300 mt-0.5 shrink-0" />
+                  <h4 className="text-sm font-bold text-slate-800 truncate">
+                    {(i + 1).toString().padStart(2, '0')}. {lesson.title}
+                  </h4>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-slate-800 truncate">Lesson {i}: Professional Modules</h4>
-                  <p className="text-xs text-slate-500 mt-1 flex items-center gap-2">
-                    <Clock className="h-3 w-3" /> 12:45
-                  </p>
-                </div>
-                {!isEnrolled && (
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Lock className="h-4 w-4 text-primary" />
+              ) : (
+                <Link
+                  key={lesson._id}
+                  to={`/students/course/${courseId}/lesson/${lesson._id}`}
+                  className="flex items-start gap-4 p-4 rounded-xl hover:bg-indigo-50/50 cursor-pointer transition-all group block"
+                >
+                  <PlayCircle className="h-5 w-5 text-indigo-400 group-hover:text-primary transition-colors mt-0.5 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-bold text-slate-800 truncate group-hover:text-primary transition-colors">
+                      {(i + 1).toString().padStart(2, '0')}. {lesson.title}
+                    </h4>
+                    {lesson.content && (
+                      <p className="text-xs text-slate-500 mt-0.5 truncate">{lesson.content}</p>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
-
+                </Link>
+              )
+            )}
             {!isEnrolled && (
               <div className="p-4 text-center">
                 <p className="text-xs text-slate-400 italic">Enroll to unlock all lessons</p>
               </div>
             )}
-          </div>
-        </div>
-      </aside>
+          </>
+        )}
+      </div>
     </div>
   )
 }

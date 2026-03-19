@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, Outlet, useChildMatches } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL, authFetch } from '@/utils/api'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,8 @@ export const Route = createFileRoute('/_auth/admin/courses/manage/$courseId')({
 function CourseManager() {
   const { courseId } = Route.useParams()
   const navigate = useNavigate()
+  const childMatches = useChildMatches()
+  const hasChildRoute = childMatches.length > 0
   const [course, setCourse] = useState(null)
   const [lessons, setLessons] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -133,6 +135,11 @@ function CourseManager() {
     } catch (err) {
       console.error('Delete lesson failed', err)
     }
+  }
+
+  // If a child route (lesson) is active, render it instead of the course manager UI
+  if (hasChildRoute) {
+    return <Outlet />
   }
 
   if (isLoading) return (
