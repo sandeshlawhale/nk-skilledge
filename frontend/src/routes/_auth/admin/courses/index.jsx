@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Plus, Search, Edit, Trash2, Upload, Image, BookOpen, Users, X, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { CourseCard } from '@/components/shared/CourseCard'
 
 export const Route = createFileRoute('/_auth/admin/courses/')({
   component: AdminCourses,
@@ -143,92 +144,56 @@ function AdminCourses() {
         </Button>
       </div>
 
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-4 justify-between items-center">
-        <div className="relative w-full sm:w-96">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+      <div className="bg-white p-3 rounded-none border border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center px-4">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
           <Input
-            className="pl-10 h-9 rounded-xl border-slate-200 focus:ring-primary shadow-none"
-            placeholder="Search courses by title..."
+            className="pl-9 h-9 rounded-none border-slate-200 focus:ring-slate-900 shadow-none text-xs font-bold"
+            placeholder="Search curricula..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <Badge variant="outline" className="h-9 px-4 rounded-xl border-slate-200 text-slate-500 font-medium">
-            {courses.length} Total
+          <Badge variant="outline" className="h-9 px-3 rounded-none border-slate-200 text-slate-500 font-black uppercase tracking-widest text-[9px]">
+            {courses.length} Units
           </Badge>
-          <Badge variant="outline" className="h-9 px-4 rounded-xl border-slate-200 text-green-600 font-medium">
-            {courses.filter(c => c.status === 'published').length} Published
-          </Badge>
-          <Badge variant="outline" className="h-9 px-4 rounded-xl border-slate-200 text-amber-600 font-medium">
-            {courses.filter(c => c.status === 'draft').length} Draft
+          <Badge variant="outline" className="h-9 px-3 rounded-none border-slate-200 text-green-600 font-black uppercase tracking-widest text-[9px]">
+            {courses.filter(c => c.status === 'published').length} Active
           </Badge>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredCourses.map((course) => (
-          <Card key={course._id} className="overflow-hidden flex flex-col group border-0 shadow-sm bg-white/50 backdrop-blur-sm rounded-2xl gap-2">
-            <div className="relative aspect-video overflow-hidden border-b border-slate-300">
-              <img
-                src={course.thumbnail || `https://placehold.co/600x400/e2e8f0/4f46e5?text=${encodeURIComponent(course.title)}`}
-                alt={course.title}
-                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute top-3 right-3 flex gap-2">
-                <Badge className="bg-white/90 backdrop-blur-md text-slate-900 font-bold border-0 shadow-sm">
-                  ₹{course.price || 'FREE'}
-                </Badge>
-                <Badge className={course.status === 'published' ? 'bg-green-500 text-white font-bold border-0' : 'bg-amber-500 text-white font-bold border-0'}>
-                  {course.status?.toUpperCase() || 'DRAFT'}
-                </Badge>
-              </div>
-            </div>
-
-            <CardHeader className="px-4 capitalize">
-              <CardTitle className="text-xl font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-1">
-                {course.title}
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent className="px-4 py-0 flex-1">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col p-3 bg-slate-50 border border-slate-100 transition-colors group-hover:bg-white group-hover:border-primary/20 rounded-xl">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">
-                    <BookOpen className="h-2.5 w-2.5" /> Lessons
-                  </span>
-                  <span className="text-xl font-bold text-slate-900">{course.lessonsCount || 0}</span>
-                </div>
-                <div className="flex flex-col p-3 bg-slate-50 rounded-xl border border-slate-100 transition-colors group-hover:bg-white group-hover:border-primary/20">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">
-                    <Users className="h-2.5 w-2.5" /> Students
-                  </span>
-                  <span className="text-xl font-bold text-slate-900">0</span>
-                </div>
-              </div>
-            </CardContent>
-
-            <CardFooter className="p-4 pt-4 flex gap-2 border-t border-slate-50/50 mt-4">
-              <Button variant="outline" onClick={() => navigate({ to: `/admin/courses/manage/${course._id}` })} className="flex-1 rounded-xl font-bold border-slate-200 hover:bg-slate-50 text-slate-600">
-                <Edit className="mr-2 h-4 w-4" /> EDIT
-              </Button>
-              <Button variant="outline" onClick={() => handleDeleteCourse(course._id)} className="flex-1 rounded-xl font-bold border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600">
-                <Trash2 className="mr-2 h-4 w-4" /> DELETE
-              </Button>
-            </CardFooter>
-          </Card>
+          <CourseCard
+            key={course._id}
+            course={course}
+            linkTo={`/admin/courses/manage/${course._id}`}
+            metadata={course.status === 'published' ? 'Active' : 'Draft'}
+            extraActions={
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDeleteCourse(course._id);
+                }}
+                className="text-[9px] font-black uppercase tracking-widest text-red-500 hover:text-red-700 transition-colors flex items-center gap-1 mt-1"
+              >
+                <Trash2 className="h-3 w-3" /> Remove Unit
+              </button>
+            }
+          />
         ))}
 
         {/* Dashed "New Course" card */}
         <div
           onClick={openModal}
-          className="border-2 border-dashed border-slate-200 bg-slate-50/30 hover:bg-white hover:border-primary/50 transition-all duration-300 flex flex-col items-center justify-center p-8 text-center h-full min-h-[350px] cursor-pointer group rounded-3xl shadow-none hover:shadow-xl hover:shadow-indigo-50"
+          className="border border-dashed border-slate-200 bg-slate-50/30 hover:bg-white hover:border-slate-900 transition-all duration-300 flex flex-col items-center justify-center p-8 text-center aspect-video cursor-pointer group rounded-none"
         >
-          <div className="h-20 w-20 bg-white shadow-sm flex items-center justify-center text-slate-400 group-hover:text-primary group-hover:scale-110 transition-all duration-300 rounded-2xl border border-slate-100 group-hover:border-primary/20">
-            <Plus className="h-10 w-10" />
+          <div className="h-10 w-10 bg-white flex items-center justify-center text-slate-300 group-hover:text-slate-900 transition-all duration-300 rounded-none border border-slate-100 group-hover:border-slate-900">
+            <Plus className="h-5 w-5" />
           </div>
-          <h3 className="font-bold text-xl text-slate-900 mt-6 font-geist">New Course</h3>
-          <p className="text-sm text-slate-500 mt-2 max-w-[220px] italic">Launch your next training program and empower your students.</p>
+          <h3 className="font-black text-xs text-slate-900 mt-4 uppercase tracking-widest leading-none">Initialize Unit</h3>
         </div>
       </div>
 

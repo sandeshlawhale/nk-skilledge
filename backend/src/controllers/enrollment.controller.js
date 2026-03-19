@@ -23,9 +23,25 @@ const enrollUser = asyncHandler(async (req, res) => {
 
 const getUserEnrollments = asyncHandler(async (req, res) => {
   const enrollments = await Enrollment.find({ userId: req.params.userId }).populate("courseId");
+  
+  const enrollmentsWithCount = await Promise.all(
+    enrollments
+      .filter(enrollment => enrollment.courseId && enrollment.courseId.status === "published")
+      .map(async (enrollment) => {
+        const eObj = enrollment.toObject();
+        if (eObj.courseId) {
+          eObj.courseId.lessonsCount = await require("../models/lesson.model").countDocuments({ 
+            courseId: eObj.courseId._id, 
+            status: "published" 
+          });
+        }
+        return eObj;
+      })
+  );
+
   return res
     .status(200)
-    .json(new ApiResponse(200, enrollments, "Enrollments fetched successfully"));
+    .json(new ApiResponse(200, enrollmentsWithCount, "Enrollments fetched successfully"));
 });
 
 const getCourseEnrollments = asyncHandler(async (req, res) => {

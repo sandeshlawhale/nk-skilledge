@@ -15,9 +15,20 @@ const getAllCourses = asyncHandler(async (req, res) => {
   }
 
   const courses = await Course.find(filter).sort("-createdAt");
+  
+  const coursesWithModuleCount = await Promise.all(
+    courses.map(async (course) => {
+      const lessonsCount = await require("../models/lesson.model").countDocuments({ 
+        courseId: course._id, 
+        status: "published" 
+      });
+      return { ...course.toObject(), lessonsCount };
+    })
+  );
+
   return res
     .status(200)
-    .json(new ApiResponse(200, courses, "Courses fetched successfully"));
+    .json(new ApiResponse(200, coursesWithModuleCount, "Courses fetched successfully"));
 });
 
 const getCourseById = asyncHandler(async (req, res) => {
@@ -25,9 +36,15 @@ const getCourseById = asyncHandler(async (req, res) => {
   if (!course) {
     throw new ApiError(404, "Course not found");
   }
+
+  const lessonsCount = await require("../models/lesson.model").countDocuments({ 
+    courseId: course._id, 
+    status: "published" 
+  });
+
   return res
     .status(200)
-    .json(new ApiResponse(200, course, "Course fetched successfully"));
+    .json(new ApiResponse(200, { ...course.toObject(), lessonsCount }, "Course fetched successfully"));
 });
 
 const createCourse = asyncHandler(async (req, res) => {

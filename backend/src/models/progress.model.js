@@ -17,6 +17,11 @@ const progressSchema = new mongoose.Schema(
       ref: "Lesson",
       required: true,
     },
+    type: {
+      type: String,
+      enum: ["video", "task"],
+      default: "task",
+    },
     taskId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Task",
@@ -24,6 +29,9 @@ const progressSchema = new mongoose.Schema(
     completed: {
       type: Boolean,
       default: false,
+    },
+    answer: {
+      type: String, // Store user's submission (MCQ selection, etc.)
     },
     completedAt: {
       type: Date,

@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { API_BASE_URL } from '@/utils/api'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { API_BASE_URL, authFetch } from '@/utils/api'
+import { useAuthStore } from '@/store/auth'
 import { Badge } from '@/components/ui/badge'
-import { BookOpen, Clock, Star, Info, ChevronRight } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
+import { CourseCard } from '@/components/shared/CourseCard'
 
 export const Route = createFileRoute('/_auth/students/all-courses')({
   component: AllCourses,
@@ -12,111 +12,82 @@ export const Route = createFileRoute('/_auth/students/all-courses')({
 
 function AllCourses() {
   const [courses, setCourses] = useState([])
+  const [enrollments, setEnrollments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const { user } = useAuthStore()
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/courses`)
-        const data = await response.json()
-        if (data.success) {
-          setCourses(data.data.filter(c => c.status === 'published'))
+        const [coursesRes, enrollmentsRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/courses`),
+          user?._id ? authFetch(`${API_BASE_URL}/enrollments/user/${user?._id}`) : Promise.resolve({ json: () => ({ success: true, data: [] }) })
+        ])
+
+        const cData = await coursesRes.json()
+        const eData = typeof enrollmentsRes.json === 'function' ? await enrollmentsRes.json() : { success: true, data: [] }
+
+        if (cData.success) {
+          setCourses(cData.data.filter(c => c.status === 'published'))
+        }
+        if (eData.success) {
+          setEnrollments(eData.data)
         }
       } catch (error) {
-        console.error('Error fetching courses:', error)
+        console.error('Error fetching data:', error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchCourses()
-  }, [])
+    fetchData()
+  }, [user?._id])
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="flex flex-col items-center justify-center h-64 gap-3">
+        <div className="animate-spin rounded-none h-6 w-6 border-b-2 border-primary"></div>
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Catalog...</p>
       </div>
     )
   }
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto font-geist">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+    <div className="space-y-6 max-w-7xl mx-auto font-geist">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 px-1">
         <div>
-          <Badge className="bg-primary/10 text-primary border-primary/20 font-bold mb-3 uppercase tracking-widest">Course Catalog</Badge>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 uppercase italic">Explore Excellence</h1>
-          <p className="text-slate-500 font-medium italic mt-1">Discover industry-leading curriculums designed for your growth.</p>
-        </div>
-        <div className="flex gap-2">
-          <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
-            Filter: All
-          </Badge>
-          <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
-            Sort: Popular
-          </Badge>
+          <Badge className="bg-primary/10 text-primary border-primary/20 font-black mb-2 uppercase tracking-widest text-[9px] rounded-none">Course Catalog</Badge>
+          <h1 className="text-3xl font-black tracking-tight text-slate-900 uppercase italic">Explore Excellence</h1>
+          <p className="text-slate-500 font-medium italic mt-0.5 text-xs">Discover industry-leading curriculums designed for your growth.</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {courses.map((course) => (
-          <Card key={course._id} className="group overflow-hidden border-0 shadow-sm hover:shadow-2xl transition-all duration-500 bg-white rounded-[2rem] flex flex-col">
-            <div className="relative aspect-video overflow-hidden">
-              <img
-                src={course.thumbnail || 'https://placehold.co/600x400/e2e8f0/4f46e5?text=Course'}
-                alt={course.title}
-                className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute top-4 right-4">
-                <Badge className="bg-white/90 backdrop-blur-md text-slate-900 font-black shadow-lg border-0 px-4 py-1.5 rounded-full uppercase text-[10px] tracking-widest">
-                  {course.category || 'Professional'}
-                </Badge>
-              </div>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {courses.map((course) => {
+          const enrollment = enrollments.find(e => {
+            const id = typeof e.courseId === 'object' ? e.courseId._id : e.courseId
+            return id === course._id
+          })
+          const progress = enrollment?.progress || 0
 
-            <CardHeader className="p-8 pb-0">
-              <div className="flex items-center gap-3 mb-4 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
-                <div className="h-1.5 w-6 bg-primary rounded-full"></div>
-                {course.lessonsCount || 0} Modules
-              </div>
-              <CardTitle className="text-2xl font-black text-slate-900 group-hover:text-primary transition-colors line-clamp-1 uppercase italic tracking-tighter">
-                {course.title}
-              </CardTitle>
-              <CardDescription className="line-clamp-2 text-slate-500 mt-3 min-h-[48px] font-medium leading-relaxed italic">
-                {course.description}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="px-8 py-6 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-                <Clock className="h-3.5 w-3.5" />
-                <span>{course.duration || 'Self-Paced'}</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-amber-500 font-black bg-amber-50 px-3 py-1 rounded-full">
-                <Star className="h-3.5 w-3.5 fill-amber-500" />
-                <span className="text-xs">4.9</span>
-              </div>
-            </CardContent>
-
-            <CardFooter className="p-8 pt-0 mt-auto">
-              <Button asChild className="w-full bg-slate-900 hover:bg-primary transition-all duration-300 h-14 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-indigo-50 group-hover:translate-y-[-2px]">
-                <Link to={`/students/course/${course._id}`} className="flex items-center justify-center gap-3">
-                  Initialize Learning <ChevronRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+          return (
+            <CourseCard 
+              key={course._id}
+              course={course}
+              progress={progress}
+              linkTo={`/students/course/${course._id}`}
+            />
+          )
+        })}
       </div>
 
       {courses.length === 0 && (
-        <div className="text-center py-32 bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200">
-          <div className="h-24 w-24 bg-white rounded-3xl flex items-center justify-center text-slate-200 shadow-sm mx-auto mb-8">
-            <BookOpen className="h-12 w-12" />
+        <div className="text-center py-20 bg-slate-50/50 rounded-none border border-dashed border-slate-200 px-4">
+          <div className="h-16 w-16 bg-white rounded-none flex items-center justify-center text-slate-200 shadow-sm mx-auto mb-6">
+            <BookOpen className="h-8 w-8" />
           </div>
-          <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tight italic">No courses found</h3>
-          <p className="text-slate-500 font-medium mt-3 italic">We're preparing new content for you. Check back shortly.</p>
+          <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">No courses found</h3>
+          <p className="text-slate-500 font-medium mt-2 italic text-sm">We're preparing new content for you. Check back shortly.</p>
         </div>
       )}
     </div>

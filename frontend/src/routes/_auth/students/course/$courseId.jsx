@@ -41,32 +41,59 @@ function getVideoEmbed(url) {
 }
 
 // In-file Task Component
-function TaskItem({ task, courseId, lessonId, userId, onComplete }) {
+function TaskItem({ task, courseId, lessonId, userId, initialProgress, onComplete }) {
   const [selected, setSelected] = useState(null)
   const [submitted, setSubmitted] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Initialize from database progress
+  useEffect(() => {
+    if (initialProgress) {
+      if (task.taskType === 'mcq') {
+        setSelected(initialProgress.answer || null)
+        setSubmitted(initialProgress.completed || false)
+        setIsCorrect(initialProgress.completed || false)
+      } else {
+        setSubmitted(initialProgress.completed)
+      }
+    }
+  }, [initialProgress, task])
+
   const handleSubmitMCQ = async () => {
     if (!selected) return
     setIsSubmitting(true)
     const correct = selected === task.correctAnswer
-    setIsCorrect(correct)
-    setSubmitted(true)
+    
+    try {
+      await authFetch(`${API_BASE_URL}/progress/complete-task`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          courseId, 
+          lessonId, 
+          taskId: task._id, 
+          type: 'task',
+          answer: selected,
+          completed: correct 
+        }),
+      })
+      
+      setIsCorrect(correct)
+      setSubmitted(true)
+      if (onComplete) onComplete(task._id)
 
-    if (correct) {
-      try {
-        await authFetch(`${API_BASE_URL}/progress/complete-task`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ courseId, lessonId, taskId: task._id }),
-        })
-        if (onComplete) onComplete(task._id)
-      } catch (err) {
-        console.error('Progress update failed:', err)
+      if (!correct) {
+        // If wrong, allow them to try again after 2 seconds
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
       }
+    } catch (err) {
+      console.error('Progress update failed:', err)
+    } finally {
+      setTimeout(() => setIsSubmitting(false), 500)
     }
-    setIsSubmitting(false)
   }
 
   const handleCompleteAssignment = async () => {
@@ -75,7 +102,7 @@ function TaskItem({ task, courseId, lessonId, userId, onComplete }) {
       await authFetch(`${API_BASE_URL}/progress/complete-task`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId, lessonId, taskId: task._id }),
+        body: JSON.stringify({ courseId, lessonId, taskId: task._id, type: 'task', completed: true }),
       })
       setSubmitted(true)
       if (onComplete) onComplete(task._id)
@@ -113,12 +140,16 @@ function TaskItem({ task, courseId, lessonId, userId, onComplete }) {
           })}
         </div>
         {!submitted ? (
-          <Button onClick={handleSubmitMCQ} disabled={!selected || isSubmitting} className="w-full bg-slate-900 hover:bg-primary h-12 rounded-xl font-black uppercase tracking-widest mt-4">
+          <Button onClick={handleSubmitMCQ} disabled={!selected || isSubmitting} className="w-full bg-slate-900 hover:bg-primary h-12 rounded-xl font-black uppercase tracking-widest mt-4 shadow-none border-b-4 border-slate-950 active:border-b-0 transition-all">
             {isSubmitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null} Submit Answer
           </Button>
         ) : (
-          <div className={`p-4 rounded-xl border-2 font-bold text-sm flex items-center gap-3 ${isCorrect ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
-            {isCorrect ? <><CheckCircle2 className="h-5 w-5" /> Correct!</> : <><AlertCircle className="h-5 w-5" /> Incorrect. Correct: {task.correctAnswer}</>}
+          <div className={`p-4 rounded-xl border-2 font-bold text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300 ${isCorrect ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+            {isCorrect ? (
+              <><CheckCircle2 className="h-5 w-5" /> Bullseye! Correct Answer: {task.correctAnswer}</>
+            ) : (
+              <><AlertCircle className="h-5 w-5" /> Incorrect selection. Try again in a moment...</>
+            )}
           </div>
         )}
       </div>
@@ -214,11 +245,11 @@ function LearningHub() {
       if (!user?._id) return;
       await authFetch(`${API_BASE_URL}/progress/complete-task`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: user._id,
           courseId,
           lessonId,
-          taskId: 'lesson_completed_manually'
+          type: 'video'
         })
       });
       fetchData();
@@ -243,18 +274,22 @@ function LearningHub() {
   // Calculate lesson status
   const lessonsWithStatus = lessons.map((lesson, index) => {
     const tasks = lessonTasks[lesson._id] || []
+    
+    // Check if video is completed
+    const isVideoCompleted = !lesson.videoUrl || progressData.some(p => p.lessonId === lesson._id && p.type === 'video' && p.completed)
+    
+    // Check which tasks are completed
     const completedTaskIds = progressData
-      .filter(p => p.lessonId === lesson._id && p.completed)
+      .filter(p => p.lessonId === lesson._id && p.type === 'task' && p.completed)
       .map(p => p.taskId)
 
-    let isCompleted = false
-    if (tasks.length > 0) {
-      isCompleted = tasks.every(t => completedTaskIds.includes(t._id))
-    } else {
-      isCompleted = completedTaskIds.includes('lesson_completed_manually')
-    }
+    const areTasksCompleted = tasks.length > 0 
+      ? tasks.every(t => completedTaskIds.includes(t._id))
+      : true
 
-    return { ...lesson, isCompleted, tasks, completedTaskIds }
+    const isCompleted = isVideoCompleted && areTasksCompleted
+
+    return { ...lesson, isCompleted, isVideoCompleted, tasks, completedTaskIds }
   })
 
   // Determine locking (second pass)
@@ -369,6 +404,13 @@ function LearningHub() {
                                     </div>
                                   )}
                                </div>
+                               <Button 
+                                 onClick={() => handleMarkLessonComplete(lesson._id)} 
+                                 disabled={lesson.isVideoCompleted}
+                                 className={`w-full h-11 rounded-none font-black uppercase tracking-widest text-[10px] shadow-none ${lesson.isVideoCompleted ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100' : 'bg-slate-900 border border-slate-900'}`}
+                               >
+                                 {lesson.isVideoCompleted ? <><CheckCircle2 className="h-4 w-4 mr-2" /> Video Completed</> : "Mark Video as Complete"}
+                               </Button>
                             </div>
                           )}
 
@@ -405,6 +447,7 @@ function LearningHub() {
                                           courseId={courseId}
                                           lessonId={lesson._id}
                                           userId={user?._id}
+                                          initialProgress={progressData.find(p => p.taskId === task._id)}
                                           onComplete={() => fetchData()}
                                        />
                                     </div>
@@ -413,8 +456,7 @@ function LearningHub() {
                              ) : (
                                <div className="bg-slate-50/50 border border-dashed border-slate-200 rounded-none p-6 text-center flex flex-col items-center gap-2">
                                   <Trophy className="h-6 w-6 text-slate-200" />
-                                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide italic">No tasks assigned — module complete.</p>
-                                  <Button onClick={() => handleMarkLessonComplete(lesson._id)} className="bg-slate-900 rounded-none h-9 px-5 font-bold uppercase text-[9px] tracking-widest mt-1">Mark Complete</Button>
+                                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide italic">No tasks assigned — focus on lecture recording.</p>
                                </div>
                              )}
                           </div>
@@ -463,18 +505,27 @@ function LearningHub() {
 
                     {/* Sub-items (Lecture & Tasks) */}
                     <div className="ml-5 space-y-1 border-l border-slate-100 pl-3">
-                       {/* Lecture Item */}
-                       <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-slate-400 py-0.5">
-                          <PlayCircle className="h-3 w-3 opacity-50" />
-                          <span>Lecture</span>
-                       </div>
+                       {/* Lecture Item (Only if video exists) */}
+                       {l.videoUrl && (
+                         <div className={`flex items-center gap-2 text-[9px] font-black uppercase tracking-widest py-0.5 cursor-pointer transition-colors ${l.isVideoCompleted ? 'text-green-600' : 'text-slate-400'}`} onClick={() => {
+                            if (!l.isLocked) {
+                              setActiveLessonId(l._id)
+                              setTimeout(() => {
+                                document.getElementById(`lesson-${l._id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                              }, 100)
+                            }
+                         }}>
+                            {l.isVideoCompleted ? <CheckCircle2 className="h-3 w-3" /> : <PlayCircle className="h-3 w-3 opacity-50" />}
+                            <span>Lecture</span>
+                         </div>
+                       )}
 
                        {/* Task Items */}
                        {(lessonTasks[l._id] || []).map((t, tIdx) => {
                           const isTaskDone = (progressData || [])
-                             .some(p => p.lessonId === l._id && p.taskId === t._id && p.completed)
+                             .some(p => p.lessonId === l._id && p.taskId === t._id && p.type === 'task' && p.completed)
                           return (
-                            <div key={t._id} className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest py-0.5 cursor-pointer hover:text-primary transition-colors" onClick={() => {
+                            <div key={t._id} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest py-0.5 cursor-pointer hover:text-primary transition-colors" onClick={() => {
                                if (!l.isLocked) {
                                  setActiveLessonId(l._id)
                                  setTimeout(() => {
