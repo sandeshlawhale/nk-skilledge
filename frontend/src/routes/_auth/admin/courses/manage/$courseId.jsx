@@ -1,23 +1,21 @@
 import { createFileRoute, useNavigate, Outlet, useChildMatches } from '@tanstack/react-router'
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { API_BASE_URL, authFetch } from '@/utils/api'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card'
-import { Plus, Trash2, Video, ChevronRight, Layout, Edit, Save, X, BookOpen, PlusCircle, CheckCircle2, Loader2, Users, Search, UserCheck, UserX, Mail, Calendar } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { ArrowLeft, Layout, Edit, Users } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup } from '@/components/ui/dropdown-menu'
-import { MoreVertical } from 'lucide-react'
+
+// Modular Components
+import ModulesTab from '@/components/admin/course/ModulesTab'
+import CourseInfoTab from '@/components/admin/course/CourseInfoTab'
+import EnrollmentsTab from '@/components/admin/course/EnrollmentsTab'
+import AddLessonModal from '@/components/admin/course/AddLessonModal'
 
 
 
 
 export const Route = createFileRoute('/_auth/admin/courses/manage/$courseId')({
   validateSearch: (search) => ({
-    tab: (search.tab) || 'curriculum',
+    tab: (search.tab) || 'modules',
   }),
   component: CourseManager,
 })
@@ -314,35 +312,17 @@ function CourseManager() {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto font-geist pb-20">
-      {/* Header Section */}
-      <div className="relative overflow-hidden bg-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl border border-slate-800">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="space-y-2">
-            <Badge className="bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold mb-2 backdrop-blur-sm px-3 py-1">ADMINISTRATOR TOOL</Badge>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white uppercase italic">
-              {course?.title}
-            </h1>
-            <p className="text-slate-400 font-medium max-w-2xl leading-relaxed">
-              Managing the structure, lessons, and assignments for this learning path.
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={handlePublishToggle}
-              className={`border-slate-700 rounded-xl px-6 h-12 font-bold uppercase tracking-tight ${course?.status === 'published'
-                ? 'text-amber-400 hover:bg-amber-500/10 border-amber-500/30'
-                : 'text-green-400 hover:bg-green-500/10 border-green-500/30'
-                }`}
-            >
-              {course?.status === 'published' ? 'Unpublish' : 'Publish Course'}
-            </Button>
-            <Button className="bg-white text-slate-900 hover:bg-slate-100 rounded-xl px-6 h-12 font-bold uppercase tracking-tight shadow-xl" onClick={() => setShowAddLesson(true)}>
-              <PlusCircle className="mr-2 h-5 w-5" /> Add Lesson
-            </Button>
-          </div>
-        </div>
+      {/* Simple Header Section */}
+      <div className="px-1">
+        <button
+          onClick={() => navigate({ to: '/admin/courses' })}
+          className="flex items-center gap-1.5 text-slate-400 hover:text-slate-900 transition-colors font-black uppercase text-[9px] tracking-widest"
+        >
+          <ArrowLeft className="h-3 w-3" /> Back to Courses
+        </button>
+        <h1 className="text-xl md:text-2xl font-bold text-slate-900 capitalize tracking-wide">
+          {course?.title}
+        </h1>
       </div>
 
       <Tabs
@@ -351,8 +331,8 @@ function CourseManager() {
         className="w-full"
       >
         <TabsList className="bg-slate-100/50 p-1 rounded-none border-b border-slate-200 w-full justify-start h-12 mb-8">
-          <TabsTrigger value="curriculum" className="rounded-xl px-8 py-2.5 font-bold">
-            <Layout className="w-4 h-4 mr-2" /> Curriculum
+          <TabsTrigger value="modules" className="rounded-xl px-8 py-2.5 font-bold">
+            <Layout className="w-4 h-4 mr-2" /> Modules
           </TabsTrigger>
           <TabsTrigger value="settings" className="rounded-xl px-8 py-2.5 font-bold">
             <Edit className="w-4 h-4 mr-2" /> Course Info
@@ -363,691 +343,69 @@ function CourseManager() {
         </TabsList>
 
 
-        {/* Curriculum Tab */}
-        <TabsContent value="curriculum" className="space-y-6">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight flex items-center gap-3">
-              <div className="h-2 w-8 bg-primary rounded-full"></div>
-              Lessons &amp; Structure
-            </h2>
-            <Badge variant="outline" className="border-slate-200 text-slate-500 font-bold bg-white">
-              {lessons.length} Modules Total
-            </Badge>
-          </div>
-
-          <div className="grid gap-4">
-            {lessons.map((lesson, idx) => (
-              <Card key={lesson._id} className="shadow-sm rounded-2xl overflow-hidden group hover:shadow-lg hover:translate-y-[-2px] transition-all bg-white border border-slate-100">
-                <div className="flex items-center p-2 min-h-[90px]">
-                  <div className="w-16 flex flex-col items-center justify-center border-r border-slate-50">
-                    <span className="text-3xl font-black text-slate-200 group-hover:text-primary/20 transition-colors">{(idx + 1).toString().padStart(2, '0')}</span>
-                  </div>
-                  <div className="flex-1 px-6">
-                    <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                      {lesson.title}
-                      {lesson.videoUrl && <Video className="h-4 w-4 text-indigo-400" />}
-                    </h3>
-                    <div className="flex items-center gap-4 mt-1.5">
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-1.5">
-                        <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
-                        Lesson Module
-                      </span>
-                      <Badge className={lesson.status === 'published' ? 'bg-green-100 text-green-700 border-0 text-[10px] font-black uppercase' : 'bg-amber-100 text-amber-700 border-0 text-[10px] font-black uppercase'}>
-                        {lesson.status || 'draft'}
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 pr-4">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteLesson(lesson._id)}
-                      className="h-10 w-10 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                    {/* Navigate to lesson detail */}
-                    <div
-                      onClick={() => navigate({ to: `/admin/courses/manage/${courseId}/lessons/${lesson._id}` })}
-                      className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all cursor-pointer"
-                    >
-                      <ChevronRight className="h-5 w-5" />
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-
-            {lessons.length === 0 && (
-              <div className="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-3xl p-20 flex flex-col items-center justify-center text-center space-y-4">
-                <div className="h-20 w-20 bg-white rounded-2xl flex items-center justify-center text-slate-300 shadow-sm mb-2">
-                  <BookOpen className="h-10 w-10" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900">Your curriculum is empty</h3>
-                <p className="text-slate-500 max-w-sm">Every great course starts with a single lesson. Click the button above to begin building.</p>
-                <Button onClick={() => setShowAddLesson(true)} className="bg-slate-900 rounded-xl px-8 h-12 font-bold uppercase transition-all hover:scale-105">Create First Lesson</Button>
-              </div>
-            )}
-          </div>
+        {/* Modules Tab */}
+        <TabsContent value="modules">
+          <ModulesTab 
+            courseId={courseId}
+            course={course}
+            lessons={lessons}
+            handleDeleteLesson={handleDeleteLesson}
+            setShowAddLesson={setShowAddLesson}
+          />
         </TabsContent>
 
         {/* Course Info Tab */}
         <TabsContent value="settings">
-          {/* ... existing settings content ... */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight flex items-center gap-3">
-              <div className="h-2 w-8 bg-indigo-500 rounded-full"></div>
-              Identity &amp; Information
-            </h2>
-            {!isEditingInfo ? (
-              <Button onClick={() => setIsEditingInfo(true)} variant="outline" className="rounded-xl font-bold border-slate-200 bg-white">
-                <Edit className="w-4 h-4 mr-2" /> Edit Details
-              </Button>
-            ) : (
-              <div className="flex gap-2">
-                <Button onClick={() => setIsEditingInfo(false)} variant="ghost" className="rounded-xl font-bold text-slate-500 hover:bg-slate-100">
-                  <X className="w-4 h-4 mr-2" /> Cancel
-                </Button>
-                <Button onClick={handleUpdateCourse} disabled={isSaving} className="bg-primary rounded-xl font-bold shadow-lg shadow-primary/20">
-                  {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                  Save Changes
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              <Card className="shadow-sm rounded-3xl bg-white p-8 border border-slate-100 overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16"></div>
-                <div className="space-y-6 relative z-10">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Course Title</label>
-                    {isEditingInfo ? (
-                      <Input
-                        value={editData.title}
-                        onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                        className="text-2xl font-black h-16 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-none placeholder:text-slate-300"
-                        placeholder="Mastering the Craft..."
-                      />
-                    ) : (
-                      <div className="p-4 rounded-2xl bg-slate-50/50 border border-slate-100 min-h-[64px] flex items-center group cursor-pointer hover:border-indigo-200 transition-all">
-                        <h3 className="text-2xl font-black text-slate-900 uppercase italic tracking-tight">{course?.title}</h3>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Long Description (Multi-Paragraph)</label>
-                    {isEditingInfo ? (
-                      <div className="space-y-3">
-                        {editData.description.map((item, index) => (
-                          <div key={index} className="flex gap-2 group">
-                            <Textarea
-                              value={item}
-                              onChange={(e) => handleListUpdate('description', index, e.target.value)}
-                              className="min-h-[100px] rounded-2xl border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-none p-4 text-base leading-relaxed"
-                              placeholder={`Paragraph #${index + 1}`}
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleRemoveListItem('description', index)}
-                              className="h-10 w-10 rounded-xl text-slate-300 hover:text-red-500 hover:bg-red-50 mt-2"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ))}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleAddListItem('description')}
-                          className="w-full border-dashed border-slate-200 text-slate-400 hover:text-primary hover:border-primary rounded-xl"
-                        >
-                          <Plus className="w-4 h-4 mr-2" /> Add Paragraph
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {Array.isArray(course?.description) ? (
-                          course.description.map((para, i) => (
-                            <p key={i} className="font-medium text-slate-600 italic leading-relaxed">
-                              {para}
-                            </p>
-                          ))
-                        ) : (
-                          <p className="font-medium text-slate-600 italic leading-relaxed">
-                            {course?.description}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">What You Will Learn</label>
-                      {isEditingInfo ? (
-                        <div className="space-y-2">
-                          {editData.whatYouWillLearn.map((item, index) => (
-                            <div key={index} className="flex gap-2 group">
-                              <Input
-                                value={item}
-                                onChange={(e) => handleListUpdate('whatYouWillLearn', index, e.target.value)}
-                                className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-none px-4 text-sm"
-                                placeholder={`Goal #${index + 1}`}
-                              />
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleRemoveListItem('whatYouWillLearn', index)}
-                                className="h-10 w-10 rounded-xl text-slate-300 hover:text-red-500 hover:bg-red-50"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ))}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => handleAddListItem('whatYouWillLearn')}
-                            className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary hover:border-primary/50 text-[10px] font-black uppercase tracking-widest bg-slate-50/50"
-                          >
-                            <PlusCircle className="h-3 w-3 mr-2" /> Add Objective
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="p-4 rounded-2xl bg-slate-50/50 border border-slate-100 min-h-[80px]">
-                          <ul className="space-y-2">
-                            {course?.whatYouWillLearn?.map((item, i) => (
-                              <li key={i} className="text-sm text-slate-600 font-medium flex items-start gap-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0"></div>
-                                {item}
-                              </li>
-                            ))}
-                            {(!course?.whatYouWillLearn || course.whatYouWillLearn.length === 0) && <li className="text-sm text-slate-400 italic">No points added yet.</li>}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Requirements</label>
-                      {isEditingInfo ? (
-                        <div className="space-y-2">
-                          {editData.requirements.map((item, index) => (
-                            <div key={index} className="flex gap-2 group">
-                              <Input
-                                value={item}
-                                onChange={(e) => handleListUpdate('requirements', index, e.target.value)}
-                                className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-none px-4 text-sm"
-                                placeholder={`Requirement #${index + 1}`}
-                              />
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleRemoveListItem('requirements', index)}
-                                className="h-10 w-10 rounded-xl text-slate-300 hover:text-red-500 hover:bg-red-50"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ))}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => handleAddListItem('requirements')}
-                            className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary hover:border-primary/50 text-[10px] font-black uppercase tracking-widest bg-slate-50/50"
-                          >
-                            <PlusCircle className="h-3 w-3 mr-2" /> Add Requirement
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="p-4 rounded-2xl bg-slate-50/50 border border-slate-100 min-h-[80px]">
-                          <ul className="space-y-2">
-                            {course?.requirements?.map((item, i) => (
-                              <li key={i} className="text-sm text-slate-600 font-medium flex items-start gap-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0"></div>
-                                {item}
-                              </li>
-                            ))}
-                            {(!course?.requirements || course.requirements.length === 0) && <li className="text-sm text-slate-400 italic">No requirements specified.</li>}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Advanced Metadata */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="shadow-sm rounded-3xl bg-white p-6 border border-slate-100">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Instructor Name</label>
-                      {isEditingInfo ? (
-                        <Input
-                          value={editData.instructorName}
-                          onChange={(e) => setEditData({ ...editData, instructorName: e.target.value })}
-                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold"
-                        />
-                      ) : (
-                        <div className="text-sm font-black text-slate-900 uppercase tracking-tight">{course?.instructorName || 'Not Set'}</div>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Duration</label>
-                      {isEditingInfo ? (
-                        <Input
-                          value={editData.duration}
-                          onChange={(e) => setEditData({ ...editData, duration: e.target.value })}
-                          placeholder="e.g. 5 Hours, 10 Weeks"
-                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold"
-                        />
-                      ) : (
-                        <div className="text-sm font-black text-slate-900 uppercase tracking-tight">{course?.duration || 'Not Set'}</div>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-
-                <Card className="shadow-sm rounded-3xl bg-white p-6 border border-slate-100">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Pricing Model</label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            id="isFree"
-                            checked={editData.isFree}
-                            disabled={!isEditingInfo}
-                            onChange={(e) => setEditData({ ...editData, isFree: e.target.checked })}
-                            className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary"
-                          />
-                          <label htmlFor="isFree" className="text-xs font-bold text-slate-700 cursor-pointer">This is a Free Course</label>
-                        </div>
-                      </div>
-                      {!editData.isFree && (
-                        <div className="w-24">
-                          <label className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Price (₹)</label>
-                          <Input
-                            type="number"
-                            disabled={!isEditingInfo}
-                            value={editData.price}
-                            onChange={(e) => setEditData({ ...editData, price: e.target.value })}
-                            className="h-9 rounded-lg border-slate-200 bg-slate-50 font-black text-xs"
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Tags (Comma Separated)</label>
-                      {isEditingInfo ? (
-                        <Input
-                          value={editData.tags}
-                          onChange={(e) => setEditData({ ...editData, tags: e.target.value })}
-                          placeholder="JS, React, Web Dev"
-                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold"
-                        />
-                      ) : (
-                        <div className="flex flex-wrap gap-1.5">
-                          {course?.tags?.map((tag, i) => (
-                            <Badge key={i} variant="outline" className="text-[9px] font-black uppercase tracking-widest border-slate-200">{tag}</Badge>
-                          ))}
-                          {(!course?.tags || course.tags.length === 0) && <span className="text-xs text-slate-400">None</span>}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="shadow-sm rounded-3xl bg-white overflow-hidden border border-slate-100">
-                <CardHeader className="p-6 pb-2">
-                  <CardTitle className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 flex items-center justify-between">
-                    Identity Card
-                    <Badge variant="outline" className="font-bold border-slate-200 text-[10px] h-5">JPG/PNG/WEBP</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 pt-2 space-y-4">
-                  <div className="aspect-video rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden relative group">
-                    {course?.thumbnail ? (
-                      <img src={course.thumbnail} className="w-full h-full object-cover" alt="Thumbnail" />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full text-slate-300">
-                        <Video className="h-10 w-10 mb-2 opacity-20" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">No Media Set</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 pt-2">
-                    <div className="flex justify-between items-center px-1">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Category</span>
-                      {isEditingInfo ? (
-                        <Input
-                          value={editData.category}
-                          onChange={(e) => setEditData({ ...editData, category: e.target.value })}
-                          className="h-8 w-32 rounded-lg border-slate-200 bg-slate-50 text-[11px] font-bold"
-                        />
-                      ) : (
-                        <span className="text-[11px] font-black text-slate-900 uppercase italic">{course?.category || 'General'}</span>
-                      )}
-                    </div>
-                    <div className="flex justify-between items-center px-1">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Expertise Level</span>
-                      {isEditingInfo ? (
-                        <select
-                          className="h-8 w-32 rounded-lg border-slate-200 bg-slate-50 text-[11px] font-bold outline-none"
-                          value={editData.levels}
-                          onChange={(e) => setEditData({ ...editData, levels: e.target.value })}
-                        >
-                          <option value="Beginner">Beginner</option>
-                          <option value="Intermediate">Intermediate</option>
-                          <option value="Advanced">Advanced</option>
-                        </select>
-                      ) : (
-                        <Badge className="bg-indigo-50 text-indigo-600 border-indigo-100 font-black text-[9px] uppercase tracking-widest">
-                          {course?.levels || 'Beginner'}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex justify-between items-center px-1 border-t border-slate-50 pt-2">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Visibility</span>
-                      <Badge className={course?.status === 'published' ? 'bg-green-500 text-white font-black border-0 rounded-none italic' : 'bg-amber-500 text-white font-black border-0 rounded-none italic'}>
-                        {course?.status?.toUpperCase() || 'DRAFT'}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild className="w-full">
-                  <Button
-                    variant="outline"
-                    className="w-full!"
-                    size="xl"
-                  >
-                    {course?.status === 'published' ? 'Unpublish Course' : 'Publish Course'}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[240px] rounded-2xl border-slate-200 p-2 shadow-2xl">
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest text-slate-400 p-3">Confirm Transition</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className={`p-3 rounded-xl cursor-not-allowed opacity-50 font-bold text-xs mb-1`}
-                    >
-                      Current Status: <span className="ml-1 uppercase">{course?.status}</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={handlePublishToggle}
-                      className={`p-4 rounded-xl cursor-pointer font-black text-xs uppercase tracking-widest transition-all ${course?.status === 'published'
-                        ? 'bg-red-50 text-red-600 hover:bg-red-100'
-                        : 'bg-green-50 text-green-600 hover:bg-green-100'
-                        }`}
-                    >
-                      {course?.status === 'published' ? 'Confirm Unpublish' : 'Confirm & Publish'}
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-            </div>
-          </div>
+          <CourseInfoTab 
+            course={course}
+            editData={editData}
+            setEditData={setEditData}
+            isEditingInfo={isEditingInfo}
+            setIsEditingInfo={setIsEditingInfo}
+            isSaving={isSaving}
+            handleUpdateCourse={handleUpdateCourse}
+            handleListUpdate={handleListUpdate}
+            handleAddListItem={handleAddListItem}
+            handleRemoveListItem={handleRemoveListItem}
+            handlePublishToggle={handlePublishToggle}
+          />
         </TabsContent>
 
         {/* Enrollments Tab */}
-        <TabsContent value="enrollments" className="space-y-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight flex items-center gap-3">
-              <div className="h-2 w-8 bg-amber-500 rounded-full"></div>
-              Student Enrollments
-            </h2>
-
-            {/* Search Box */}
-            <div className="relative w-full md:w-80 group" ref={dropdownRef}>
-              <div className="relative overflow-hidden rounded-none border border-slate-200 focus-within:border-slate-400 transition-all bg-white flex items-center px-3 h-10">
-                <Search className="w-4 h-4 text-slate-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Invite student by email..."
-                  className="bg-transparent border-0 outline-0 w-full font-bold text-xs text-slate-700 placeholder:text-slate-300"
-                  value={emailQuery}
-                  onChange={(e) => handleEmailSearch(e.target.value)}
-                  onFocus={() => emailQuery.trim().length >= 2 && searchResults.length > 0 && setShowDropdown(true)}
-                />
-                {isSearching && <Loader2 className="w-3 h-3 animate-spin text-slate-400 ml-2" />}
-              </div>
-
-              {/* Dropdown Results / Confirmation Dialog */}
-              {showDropdown && (searchResults.length > 0 || confirmStudent) && (
-                <div className="absolute top-full mt-1 left-0 right-0 z-50 bg-white rounded-none shadow-xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
-                  {confirmStudent ? (
-                    <div className="p-3 bg-slate-50/50">
-                      <div className="space-y-1 mb-3">
-                        <p className="text-[10px] font-black tracking-widest text-slate-300 uppercase">Confirm Access</p>
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-slate-200 flex items-center justify-center text-slate-500 font-black text-[12px]">
-                            {confirmStudent.name?.charAt(0)}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[11px] font-bold text-slate-900 truncate uppercase tracking-tight">{confirmStudent.name}</p>
-                            <p className="text-[9px] text-slate-400 truncate lowercase">{confirmStudent.email}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-1.5">
-                        <Button
-                          onClick={handleConfirmEnroll}
-                          disabled={isEnrolling}
-                          size="sm"
-                          className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-none h-8 text-[10px] font-black uppercase tracking-widest shadow-none"
-                        >
-                          {isEnrolling ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Confirm'}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          onClick={() => setConfirmStudent(null)}
-                          disabled={isEnrolling}
-                          size="sm"
-                          className="w-full rounded-none h-7 text-[9px] font-bold text-slate-400 hover:text-slate-600 hover:bg-white uppercase tracking-tight"
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-
-                      {enrollError && (
-                        <p className="mt-2 text-[8px] text-red-500 font-black uppercase tracking-widest text-center">{enrollError}</p>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="p-1 max-h-60 overflow-y-auto">
-                      {searchResults.map((user) => (
-                        <div
-                          key={user._id}
-                          className="flex items-center justify-between p-2 hover:bg-slate-50 cursor-pointer group transition-colors"
-                          onClick={() => handleSelectStudent(user)}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4 text-slate-400" />
-                            <div className="flex flex-col text-left">
-                              <span className="text-[11px] font-bold text-slate-900 leading-none mb-0.5">{user.name}</span>
-                              <span className="text-[10px] text-slate-400 leading-none">{user.email}</span>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="text-[8px] h-4 rounded-none border-slate-200 px-1 font-black uppercase text-slate-400">{user.role}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-          </div>
-
-          {/* Enrolled Students Table */}
-          <div className="bg-white rounded-none border border-slate-200 overflow-hidden">
-            {isLoadingEnrollments && enrollments.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 space-y-3">
-                <Loader2 className="h-6 w-6 animate-spin text-slate-200" />
-                <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">Querying Registry...</p>
-              </div>
-            ) : enrollments.length === 0 ? (
-              <div className="p-16 flex flex-col items-center justify-center text-center space-y-3 bg-slate-50/20">
-                <Users className="h-8 w-8 text-slate-200 mb-1" />
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-tight">Zero enrollments</h3>
-                <p className="text-slate-400 text-[11px] max-w-xs font-medium uppercase tracking-tighter">Invite students using the search utility above.</p>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader className="bg-slate-50/80 border-b border-slate-200">
-                  <TableRow className="hover:bg-transparent border-none">
-                    <TableHead className="h-10 px-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Student Identity</TableHead>
-                    <TableHead className="h-10 px-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Date</TableHead>
-                    <TableHead className="h-10 px-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Access</TableHead>
-                    <TableHead className="h-10 px-6 text-right text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Manage</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {enrollments.map((enroll) => (
-                    <TableRow key={enroll._id} className="hover:bg-slate-50/50 border-slate-100 transition-colors">
-                      <TableCell className="px-6 py-3">
-                        <div className="flex flex-col">
-                          <span className="text-[12px] font-bold text-slate-800 leading-tight">{enroll.userId?.name || 'Unknown User'}</span>
-                          <span className="text-[10px] text-slate-400 font-medium leading-tight lowercase">{enroll.userId?.email || 'N/A'}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-6 py-3">
-                        <span className="text-[11px] font-bold text-slate-500">
-                          {new Date(enroll.enrolledAt).toLocaleDateString()}
-                        </span>
-                      </TableCell>
-                      <TableCell className="px-6 py-3">
-                        <Badge className="bg-transparent text-slate-500 border border-slate-200 rounded-none px-1.5 py-0 text-[8px] font-black uppercase tracking-widest shadow-none">
-                          {enroll.accessType}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="px-6 py-3 text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-none text-slate-400">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="rounded-none border-slate-200 min-w-[150px] shadow-xl p-1">
-                            <DropdownMenuGroup>
-                              <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest text-slate-400 px-2 py-1.5">Action Menu</DropdownMenuLabel>
-                              <DropdownMenuSeparator className="bg-slate-100" />
-                              <DropdownMenuItem
-                                className="text-red-600 text-[11px] font-bold px-2 py-2 cursor-pointer focus:bg-red-50 focus:text-red-700 bg-red-50/20 whitespace-nowrap"
-                                onClick={(e) => handleUnenroll(enroll._id)}
-                              >
-                                <UserX className="w-3.5 h-3.5 mr-2" />
-                                Unenroll Student
-                              </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </div>
-
-
+        <TabsContent value="enrollments">
+          <EnrollmentsTab 
+            courseId={courseId}
+            enrollments={enrollments}
+            isLoadingEnrollments={isLoadingEnrollments}
+            emailQuery={emailQuery}
+            handleEmailSearch={handleEmailSearch}
+            searchResults={searchResults}
+            isSearching={isSearching}
+            showDropdown={showDropdown}
+            setShowDropdown={setShowDropdown}
+            confirmStudent={confirmStudent}
+            setConfirmStudent={setConfirmStudent}
+            isEnrolling={isEnrolling}
+            handleConfirmEnroll={handleConfirmEnroll}
+            enrollError={enrollError}
+            setEnrollError={setEnrollError}
+            handleSelectStudent={handleSelectStudent}
+            handleUnenroll={handleUnenroll}
+            dropdownRef={dropdownRef}
+          />
         </TabsContent>
-
       </Tabs>
 
-
-
-
-
       {/* Add Lesson Modal */}
-      {showAddLesson && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-          <Card className="w-full max-w-lg border-0 shadow-2xl rounded-3xl overflow-hidden bg-white">
-            <CardHeader className="bg-slate-900 text-white p-8">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-2xl font-black uppercase italic tracking-tight">Add New Module</CardTitle>
-                <Button variant="ghost" size="icon" onClick={() => setShowAddLesson(false)} className="text-slate-400 hover:text-white hover:bg-white/10 rounded-xl">
-                  <X className="h-6 w-6" />
-                </Button>
-              </div>
-              <p className="text-slate-400 text-sm font-medium mt-1">Expanding the curriculum with deep-dive technical insights.</p>
-            </CardHeader>
-            <form onSubmit={handleCreateLesson}>
-              <CardContent className="p-8 space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Lesson Title</label>
-                  <Input
-                    required
-                    placeholder="e.g. Introduction to Advanced Paradigms"
-                    className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold"
-                    value={newLesson.title}
-                    onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Video URL</label>
-                    <Input
-                      placeholder="Paste video URL..."
-                      className="h-12 rounded-xl border-slate-200 bg-slate-50 font-bold"
-                      value={newLesson.videoUrl}
-                      onChange={(e) => setNewLesson({ ...newLesson, videoUrl: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PDF URL</label>
-                    <Input
-                      placeholder="Reference doc URL..."
-                      className="h-12 rounded-xl border-slate-200 bg-slate-50 font-bold"
-                      value={newLesson.pdfUrl}
-                      onChange={(e) => setNewLesson({ ...newLesson, pdfUrl: e.target.value })}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Module Summary</label>
-                  <Textarea
-                    placeholder="What will students master in this lesson?"
-                    className="rounded-xl border-slate-200 bg-slate-50 min-h-[100px] font-medium"
-                    value={newLesson.content}
-                    onChange={(e) => setNewLesson({ ...newLesson, content: e.target.value })}
-                  />
-                </div>
-                {lessonError && (
-                  <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-600 font-medium">
-                    {lessonError}
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter className="p-8 pt-0 flex gap-3">
-                <Button type="button" variant="outline" onClick={() => setShowAddLesson(false)} className="flex-1 rounded-xl h-12 font-bold border-slate-200 uppercase tracking-tight">Cancel</Button>
-                <Button type="submit" disabled={isCreatingLesson} className="flex-1 bg-slate-900 hover:bg-primary rounded-xl h-12 font-black uppercase tracking-tight shadow-xl shadow-slate-200">
-                  {isCreatingLesson ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</> : 'Deploy Lesson'}
-                </Button>
-              </CardFooter>
-            </form>
-          </Card>
-        </div>
-      )}
+      <AddLessonModal 
+        showAddLesson={showAddLesson}
+        setShowAddLesson={setShowAddLesson}
+        newLesson={newLesson}
+        setNewLesson={setNewLesson}
+        handleCreateLesson={handleCreateLesson}
+        isCreatingLesson={isCreatingLesson}
+        lessonError={lessonError}
+      />
     </div>
   )
 }
