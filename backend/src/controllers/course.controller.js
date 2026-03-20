@@ -48,9 +48,22 @@ const getCourseById = asyncHandler(async (req, res) => {
 });
 
 const createCourse = asyncHandler(async (req, res) => {
-  const { title, description, price } = req.body;
+  const { 
+    title, 
+    price, 
+    category, 
+    levels, 
+    duration, 
+    instructorName, 
+  } = req.body;
 
-  if (!title || !description) {
+  // Handle arrays from FormData which might have [] suffix
+  const tags = req.body.tags || req.body['tags[]'] || [];
+  const whatYouWillLearn = req.body.whatYouWillLearn || req.body['whatYouWillLearn[]'] || [];
+  const requirements = req.body.requirements || req.body['requirements[]'] || [];
+  const description = req.body.description || req.body['description[]'] || [];
+
+  if (!title || (Array.isArray(description) ? description.length === 0 : !description)) {
     throw new ApiError(400, "Title and description are required");
   }
 
@@ -66,10 +79,21 @@ const createCourse = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Failed to upload thumbnail");
   }
 
+  const parsedPrice = Number(price) || 0;
+  const isFree = parsedPrice === 0;
+
   const course = await Course.create({
     title,
-    description,
-    price: price || 0,
+    description: Array.isArray(description) ? description : (description ? [description] : []),
+    price: parsedPrice,
+    isFree,
+    category,
+    levels,
+    tags: Array.isArray(tags) ? tags : (tags ? [tags] : []),
+    duration,
+    instructorName,
+    whatYouWillLearn: Array.isArray(whatYouWillLearn) ? whatYouWillLearn : (whatYouWillLearn ? [whatYouWillLearn] : []),
+    requirements: Array.isArray(requirements) ? requirements : (requirements ? [requirements] : []),
     thumbnail: thumbnail.url,
     createdBy: req.user._id,
     status: "draft",
@@ -81,8 +105,40 @@ const createCourse = asyncHandler(async (req, res) => {
 });
 
 const updateCourse = asyncHandler(async (req, res) => {
-  const { title, description, price, status } = req.body;
-  const updateData = { title, description, price, status };
+  const { 
+    title, 
+    price, 
+    status,
+    category,
+    levels,
+    duration,
+    instructorName,
+  } = req.body;
+
+  // Handle arrays from FormData
+  const tagsUpdate = req.body.tags || req.body['tags[]'];
+  const whatYouWillLearnUpdate = req.body.whatYouWillLearn || req.body['whatYouWillLearn[]'];
+  const requirementsUpdate = req.body.requirements || req.body['requirements[]'];
+  const descriptionUpdate = req.body.description || req.body['description[]'];
+
+  const updateData = { 
+    title, 
+    description: descriptionUpdate !== undefined ? (Array.isArray(descriptionUpdate) ? descriptionUpdate : [descriptionUpdate]) : undefined, 
+    price: price !== undefined ? Number(price) : undefined, 
+    status,
+    category,
+    levels,
+    tags: tagsUpdate !== undefined ? (Array.isArray(tagsUpdate) ? tagsUpdate : [tagsUpdate]) : undefined,
+    duration,
+    instructorName,
+    whatYouWillLearn: whatYouWillLearnUpdate !== undefined ? (Array.isArray(whatYouWillLearnUpdate) ? whatYouWillLearnUpdate : [whatYouWillLearnUpdate]) : undefined,
+    requirements: requirementsUpdate !== undefined ? (Array.isArray(requirementsUpdate) ? requirementsUpdate : [requirementsUpdate]) : undefined
+  };
+
+  // If price is updated, adjust isFree
+  if (price !== undefined) {
+    updateData.isFree = Number(price) === 0;
+  }
 
   if (req.file) {
     const thumbnailLocalPath = req.file.path;

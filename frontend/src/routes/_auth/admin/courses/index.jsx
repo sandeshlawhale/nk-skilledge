@@ -4,7 +4,7 @@ import { API_BASE_URL, authFetch } from '@/utils/api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Plus, Search, Edit, Trash2, Upload, Image, BookOpen, Users, X, Loader2 } from 'lucide-react'
+import { Plus, PlusCircle, Search, Edit, Trash2, Upload, Image, BookOpen, Users, X, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { CourseCard } from '@/components/shared/CourseCard'
@@ -22,7 +22,18 @@ function AdminCourses() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
   const [createError, setCreateError] = useState('')
-  const [newCourse, setNewCourse] = useState({ title: '', description: '', price: '' })
+  const [newCourse, setNewCourse] = useState({ 
+    title: '', 
+    description: [''], 
+    price: '', 
+    category: '', 
+    levels: 'Beginner',
+    instructorName: '',
+    duration: '',
+    tags: '',
+    whatYouWillLearn: [''],
+    requirements: ['']
+  })
   const [thumbnailFile, setThumbnailFile] = useState(null)
   const [thumbnailPreview, setThumbnailPreview] = useState(null)
   const fileInputRef = useRef(null)
@@ -62,7 +73,7 @@ function AdminCourses() {
     e.preventDefault()
     setCreateError('')
 
-    if (!newCourse.title.trim() || !newCourse.description.trim()) {
+    if (!newCourse.title.trim() || newCourse.description.every(d => !d.trim())) {
       setCreateError('Title and description are required.')
       return
     }
@@ -75,8 +86,25 @@ function AdminCourses() {
     try {
       const formData = new FormData()
       formData.append('title', newCourse.title)
-      formData.append('description', newCourse.description)
+      
+      const descParas = newCourse.description.map(t => t.trim()).filter(t => t)
+      descParas.forEach(para => formData.append('description[]', para))
+      
       formData.append('price', newCourse.price || '0')
+      formData.append('category', newCourse.category)
+      formData.append('levels', newCourse.levels)
+      formData.append('instructorName', newCourse.instructorName)
+      formData.append('duration', newCourse.duration)
+      
+      const tagsArray = newCourse.tags.split(',').map(t => t.trim()).filter(t => t)
+      tagsArray.forEach(tag => formData.append('tags[]', tag))
+
+      const goals = newCourse.whatYouWillLearn.map(t => t.trim()).filter(t => t)
+      goals.forEach(goal => formData.append('whatYouWillLearn[]', goal))
+
+      const reqs = newCourse.requirements.map(t => t.trim()).filter(t => t)
+      reqs.forEach(req => formData.append('requirements[]', req))
+
       formData.append('thumbnail', thumbnailFile)
 
       const res = await authFetch(`${API_BASE_URL}/courses`, {
@@ -113,10 +141,45 @@ function AdminCourses() {
   }
 
   const resetForm = () => {
-    setNewCourse({ title: '', description: '', price: '' })
+    setNewCourse({ 
+      title: '', 
+      description: [''], 
+      price: '', 
+      category: '', 
+      levels: 'Beginner',
+      instructorName: '',
+      duration: '',
+      tags: '',
+      whatYouWillLearn: [''],
+      requirements: ['']
+    })
     setThumbnailFile(null)
     setThumbnailPreview(null)
     setCreateError('')
+  }
+
+
+  const handleListUpdate = (field, index, value) => {
+    setNewCourse(prev => {
+      const newList = [...prev[field]]
+      newList[index] = value
+      return { ...prev, [field]: newList }
+    })
+  }
+
+  const handleAddListItem = (field) => {
+    setNewCourse(prev => ({
+      ...prev,
+      [field]: [...prev[field], '']
+    }))
+  }
+
+  const handleRemoveListItem = (field, index) => {
+    if (newCourse[field].length <= 1) return;
+    setNewCourse(prev => ({
+      ...prev,
+      [field]: prev[field].filter((_, i) => i !== index)
+    }))
   }
 
   const openModal = () => {
@@ -246,49 +309,195 @@ function AdminCourses() {
                 </div>
 
                 {/* Right — Form fields */}
-                <div className="flex-1 p-6 space-y-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Course Title</label>
-                    <Input
-                      required
-                      placeholder="e.g. Advanced JavaScript Mastery"
-                      className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold"
-                      value={newCourse.title}
-                      onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Description</label>
-                    <Textarea
-                      required
-                      placeholder="What will students learn in this course?"
-                      className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white min-h-[110px] font-medium resize-none"
-                      value={newCourse.description}
-                      onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Price (₹) — leave 0 for free</label>
-                    <Input
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold"
-                      value={newCourse.price}
-                      onChange={(e) => setNewCourse({ ...newCourse, price: e.target.value })}
-                    />
-                  </div>
-
-                  {createError && (
-                    <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-600 font-medium">
-                      {createError}
+                <div className="flex-1 p-6 flex flex-col max-h-[70vh]">
+                  <div className="overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Course Title</label>
+                      <Input
+                        required
+                        placeholder="e.g. Advanced JavaScript Mastery"
+                        className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold text-sm"
+                        value={newCourse.title}
+                        onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
+                      />
                     </div>
-                  )}
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Description (Multi-Paragraph)</label>
+                      <div className="space-y-2">
+                        {newCourse.description.map((item, index) => (
+                          <div key={index} className="flex gap-2">
+                            <Textarea
+                              value={item}
+                              onChange={(e) => handleListUpdate('description', index, e.target.value)}
+                              className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white min-h-[60px] font-medium resize-none text-sm"
+                              placeholder={`Paragraph #${index + 1}`}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRemoveListItem('description', index)}
+                              className="h-10 w-10 shrink-0 text-slate-300 hover:text-red-500 mt-2"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleAddListItem('description')}
+                          className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary text-[10px] font-black uppercase tracking-widest bg-slate-50/10"
+                        >
+                          <PlusCircle className="h-3 w-3 mr-2" /> Add Paragraph
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Category</label>
+                        <Input
+                          placeholder="e.g. Development"
+                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold text-xs"
+                          value={newCourse.category}
+                          onChange={(e) => setNewCourse({ ...newCourse, category: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Level</label>
+                        <select
+                          className="flex h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
+                          value={newCourse.levels}
+                          onChange={(e) => setNewCourse({ ...newCourse, levels: e.target.value })}
+                        >
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Advanced">Advanced</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Instructor Name</label>
+                        <Input
+                          placeholder="e.g. Sandeep Lawhale"
+                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold text-xs"
+                          value={newCourse.instructorName}
+                          onChange={(e) => setNewCourse({ ...newCourse, instructorName: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Duration</label>
+                        <Input
+                          placeholder="e.g. 10 Hours"
+                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold text-xs"
+                          value={newCourse.duration}
+                          onChange={(e) => setNewCourse({ ...newCourse, duration: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Price (₹)</label>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold text-xs"
+                          value={newCourse.price}
+                          onChange={(e) => setNewCourse({ ...newCourse, price: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Tags (Separated by ",")</label>
+                        <Input
+                          placeholder="React, Nextjs..."
+                          className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold text-xs"
+                          value={newCourse.tags}
+                          onChange={(e) => setNewCourse({ ...newCourse, tags: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">What You Will Learn</label>
+                       <div className="space-y-2">
+                          {newCourse.whatYouWillLearn.map((item, index) => (
+                            <div key={index} className="flex gap-2">
+                              <Input
+                                value={item}
+                                onChange={(e) => handleListUpdate('whatYouWillLearn', index, e.target.value)}
+                                className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-xs font-medium"
+                                placeholder={`Objective #${index + 1}`}
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleRemoveListItem('whatYouWillLearn', index)}
+                                className="h-10 w-10 shrink-0 text-slate-300 hover:text-red-500"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => handleAddListItem('whatYouWillLearn')}
+                            className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary text-[10px] font-black uppercase tracking-widest bg-slate-50/10"
+                          >
+                            <PlusCircle className="h-3 w-3 mr-2" /> Add Objective
+                          </Button>
+                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Requirements</label>
+                       <div className="space-y-2">
+                          {newCourse.requirements.map((item, index) => (
+                            <div key={index} className="flex gap-2">
+                              <Input
+                                value={item}
+                                onChange={(e) => handleListUpdate('requirements', index, e.target.value)}
+                                className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-xs font-medium"
+                                placeholder={`Requirement #${index + 1}`}
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleRemoveListItem('requirements', index)}
+                                className="h-10 w-10 shrink-0 text-slate-300 hover:text-red-500"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => handleAddListItem('requirements')}
+                            className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary text-[10px] font-black uppercase tracking-widest bg-slate-50/10"
+                          >
+                            <PlusCircle className="h-3 w-3 mr-2" /> Add Requirement
+                          </Button>
+                       </div>
+                    </div>
+
+                    {createError && (
+                      <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-600 font-medium">
+                        {createError}
+                      </div>
+                    )}
+                  </div>
 
                   {/* Actions */}
-                  <div className="flex gap-3 pt-1">
+                  <div className="flex gap-3 pt-4 bg-white mt-auto border-t border-slate-100">
                     <Button type="button" variant="outline" onClick={() => setShowCreateModal(false)} className="flex-1 rounded-xl h-11 font-bold border-slate-200 uppercase tracking-tight">
                       Cancel
                     </Button>

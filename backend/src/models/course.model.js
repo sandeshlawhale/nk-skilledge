@@ -7,10 +7,12 @@ const courseSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
+    description: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     thumbnail: {
       type: String, // cloudinary url
       required: true,
@@ -20,6 +22,41 @@ const courseSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    isFree: {
+      type: Boolean,
+      default: false,
+    },
+    category: {
+      type: String,
+      trim: true,
+    },
+    levels: {
+      type: String,
+      enum: ["Beginner", "Intermediate", "Advanced"],
+      default: "Beginner",
+    },
+    tags: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    duration: {
+      type: String, // e.g. "5 hours", "3 weeks"
+    },
+    instructorName: {
+      type: String,
+    },
+    whatYouWillLearn: [
+      {
+        type: String,
+      },
+    ],
+    requirements: [
+      {
+        type: String,
+      },
+    ],
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

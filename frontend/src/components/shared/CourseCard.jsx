@@ -40,13 +40,18 @@ export function CourseCard({ course, progress, linkTo, extraActions, metadata })
             {course.title}
           </h3>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">
-              {course.instructor || 'Elite Instructor'}
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">
+                {course.instructorName || course.instructor || 'Elite Instructor'}
+              </span>
+              {course.isFree && (
+                <Badge className="bg-green-100 text-green-700 border-0 text-[8px] h-4 font-black uppercase tracking-widest px-1">FREE</Badge>
+              )}
+            </div>
             <div className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-widest">
               <span>{course.lessonsCount || 0} Modules</span>
               <span className="h-1 w-1 bg-slate-300 rounded-none" />
-              <span>{metadata || course.category || 'Professional'}</span>
+              <span>{metadata || course.category || course.levels || 'Professional'}</span>
               {progress === 100 && (
                  <>
                    <span className="h-1 w-1 bg-slate-300 rounded-none" />
