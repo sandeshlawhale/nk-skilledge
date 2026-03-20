@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL, authFetch } from '@/utils/api'
 import { useAuthStore } from '@/store/auth'
@@ -14,9 +14,14 @@ export const Route = createFileRoute('/_auth/students/')({
 })
 
 function Dashboard() {
+  const navigate = useNavigate()
   const { user } = useAuthStore()
   const [enrollments, setEnrollments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    navigate({ to: '/students/my-courses', replace: true })
+  }, [navigate])
 
   useEffect(() => {
     const fetchEnrollments = async () => {

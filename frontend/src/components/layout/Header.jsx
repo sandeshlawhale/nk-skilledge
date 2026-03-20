@@ -24,10 +24,10 @@ export function Header() {
           {isAuthenticated ? (
             <>
               <Link
-                to={user?.role === 'admin' ? '/admin' : '/students'}
+                to={user?.role === 'admin' ? '/admin' : '/students/my-courses'}
                 className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50"
               >
-                Dashboard
+                {user?.role === 'admin' ? 'Dashboard' : 'My Courses'}
               </Link>
               <button
                 onClick={logout}
