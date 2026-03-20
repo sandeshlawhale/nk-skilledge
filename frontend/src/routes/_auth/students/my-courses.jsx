@@ -45,25 +45,69 @@ function MyCourses() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 px-1">
+      {/* <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 px-1">
         <div>
           <Badge className="bg-primary/10 text-primary border-primary/20 font-black mb-2 uppercase tracking-widest text-[9px] rounded-none">Personal Dashboard</Badge>
           <h1 className="text-3xl font-black tracking-tight text-slate-900 uppercase italic">Your Learning Path</h1>
           <p className="text-slate-500 font-medium italic mt-0.5 text-xs">A collection of specialized professional curriculums currently in progress.</p>
         </div>
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {enrollments.map((enrollment) => (
-          <CourseCard 
-            key={enrollment._id}
-            course={enrollment.courseId}
-            progress={enrollment.progress}
-            linkTo={`/students/course/${enrollment.courseId?._id}`}
-            metadata="Curriculum Progress"
-          />
-        ))}
-      </div>
+      {enrollments.length > 0 ? (
+        <div className="space-y-12 pb-10">
+          {/* In Progress Section */}
+          {enrollments.filter(e => e.progress > 0 && e.progress < 100).length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 px-1">
+                <div className="h-5 w-1 bg-slate-300 rounded-full"></div>
+                <h2 className="text-lg font-semibold text-slate-900 capitalize tracking-wide">In Progress</h2>
+                <Badge variant="outline" className="ml-2 text-[10px] font-bold border-slate-200 text-slate-400 rounded-none uppercase tracking-widest">
+                  {enrollments.filter(e => e.progress > 0 && e.progress < 100).length} Modules
+                </Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {enrollments
+                  .filter(e => e.progress > 0 && e.progress < 100)
+                  .map((enrollment) => (
+                    <CourseCard
+                      key={enrollment._id}
+                      course={enrollment.courseId}
+                      progress={enrollment.progress}
+                      linkTo={`/students/course/${enrollment.courseId?._id}`}
+                      metadata="Current Progress"
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Completed or Not Started Section */}
+          {enrollments.filter(e => e.progress === 0 || e.progress === 100).length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 px-1">
+                <div className="h-5 w-1 bg-slate-300 rounded-full"></div>
+                <h2 className="text-lg font-semibold text-slate-900 capitalize tracking-wide">Courses</h2>
+                <Badge variant="outline" className="ml-2 text-[10px] font-bold border-slate-200 text-slate-400 rounded-none uppercase tracking-widest">
+                  {enrollments.filter(e => e.progress === 0 || e.progress === 100).length} Modules
+                </Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {enrollments
+                  .filter(e => e.progress === 0 || e.progress === 100)
+                  .map((enrollment) => (
+                    <CourseCard
+                      key={enrollment._id}
+                      course={enrollment.courseId}
+                      progress={enrollment.progress}
+                      linkTo={`/students/course/${enrollment.courseId?._id}`}
+                      metadata={enrollment.progress === 100 ? "Completed" : "Not Started"}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ) : null}
 
       {enrollments.length === 0 && (
         <div className="text-center py-20 bg-slate-50/50 rounded-none border border-dashed border-slate-200 px-4">
@@ -73,7 +117,7 @@ function MyCourses() {
           <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Enrollment Required</h3>
           <p className="text-slate-500 font-medium mt-2 italic text-sm">You haven't initialized any learning modules yet.</p>
           <Button asChild className="mt-6 bg-slate-900 rounded-none px-8 h-12 font-black uppercase tracking-widest shadow-none text-xs">
-             <Link to="/students/all-courses">Browse Catalog</Link>
+            <Link to="/students/all-courses">Browse Catalog</Link>
           </Button>
         </div>
       )}

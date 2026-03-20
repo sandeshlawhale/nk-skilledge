@@ -53,16 +53,16 @@ function AllCourses() {
   }
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto font-geist">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 px-1">
-        <div>
-          <Badge className="bg-primary/10 text-primary border-primary/20 font-black mb-2 uppercase tracking-widest text-[9px] rounded-none">Course Catalog</Badge>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 uppercase italic">Explore Excellence</h1>
-          <p className="text-slate-500 font-medium italic mt-0.5 text-xs">Discover industry-leading curriculums designed for your growth.</p>
-        </div>
+    <div className="space-y-2 max-w-7xl mx-auto font-geist">
+      <div className="flex items-center gap-3 px-1">
+        <div className="h-5 w-1 bg-slate-300 rounded-full"></div>
+        <h2 className="text-lg font-semibold text-slate-900 capitalize tracking-wide">All Courses</h2>
+        <Badge variant="outline" className="ml-2 text-[10px] font-bold border-slate-200 text-slate-400 rounded-none uppercase tracking-widest">
+          {courses.length} Modules
+        </Badge>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {courses.map((course) => {
           const enrollment = enrollments.find(e => {
             const id = typeof e.courseId === 'object' ? e.courseId._id : e.courseId
@@ -71,7 +71,7 @@ function AllCourses() {
           const progress = enrollment?.progress || 0
 
           return (
-            <CourseCard 
+            <CourseCard
               key={course._id}
               course={course}
               progress={progress}
