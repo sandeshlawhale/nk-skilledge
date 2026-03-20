@@ -4,12 +4,19 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Plus, Edit, Save, X, Loader2, Video, PlusCircle,
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
-  DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, 
-  DropdownMenuGroup 
+import {
+  Plus, Edit, Save, X, Loader2, Video, PlusCircle
 } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu"
+
 
 const CourseInfoTab = ({
   course,
@@ -366,7 +373,7 @@ const CourseInfoTab = ({
             <DropdownMenuTrigger asChild className="w-full">
               <Button
                 variant="outline"
-                className="w-full!"
+                className="w-full"
                 size="xl"
               >
                 {course?.status === 'published' ? 'Unpublish Course' : 'Publish Course'}

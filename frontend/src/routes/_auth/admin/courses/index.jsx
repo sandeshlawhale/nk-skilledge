@@ -22,11 +22,11 @@ function AdminCourses() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
   const [createError, setCreateError] = useState('')
-  const [newCourse, setNewCourse] = useState({ 
-    title: '', 
-    description: [''], 
-    price: '', 
-    category: '', 
+  const [newCourse, setNewCourse] = useState({
+    title: '',
+    description: [''],
+    price: '',
+    category: '',
     levels: 'Beginner',
     instructorName: '',
     duration: '',
@@ -86,16 +86,16 @@ function AdminCourses() {
     try {
       const formData = new FormData()
       formData.append('title', newCourse.title)
-      
+
       const descParas = newCourse.description.map(t => t.trim()).filter(t => t)
       descParas.forEach(para => formData.append('description[]', para))
-      
+
       formData.append('price', newCourse.price || '0')
       formData.append('category', newCourse.category)
       formData.append('levels', newCourse.levels)
       formData.append('instructorName', newCourse.instructorName)
       formData.append('duration', newCourse.duration)
-      
+
       const tagsArray = newCourse.tags.split(',').map(t => t.trim()).filter(t => t)
       tagsArray.forEach(tag => formData.append('tags[]', tag))
 
@@ -141,11 +141,11 @@ function AdminCourses() {
   }
 
   const resetForm = () => {
-    setNewCourse({ 
-      title: '', 
-      description: [''], 
-      price: '', 
-      category: '', 
+    setNewCourse({
+      title: '',
+      description: [''],
+      price: '',
+      category: '',
       levels: 'Beginner',
       instructorName: '',
       duration: '',
@@ -235,7 +235,7 @@ function AdminCourses() {
             linkTo={`/admin/courses/manage/${course._id}`}
             metadata={course.status === 'published' ? 'Active' : 'Draft'}
             extraActions={
-              <button 
+              <button
                 onClick={(e) => {
                   e.preventDefault();
                   handleDeleteCourse(course._id);
@@ -383,7 +383,7 @@ function AdminCourses() {
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Instructor Name</label>
                         <Input
-                          placeholder="e.g. Sandeep Lawhale"
+                          placeholder="e.g. Narendra Modi"
                           className="h-11 rounded-xl border-slate-200 bg-slate-50 focus:bg-white font-bold text-xs"
                           value={newCourse.instructorName}
                           onChange={(e) => setNewCourse({ ...newCourse, instructorName: e.target.value })}
@@ -424,69 +424,69 @@ function AdminCourses() {
                     </div>
 
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">What You Will Learn</label>
-                       <div className="space-y-2">
-                          {newCourse.whatYouWillLearn.map((item, index) => (
-                            <div key={index} className="flex gap-2">
-                              <Input
-                                value={item}
-                                onChange={(e) => handleListUpdate('whatYouWillLearn', index, e.target.value)}
-                                className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-xs font-medium"
-                                placeholder={`Objective #${index + 1}`}
-                              />
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleRemoveListItem('whatYouWillLearn', index)}
-                                className="h-10 w-10 shrink-0 text-slate-300 hover:text-red-500"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ))}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => handleAddListItem('whatYouWillLearn')}
-                            className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary text-[10px] font-black uppercase tracking-widest bg-slate-50/10"
-                          >
-                            <PlusCircle className="h-3 w-3 mr-2" /> Add Objective
-                          </Button>
-                       </div>
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">What You Will Learn</label>
+                      <div className="space-y-2">
+                        {newCourse.whatYouWillLearn.map((item, index) => (
+                          <div key={index} className="flex gap-2">
+                            <Input
+                              value={item}
+                              onChange={(e) => handleListUpdate('whatYouWillLearn', index, e.target.value)}
+                              className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-xs font-medium"
+                              placeholder={`Objective #${index + 1}`}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRemoveListItem('whatYouWillLearn', index)}
+                              className="h-10 w-10 shrink-0 text-slate-300 hover:text-red-500"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleAddListItem('whatYouWillLearn')}
+                          className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary text-[10px] font-black uppercase tracking-widest bg-slate-50/10"
+                        >
+                          <PlusCircle className="h-3 w-3 mr-2" /> Add Objective
+                        </Button>
+                      </div>
                     </div>
 
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Requirements</label>
-                       <div className="space-y-2">
-                          {newCourse.requirements.map((item, index) => (
-                            <div key={index} className="flex gap-2">
-                              <Input
-                                value={item}
-                                onChange={(e) => handleListUpdate('requirements', index, e.target.value)}
-                                className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-xs font-medium"
-                                placeholder={`Requirement #${index + 1}`}
-                              />
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleRemoveListItem('requirements', index)}
-                                className="h-10 w-10 shrink-0 text-slate-300 hover:text-red-500"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ))}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => handleAddListItem('requirements')}
-                            className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary text-[10px] font-black uppercase tracking-widest bg-slate-50/10"
-                          >
-                            <PlusCircle className="h-3 w-3 mr-2" /> Add Requirement
-                          </Button>
-                       </div>
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Requirements</label>
+                      <div className="space-y-2">
+                        {newCourse.requirements.map((item, index) => (
+                          <div key={index} className="flex gap-2">
+                            <Input
+                              value={item}
+                              onChange={(e) => handleListUpdate('requirements', index, e.target.value)}
+                              className="h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-xs font-medium"
+                              placeholder={`Requirement #${index + 1}`}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRemoveListItem('requirements', index)}
+                              className="h-10 w-10 shrink-0 text-slate-300 hover:text-red-500"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleAddListItem('requirements')}
+                          className="w-full h-10 rounded-xl border-dashed border-slate-200 text-slate-400 hover:text-primary text-[10px] font-black uppercase tracking-widest bg-slate-50/10"
+                        >
+                          <PlusCircle className="h-3 w-3 mr-2" /> Add Requirement
+                        </Button>
+                      </div>
                     </div>
 
                     {createError && (

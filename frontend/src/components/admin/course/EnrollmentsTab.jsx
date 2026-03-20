@@ -2,13 +2,17 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { 
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
-  DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, 
-  DropdownMenuGroup 
-} from 'lucide-react'
-import { 
-  Users, Search, Loader2, UserX, MoreVertical 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu"
+import {
+  Users, Search, Loader2, UserX, MoreVertical
 } from 'lucide-react'
 
 const EnrollmentsTab = ({
