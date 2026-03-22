@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { API_BASE_URL } from '@/utils/api'
+import { API_BASE_URL, authFetch } from '@/utils/api'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -49,8 +49,8 @@ function AdminStudents() {
     const fetchData = async () => {
       try {
         const [usersRes, coursesRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/users`),
-          fetch(`${API_BASE_URL}/courses`)
+          authFetch(`${API_BASE_URL}/users`),
+          authFetch(`${API_BASE_URL}/courses`)
         ])
         const usersData = await usersRes.json()
         const coursesData = await coursesRes.json()
@@ -71,7 +71,7 @@ function AdminStudents() {
     if (!selectedUser || !selectedCourse) return
 
     try {
-      const response = await fetch(`${API_BASE_URL}/enrollments/enroll`, {
+      const response = await authFetch(`${API_BASE_URL}/enrollments/enroll`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: selectedUser._id, courseId: selectedCourse })
@@ -90,7 +90,7 @@ function AdminStudents() {
   }
 
   const filteredUsers = users.filter(user => 
-    user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    user.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
@@ -158,10 +158,10 @@ function AdminStudents() {
                     <div className="flex items-center gap-4">
                        <Avatar className="h-10 w-10 border-2 border-slate-100 group-hover:border-primary/20 transition-colors">
                           <AvatarImage src={user.avatar} />
-                          <AvatarFallback className="bg-primary/5 text-primary font-bold">{user.fullName[0]}</AvatarFallback>
+                          <AvatarFallback className="bg-primary/5 text-primary font-bold">{user.name?.[0] || 'U'}</AvatarFallback>
                        </Avatar>
                        <div className="flex flex-col">
-                          <span className="font-bold text-slate-900 group-hover:text-primary transition-colors">{user.fullName}</span>
+                          <span className="font-bold text-slate-900 group-hover:text-primary transition-colors">{user.name}</span>
                           <span className="text-xs text-slate-500 flex items-center gap-1">
                              <Mail className="h-3 w-3 opacity-60" /> {user.email}
                           </span>
@@ -211,7 +211,7 @@ function AdminStudents() {
                                 <UserCheck className="h-10 w-10 text-primary mb-4" />
                                 <DialogTitle className="text-2xl font-bold">Enroll Student</DialogTitle>
                                 <DialogDescription className="text-slate-400 mt-2 font-medium">
-                                  You are enrolling <span className="text-white font-bold">{user.fullName}</span> in a new course.
+                                  You are enrolling <span className="text-white font-bold">{user.name}</span> in a new course.
                                 </DialogDescription>
                              </div>
                              

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -7,6 +7,16 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const Route = createFileRoute('/register')({
+  beforeLoad: ({ context }) => {
+    if (context.auth.isAuthenticated) {
+      const { user } = context.auth
+      if (user?.role === 'admin') {
+        throw redirect({ to: '/admin' })
+      } else {
+        throw redirect({ to: '/students/my-courses' })
+      }
+    }
+  },
   component: Register,
 })
 
@@ -32,7 +42,7 @@ function Register() {
     const password = e.target.password.value
 
     const result = await register({ 
-      fullName: `${firstName} ${lastName}`, 
+      name: `${firstName} ${lastName}`, 
       email, 
       password 
     })

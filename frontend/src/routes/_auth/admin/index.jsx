@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { API_BASE_URL } from '@/utils/api'
+import { API_BASE_URL, authFetch } from '@/utils/api'
 import { Users, BookOpen, DollarSign, TrendingUp, Clock, UserPlus, CreditCard, ChevronRight } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Link } from '@tanstack/react-router'
@@ -23,8 +23,8 @@ function AdminOverview() {
     const fetchStats = async () => {
       try {
         const [usersRes, coursesRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/users`),
-          fetch(`${API_BASE_URL}/courses`)
+          authFetch(`${API_BASE_URL}/users`),
+          authFetch(`${API_BASE_URL}/courses`)
         ])
         const usersData = await usersRes.json()
         const coursesData = await coursesRes.json()
@@ -107,10 +107,10 @@ function AdminOverview() {
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12 border-2 border-slate-100 group-hover:border-primary/20 transition-colors">
                       <AvatarImage src={user.avatar} />
-                      <AvatarFallback className="bg-primary/5 text-primary font-bold">{user.fullName[0]}</AvatarFallback>
+                      <AvatarFallback className="bg-primary/5 text-primary font-bold">{user.name?.[0] || 'U'}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-bold text-slate-900 text-lg group-hover:text-primary transition-colors">{user.fullName}</div>
+                      <div className="font-bold text-slate-900 text-lg group-hover:text-primary transition-colors">{user.name}</div>
                       <div className="text-xs font-semibold text-slate-400 uppercase tracking-tighter">{user.email}</div>
                     </div>
                   </div>

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { API_BASE_URL } from '@/utils/api'
+import { API_BASE_URL, authFetch } from '@/utils/api'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { BookOpen, Loader2 } from 'lucide-react'
@@ -17,7 +17,7 @@ function AdminAllCourses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/courses`)
+        const response = await authFetch(`${API_BASE_URL}/courses`)
         const data = await response.json()
         if (data.success) {
           setCourses(data.data)

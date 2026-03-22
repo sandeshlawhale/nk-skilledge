@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,6 +7,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useEffect } from 'react'
 
 export const Route = createFileRoute('/login')({
+  beforeLoad: ({ context }) => {
+    if (context.auth.isAuthenticated) {
+      const { user } = context.auth
+      if (user?.role === 'admin') {
+        throw redirect({ to: '/admin' })
+      } else {
+        throw redirect({ to: '/students/my-courses' })
+      }
+    }
+  },
   component: Login,
 })
 

@@ -23,7 +23,7 @@ function AllCourses() {
     const fetchData = async () => {
       try {
         const [coursesRes, enrollmentsRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/courses`),
+          authFetch(`${API_BASE_URL}/courses`),
           user?._id ? authFetch(`${API_BASE_URL}/enrollments/user/${user?._id}`) : Promise.resolve({ json: () => ({ success: true, data: [] }) })
         ])
 

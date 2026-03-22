@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from '@tanstack/react-router'
+import { createFileRoute, Outlet, Link, useNavigate, useRouterState, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 import { useEffect } from 'react'
 import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users } from 'lucide-react'
@@ -24,10 +24,20 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 export const Route = createFileRoute('/_auth')({
   beforeLoad: ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
-      throw Object.assign(new Error('Not authenticated'), {
-        redirect: '/login',
-        from: location.pathname
+      throw redirect({
+        to: '/login',
+        search: {
+          redirect: location.href,
+        },
       })
+    }
+
+    const { user } = context.auth
+    if (location.pathname.startsWith('/admin') && user?.role !== 'admin') {
+      throw redirect({ to: '/students/my-courses' })
+    }
+    if (location.pathname.startsWith('/students') && user?.role === 'admin') {
+      throw redirect({ to: '/admin' })
     }
   },
   component: AuthLayout,
@@ -123,14 +133,7 @@ function DashboardSidebar() {
 }
 
 function AuthLayout() {
-  const navigate = useNavigate()
   const { isAuthenticated } = useAuthStore()
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate({ to: '/login', replace: true })
-    }
-  }, [isAuthenticated, navigate])
 
   if (!isAuthenticated) {
     return null

@@ -17,18 +17,35 @@ const getToken = () => {
   }
 };
 
+import { useAuthStore } from '../store/auth';
+
 /**
  * Authenticated fetch — automatically adds the Authorization Bearer token
  * and credentials:include on every request.
  */
-export const authFetch = (url, options = {}) => {
+export const authFetch = async (url, options = {}) => {
   const token = getToken();
   const { headers = {}, ...rest } = options;
-  return fetch(url, {
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    ...rest,
-  });
+  
+  try {
+    const response = await fetch(url, {
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+      ...rest,
+    });
+
+    if (response.status === 401) {
+      // Clear auth state and redirect to login
+      useAuthStore.getState().logout();
+      window.location.href = '/login';
+      return response;
+    }
+
+    return response;
+  } catch (error) {
+    console.error('API call failed:', error);
+    throw error;
+  }
 };

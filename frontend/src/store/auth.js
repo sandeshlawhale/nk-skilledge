@@ -68,6 +68,17 @@ export const useAuthStore = create(
       checkAuth: async () => {
         try {
           const response = await fetch(`${API_BASE_URL}/auth/me`)
+          
+          if (response.status === 401) {
+            set({ user: null, accessToken: null, isAuthenticated: false })
+            // Only redirect if not already on login or register
+            const path = window.location.pathname
+            if (path !== '/login' && path !== '/register') {
+              window.location.href = '/login'
+            }
+            return
+          }
+
           const data = await response.json()
           if (data.success) {
             set({ user: data.data, isAuthenticated: true })
