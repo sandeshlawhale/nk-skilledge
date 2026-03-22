@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Clock } from 'lucide-react'
 import { FEATURED_COURSES } from '@/constants'
+import { PageHeader } from '../shared/PageHeader'
 
 export function Courses() {
   return (
@@ -10,21 +11,19 @@ export function Courses() {
         <div className="h-px w-8 bg-primary"></div>
         <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">Courses</p>
       </div>
-      <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-8">
-        <div className="text-left flex-1 space-y-2">
-          <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Build Skills That Companies Actually Hire For.</h2>
-          <p className="text-xl text-slate-500 max-w-2xl font-light">
-            Hands-on training programs designed with real projects, industry tools, and mentorship to help you become job-ready.
-          </p>
-        </div>
+
+      <PageHeader
+        title="Build Skills That Companies Actually Hire For."
+        subtitle="Hands-on training programs designed with real projects, industry tools, and mentorship to help you become job-ready."
+      >
         <Link to="/courses">
-          <Button variant="brutal-outline" size="hero">
+          <Button variant="brutal-outline" size="xl">
             Browse all courses
           </Button>
         </Link>
-      </div>
+      </PageHeader>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-8">
         {FEATURED_COURSES.map((course, i) => (
           <div key={i} className="group flex flex-col bg-white border border-slate-200 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.05)] transition-all relative z-1 hover:z-10">
             <div className="w-full aspect-video bg-slate-100 relative overflow-hidden">

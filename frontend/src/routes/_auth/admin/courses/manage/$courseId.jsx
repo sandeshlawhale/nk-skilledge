@@ -9,6 +9,8 @@ import ModulesTab from '@/components/admin/course/ModulesTab'
 import CourseInfoTab from '@/components/admin/course/CourseInfoTab'
 import EnrollmentsTab from '@/components/admin/course/EnrollmentsTab'
 import AddLessonModal from '@/components/admin/course/AddLessonModal'
+import { PageHeader } from '@/components/shared/PageHeader'
+import { Button } from '@/components/ui/button'
 
 
 
@@ -313,16 +315,20 @@ function CourseManager() {
   return (
     <div className="space-y-8 max-w-6xl mx-auto font-geist pb-20">
       {/* Simple Header Section */}
-      <div className="px-1">
-        <button
+      <div className='space-y-2'>
+        <Button
+          variant='ghost'
+          size='sm'
+          className="flex items-center text-slate-400"
           onClick={() => navigate({ to: '/admin/courses' })}
-          className="flex items-center gap-1.5 text-slate-400 hover:text-slate-900 transition-colors font-black uppercase text-[9px] tracking-widest"
         >
           <ArrowLeft className="h-3 w-3" /> Back to Courses
-        </button>
-        <h1 className="text-xl md:text-2xl font-bold text-slate-900 capitalize tracking-wide">
-          {course?.title}
-        </h1>
+        </Button>
+        <PageHeader
+          title={course?.title}
+          subtitle="Manage your course content and settings."
+        >
+        </PageHeader>
       </div>
 
       <Tabs
@@ -345,7 +351,7 @@ function CourseManager() {
 
         {/* Modules Tab */}
         <TabsContent value="modules">
-          <ModulesTab 
+          <ModulesTab
             courseId={courseId}
             course={course}
             lessons={lessons}
@@ -356,7 +362,7 @@ function CourseManager() {
 
         {/* Course Info Tab */}
         <TabsContent value="settings">
-          <CourseInfoTab 
+          <CourseInfoTab
             course={course}
             editData={editData}
             setEditData={setEditData}
@@ -373,7 +379,7 @@ function CourseManager() {
 
         {/* Enrollments Tab */}
         <TabsContent value="enrollments">
-          <EnrollmentsTab 
+          <EnrollmentsTab
             courseId={courseId}
             enrollments={enrollments}
             isLoadingEnrollments={isLoadingEnrollments}
@@ -397,7 +403,7 @@ function CourseManager() {
       </Tabs>
 
       {/* Add Lesson Modal */}
-      <AddLessonModal 
+      <AddLessonModal
         showAddLesson={showAddLesson}
         setShowAddLesson={setShowAddLesson}
         newLesson={newLesson}

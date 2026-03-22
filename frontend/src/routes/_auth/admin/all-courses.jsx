@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { BookOpen, Loader2 } from 'lucide-react'
 import { CourseCard } from '@/components/shared/CourseCard'
+import { PageHeader } from '@/components/shared/PageHeader'
 
 export const Route = createFileRoute('/_auth/admin/all-courses')({
   component: AdminAllCourses,
@@ -42,20 +43,20 @@ function AdminAllCourses() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
-      <div className="flex justify-between items-end px-1">
-        <div>
-          <Badge className="bg-indigo-500/10 text-indigo-500 border-indigo-500/20 font-black mb-2 uppercase tracking-[0.2em] text-[10px] rounded-none">Registry View</Badge>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 uppercase italic">Published Registry</h1>
-          <p className="text-slate-500 mt-1 font-medium italic text-xs">Viewing the platform as a student to verify content delivery.</p>
+      <PageHeader
+        title="Published Courses"
+        subtitle="Viewing the platform as a student to verify content delivery."
+      >
+        <div className="flex flex-col items-end gap-2">
+          <Button asChild variant="outline" size='xl' className="">
+            <Link to="/admin/courses">Management Mode</Link>
+          </Button>
         </div>
-        <Button asChild variant="outline" className="rounded-none border-slate-200 font-black h-11 px-6 uppercase tracking-widest text-[10px]">
-           <Link to="/admin/courses">Management Mode</Link>
-        </Button>
-      </div>
+      </PageHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.filter(c => c.status === 'published').map((course) => (
-          <CourseCard 
+          <CourseCard
             key={course._id}
             course={course}
             linkTo={`/students/course/${course._id}`}
@@ -63,17 +64,17 @@ function AdminAllCourses() {
           />
         ))}
       </div>
-      
+
       {courses.filter(c => c.status === 'published').length === 0 && (
         <div className="text-center py-20 bg-slate-50/50 rounded-none border border-dashed border-slate-200 px-4">
-           <div className="h-16 w-16 bg-white rounded-none flex items-center justify-center text-slate-200 shadow-sm mx-auto mb-6">
-              <BookOpen className="h-8 w-8" />
-           </div>
-           <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Registry Empty</h3>
-           <p className="text-slate-500 font-medium mt-2 italic text-sm">No courses are currently live on the student portal.</p>
-           <Button asChild className="mt-8 bg-slate-900 rounded-none px-8 h-12 font-black uppercase tracking-widest text-[10px]">
-              <Link to="/admin/courses">Manage Courses</Link>
-           </Button>
+          <div className="h-16 w-16 bg-white rounded-none flex items-center justify-center text-slate-200 shadow-sm mx-auto mb-6">
+            <BookOpen className="h-8 w-8" />
+          </div>
+          <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Registry Empty</h3>
+          <p className="text-slate-500 font-medium mt-2 italic text-sm">No courses are currently live on the student portal.</p>
+          <Button asChild className="mt-8 bg-slate-900 rounded-none px-8 h-12 font-black uppercase tracking-widest text-[10px]">
+            <Link to="/admin/courses">Manage Courses</Link>
+          </Button>
         </div>
       )}
     </div>

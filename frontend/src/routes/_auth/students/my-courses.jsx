@@ -4,8 +4,11 @@ import { API_BASE_URL, authFetch } from '@/utils/api'
 import { useAuthStore } from '@/store/auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Loader2 } from 'lucide-react'
+import { BookOpen, Loader2, Search } from 'lucide-react'
 import { CourseCard } from '@/components/shared/CourseCard'
+import { PageHeader } from '@/components/shared/PageHeader'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export const Route = createFileRoute('/_auth/students/my-courses')({
   component: MyCourses,
@@ -15,25 +18,45 @@ function MyCourses() {
   const { user } = useAuthStore()
   const [enrollments, setEnrollments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedLevel, setSelectedLevel] = useState('All')
+  const [categories, setCategories] = useState(['All'])
+
+  const levels = ['All', 'Beginner', 'Intermediate', 'Advanced']
+
+  const fetchEnrollments = async () => {
+    if (!user?._id) return
+    setIsLoading(true)
+    try {
+      const queryParams = new URLSearchParams()
+      if (selectedCategory !== 'All') queryParams.append('category', selectedCategory)
+      if (selectedLevel !== 'All') queryParams.append('levels', selectedLevel)
+      if (searchQuery) queryParams.append('search', searchQuery)
+
+      const response = await authFetch(`${API_BASE_URL}/enrollments/user/${user._id}?${queryParams.toString()}`)
+      const data = await response.json()
+      if (data.success) {
+        setEnrollments(data.data)
+        // Update categories only on initial load or when no filters are applied
+        if (selectedCategory === 'All' && selectedLevel === 'All' && !searchQuery) {
+          const cats = ['All', ...new Set(data.data.map(e => e.courseId?.category).filter(Boolean))]
+          setCategories(cats)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching enrollments:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchEnrollments = async () => {
-      if (!user?._id) return
-      try {
-        const response = await authFetch(`${API_BASE_URL}/enrollments/user/${user._id}`)
-        const data = await response.json()
-        if (data.success) {
-          setEnrollments(data.data)
-        }
-      } catch (error) {
-        console.error('Error fetching enrollments:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchEnrollments()
-  }, [user?._id])
+    const timer = setTimeout(() => {
+      fetchEnrollments()
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [user?._id, searchQuery, selectedCategory, selectedLevel])
 
   if (isLoading) {
     return (
@@ -45,13 +68,34 @@ function MyCourses() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
-      {/* <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 px-1">
-        <div>
-          <Badge className="bg-primary/10 text-primary border-primary/20 font-black mb-2 uppercase tracking-widest text-[9px] rounded-none">Personal Dashboard</Badge>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 uppercase italic">Your Learning Path</h1>
-          <p className="text-slate-500 font-medium italic mt-0.5 text-xs">A collection of specialized professional curriculums currently in progress.</p>
+      <PageHeader
+        title="My courses"
+        subtitle={`${enrollments.length} Modules available`}
+      >
+        <div className="flex items-stretch gap-2 w-full md:w-auto">
+          <div className="relative w-full md:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input
+              placeholder="Search my courses..."
+              className="pl-10 h-10 text-xs font-bold rounded-none border-slate-200 bg-white w-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+            <SelectTrigger className="h-10! w-32 text-xs font-bold rounded-none border-slate-200 bg-white flex items-center">
+              <SelectValue placeholder="Difficulty" />
+            </SelectTrigger>
+            <SelectContent className="rounded-none border-slate-200 w-32!">
+              {levels.map(lvl => (
+                <SelectItem key={lvl} value={lvl} className="text-xs font-bold uppercase tracking-widest">
+                  {lvl === 'All' ? 'All Levels' : lvl}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-      </div> */}
+      </PageHeader>
 
       {enrollments.length > 0 ? (
         <div className="space-y-12 pb-10">
@@ -84,13 +128,13 @@ function MyCourses() {
           {/* Completed or Not Started Section */}
           {enrollments.filter(e => e.progress === 0 || e.progress === 100).length > 0 && (
             <div className="space-y-2">
-              <div className="flex items-center gap-3 px-1">
+              {enrollments.length == 0 && <div className="flex items-center gap-3 px-1">
                 <div className="h-5 w-1 bg-slate-300 rounded-full"></div>
                 <h2 className="text-lg font-semibold text-slate-900 capitalize tracking-wide">Courses</h2>
                 <Badge variant="outline" className="ml-2 text-[10px] font-bold border-slate-200 text-slate-400 rounded-none uppercase tracking-widest">
                   {enrollments.filter(e => e.progress === 0 || e.progress === 100).length} Modules
                 </Badge>
-              </div>
+              </div>}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {enrollments
                   .filter(e => e.progress === 0 || e.progress === 100)

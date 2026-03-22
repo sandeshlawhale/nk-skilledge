@@ -3,15 +3,31 @@ const { ApiError, ApiResponse, asyncHandler } = require("../utils/apiHandler");
 const { uploadOnCloudinary } = require("../config/cloudinary");
 
 const getAllCourses = asyncHandler(async (req, res) => {
-  const { status } = req.query;
+  const { status, search, category, levels } = req.query;
   const filter = {};
 
-  if (status === "all") {
-    // Note: Security check for admin role should be handled here or in middleware
-    // If we want this to be purely through query params, we need to ensure the requester is admin
-    // For now, I'll implement the logic to handle the 'all' filter
-  } else {
+  // Status filter
+  if (status !== "all") {
     filter.status = "published";
+  }
+
+  // Category filter
+  if (category && category !== "All") {
+    filter.category = category;
+  }
+
+  // Levels filter
+  if (levels && levels !== "All") {
+    filter.levels = levels;
+  }
+
+  // Search filter
+  if (search) {
+    filter.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { category: { $regex: search, $options: "i" } },
+      { tags: { $regex: search, $options: "i" } }
+    ];
   }
 
   const courses = await Course.find(filter).sort("-createdAt");

@@ -1,4 +1,5 @@
 const Enrollment = require("../models/enrollment.model");
+const Course = require("../models/course.model");
 const { ApiError, ApiResponse, asyncHandler } = require("../utils/apiHandler");
 
 const enrollUser = asyncHandler(async (req, res) => {
@@ -22,11 +23,29 @@ const enrollUser = asyncHandler(async (req, res) => {
 });
 
 const getUserEnrollments = asyncHandler(async (req, res) => {
-  const enrollments = await Enrollment.find({ userId: req.params.userId }).populate("courseId");
+  const { search, category, levels } = req.query;
+  const courseFilter = { status: "published" };
+
+  if (category && category !== "All") courseFilter.category = category;
+  if (levels && levels !== "All") courseFilter.levels = levels;
+  if (search) {
+    courseFilter.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { category: { $regex: search, $options: "i" } }
+    ];
+  }
+
+  const matchingCourses = await Course.find(courseFilter).select("_id");
+  const matchingCourseIds = matchingCourses.map(c => c._id);
+
+  const enrollments = await Enrollment.find({ 
+    userId: req.params.userId,
+    courseId: { $in: matchingCourseIds }
+  }).populate("courseId");
   
   const enrollmentsWithCount = await Promise.all(
     enrollments
-      .filter(enrollment => enrollment.courseId && enrollment.courseId.status === "published")
+      .filter(enrollment => enrollment.courseId)
       .map(async (enrollment) => {
         const eObj = enrollment.toObject();
         if (eObj.courseId) {

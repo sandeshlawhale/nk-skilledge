@@ -7,6 +7,7 @@ import { Link } from '@tanstack/react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/shared/PageHeader'
 
 export const Route = createFileRoute('/_auth/admin/')({
   component: AdminOverview,
@@ -60,16 +61,15 @@ function AdminOverview() {
 
   return (
     <div className="space-y-10 max-w-7xl mx-auto font-geist">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
-        <div>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 uppercase">Dashboard</h1>
-          <p className="text-slate-500 font-medium italic mt-1">Welcome back. Here's what's happening on your platform today.</p>
-        </div>
+      <PageHeader
+        title="Dashboard"
+        subtitle="Welcome back. Here's what's happening on your platform today."
+      >
         <div className="bg-slate-50 border border-slate-100 rounded-2xl px-4 py-2 flex items-center gap-2">
           <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">System Health: Optimal</span>
         </div>
-      </div>
+      </PageHeader>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat, i) => (

@@ -8,6 +8,7 @@ import { Plus, PlusCircle, Search, Edit, Trash2, Upload, Image, BookOpen, Users,
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { CourseCard } from '@/components/shared/CourseCard'
+import { PageHeader } from '@/components/shared/PageHeader'
 
 export const Route = createFileRoute('/_auth/admin/courses/')({
   component: AdminCourses,
@@ -197,15 +198,14 @@ function AdminCourses() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto font-geist">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Course Management</h1>
-          <p className="text-slate-500 mt-1 italic">Create, edit, and organize your educational content.</p>
-        </div>
-        <Button onClick={openModal} className="bg-slate-900 hover:bg-primary font-bold rounded-xl shadow-lg shadow-indigo-100">
+      <PageHeader
+        title="Course Management"
+        subtitle="Create, edit, and organize your educational content."
+      >
+        <Button onClick={openModal} size='xl' variant='outline' className="">
           <Plus className="mr-2 h-4 w-4" /> Create New Course
         </Button>
-      </div>
+      </PageHeader>
 
       <div className="bg-white p-3 rounded-none border border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center px-4">
         <div className="relative w-full sm:w-80">

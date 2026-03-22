@@ -3,8 +3,12 @@ import { useEffect, useState } from 'react'
 import { API_BASE_URL, authFetch } from '@/utils/api'
 import { useAuthStore } from '@/store/auth'
 import { Badge } from '@/components/ui/badge'
-import { BookOpen } from 'lucide-react'
+import { BookOpen, Search } from 'lucide-react'
 import { CourseCard } from '@/components/shared/CourseCard'
+import { PageHeader } from '@/components/shared/PageHeader'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_auth/students/all-courses')({
   component: AllCourses,
@@ -18,42 +22,61 @@ function AllCourses() {
 
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedLevel, setSelectedLevel] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categories, setCategories] = useState(['All'])
+
+  const fetchCourses = async () => {
+    setIsLoading(true)
+    try {
+      const queryParams = new URLSearchParams()
+      if (selectedCategory !== 'All') queryParams.append('category', selectedCategory)
+      if (selectedLevel !== 'All') queryParams.append('levels', selectedLevel)
+      if (searchQuery) queryParams.append('search', searchQuery)
+
+      const response = await authFetch(`${API_BASE_URL}/courses?${queryParams.toString()}`)
+      const data = await response.json()
+      if (data.success) {
+        setCourses(data.data)
+        // Also update categories if we are doing the initial fetch (no filters)
+        if (selectedCategory === 'All' && selectedLevel === 'All' && !searchQuery) {
+          const cats = ['All', ...new Set(data.data.map(c => c.category).filter(Boolean))]
+          setCategories(cats)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchEnrollments = async () => {
+      if (!user?._id) return
       try {
-        const [coursesRes, enrollmentsRes] = await Promise.all([
-          authFetch(`${API_BASE_URL}/courses`),
-          user?._id ? authFetch(`${API_BASE_URL}/enrollments/user/${user?._id}`) : Promise.resolve({ json: () => ({ success: true, data: [] }) })
-        ])
-
-        const cData = await coursesRes.json()
-        const eData = typeof enrollmentsRes.json === 'function' ? await enrollmentsRes.json() : { success: true, data: [] }
-
-        if (cData.success) {
-          setCourses(cData.data.filter(c => c.status === 'published'))
-        }
-        if (eData.success) {
-          setEnrollments(eData.data)
+        const response = await authFetch(`${API_BASE_URL}/enrollments/user/${user?._id}`)
+        const data = await response.json()
+        if (data.success) {
+          setEnrollments(data.data)
         }
       } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setIsLoading(false)
+        console.error('Error fetching enrollments:', error)
       }
     }
-
-    fetchData()
+    fetchEnrollments()
   }, [user?._id])
 
-  const categories = ['All', ...new Set(courses.map(c => c.category).filter(Boolean))]
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchCourses()
+    }, 400)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery, selectedCategory, selectedLevel])
+
   const levels = ['All', 'Beginner', 'Intermediate', 'Advanced']
 
-  const filteredCourses = courses.filter(course => {
-    const categoryMatch = selectedCategory === 'All' || course.category === selectedCategory
-    const levelMatch = selectedLevel === 'All' || course.levels === selectedLevel
-    return categoryMatch && levelMatch
-  })
+  const filteredCourses = courses // Filtering is now handled by the backend
 
   if (isLoading) {
     return (
@@ -67,52 +90,48 @@ function AllCourses() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
       <div className="flex flex-col gap-6 px-1">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-5 w-1 bg-slate-900 rounded-full"></div>
-            <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight italic">Elite Curriculum</h2>
-            <Badge variant="outline" className="ml-2 text-[10px] font-bold border-slate-200 text-slate-400 rounded-none uppercase tracking-widest">
-              {filteredCourses.length} Modules Available
-            </Badge>
+        <PageHeader
+          title="Elite Curriculum"
+          subtitle={`${filteredCourses.length} Modules available`}
+        >
+          <div className="flex items-stretch gap-2 w-full md:w-auto">
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Search courses..."
+                className="pl-10 h-10 text-xs font-bold rounded-none border-slate-200 bg-white w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+              <SelectTrigger className="h-10! w-32 text-xs font-bold rounded-none border-slate-200 bg-white flex items-center">
+                <SelectValue placeholder="Difficulty" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none border-slate-200">
+                {levels.map(lvl => (
+                  <SelectItem key={lvl} value={lvl} className="text-xs font-bold uppercase tracking-widest">
+                    {lvl === 'All' ? 'All Levels' : lvl}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </div>
+        </PageHeader>
 
         {/* Filters */}
-        <div className="space-y-4 bg-slate-50/50 p-4 border border-slate-100 rounded-none">
-          <div className="flex flex-col gap-3">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Browse Categories</span>
+        <div className="space-y-2 bg-slate-50/50 p-2 border border-slate-200 rounded-none">
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-bold text-slate-400 capitalize tracking-wider ml-1">Browse Categories</span>
             <div className="flex flex-wrap gap-2">
               {categories.map(cat => (
-                <button
+                <Button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all rounded-none border ${
-                    selectedCategory === cat 
-                    ? 'bg-slate-900 border-slate-900 text-white shadow-md' 
-                    : 'bg-white border-slate-100 text-slate-500 hover:border-slate-200 hover:bg-slate-50'
-                  }`}
+                  variant={selectedCategory === cat ? "default" : "outline"}
                 >
                   {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-3">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Difficulty Level</span>
-            <div className="flex flex-wrap gap-2">
-              {levels.map(lvl => (
-                <button
-                  key={lvl}
-                  onClick={() => setSelectedLevel(lvl)}
-                  className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all rounded-none border ${
-                    selectedLevel === lvl 
-                    ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' 
-                    : 'bg-white border-slate-100 text-slate-500 hover:border-slate-200 hover:bg-slate-50'
-                  }`}
-                >
-                  {lvl}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -138,22 +157,24 @@ function AllCourses() {
         })}
       </div>
 
-      {filteredCourses.length === 0 && (
-        <div className="text-center py-20 bg-slate-50/50 rounded-none border border-dashed border-slate-200 px-4 mx-1">
-          <div className="h-16 w-16 bg-white rounded-none flex items-center justify-center text-slate-200 shadow-sm mx-auto mb-6">
-            <BookOpen className="h-8 w-8" />
+      {
+        filteredCourses.length === 0 && (
+          <div className="text-center py-20 bg-slate-50/50 rounded-none border border-dashed border-slate-200 px-4 mx-1">
+            <div className="h-16 w-16 bg-white rounded-none flex items-center justify-center text-slate-200 shadow-sm mx-auto mb-6">
+              <BookOpen className="h-8 w-8" />
+            </div>
+            <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">No modules match filters</h3>
+            <p className="text-slate-500 font-medium mt-2 italic text-sm">Try adjusting your filters or browsing all categories.</p>
+            <Button
+              variant="link"
+              onClick={() => { setSelectedCategory('All'); setSelectedLevel('All'); }}
+              className="mt-4 text-primary font-black uppercase tracking-widest text-[10px]"
+            >
+              Clear all filters
+            </Button>
           </div>
-          <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">No modules match filters</h3>
-          <p className="text-slate-500 font-medium mt-2 italic text-sm">Try adjusting your filters or browsing all categories.</p>
-          <Button 
-            variant="link" 
-            onClick={() => { setSelectedCategory('All'); setSelectedLevel('All'); }}
-            className="mt-4 text-primary font-black uppercase tracking-widest text-[10px]"
-          >
-            Clear all filters
-          </Button>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   )
 }
