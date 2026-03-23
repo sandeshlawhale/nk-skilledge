@@ -285,6 +285,20 @@ const CourseInfoTab = ({
                     </div>
                   )}
                 </div>
+                <div className="space-y-2 pt-2 border-t border-slate-50">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Featured Course</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="featured"
+                      checked={editData.featured}
+                      disabled={!isEditingInfo}
+                      onChange={(e) => setEditData({ ...editData, featured: e.target.checked })}
+                      className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary"
+                    />
+                    <label htmlFor="featured" className="text-xs font-bold text-slate-700 cursor-pointer">Show this course on Homepage</label>
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Tags (Comma Separated)</label>
                   {isEditingInfo ? (
@@ -365,6 +379,14 @@ const CourseInfoTab = ({
                     {course?.status?.toUpperCase() || 'DRAFT'}
                   </Badge>
                 </div>
+                {course?.featured && (
+                  <div className="flex justify-between items-center px-1 border-t border-slate-50 pt-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Featured</span>
+                    <Badge className="bg-indigo-500 text-white font-black border-0 rounded-none italic">
+                      YES
+                    </Badge>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

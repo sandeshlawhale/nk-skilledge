@@ -3,7 +3,7 @@ const { ApiError, ApiResponse, asyncHandler } = require("../utils/apiHandler");
 const { uploadOnCloudinary } = require("../config/cloudinary");
 
 const getAllCourses = asyncHandler(async (req, res) => {
-  const { status, search, category, levels } = req.query;
+  const { status, search, category, levels, featured, limit } = req.query;
   const filter = {};
 
   // Status filter
@@ -30,7 +30,21 @@ const getAllCourses = asyncHandler(async (req, res) => {
     ];
   }
 
-  const courses = await Course.find(filter).sort("-createdAt");
+  // Featured filter
+  if (featured === "true") {
+    filter.featured = true;
+  } else if (featured === "false") {
+    filter.featured = false;
+  }
+
+  let query = Course.find(filter).sort("-createdAt");
+
+  // Limit results
+  if (limit) {
+    query = query.limit(parseInt(limit));
+  }
+
+  const courses = await query;
   
   const coursesWithModuleCount = await Promise.all(
     courses.map(async (course) => {
@@ -71,6 +85,7 @@ const createCourse = asyncHandler(async (req, res) => {
     levels, 
     duration, 
     instructorName, 
+    featured,
   } = req.body;
 
   // Handle arrays from FormData which might have [] suffix
@@ -113,6 +128,7 @@ const createCourse = asyncHandler(async (req, res) => {
     thumbnail: thumbnail.url,
     createdBy: req.user._id,
     status: "draft",
+    featured: featured === "true" || featured === true,
   });
 
   return res
@@ -129,6 +145,7 @@ const updateCourse = asyncHandler(async (req, res) => {
     levels,
     duration,
     instructorName,
+    featured,
   } = req.body;
 
   // Handle arrays from FormData
@@ -148,7 +165,8 @@ const updateCourse = asyncHandler(async (req, res) => {
     duration,
     instructorName,
     whatYouWillLearn: whatYouWillLearnUpdate !== undefined ? (Array.isArray(whatYouWillLearnUpdate) ? whatYouWillLearnUpdate : [whatYouWillLearnUpdate]) : undefined,
-    requirements: requirementsUpdate !== undefined ? (Array.isArray(requirementsUpdate) ? requirementsUpdate : [requirementsUpdate]) : undefined
+    requirements: requirementsUpdate !== undefined ? (Array.isArray(requirementsUpdate) ? requirementsUpdate : [requirementsUpdate]) : undefined,
+    featured: featured !== undefined ? (featured === "true" || featured === true) : undefined
   };
 
   // If price is updated, adjust isFree

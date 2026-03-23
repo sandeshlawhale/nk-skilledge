@@ -1,10 +1,42 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import { Clock } from 'lucide-react'
-import { FEATURED_COURSES } from '@/constants'
+import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '@/utils/api'
 import { PageHeader } from '../shared/PageHeader'
+import { CourseCard } from '../shared/CourseCard'
 
 export function Courses() {
+  const [courses, setCourses] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchFeaturedCourses = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/courses?featured=true&limit=4`)
+        const data = await response.json()
+        if (data.success) {
+          setCourses(data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching featured courses:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchFeaturedCourses()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-7xl py-12 px-4 mx-auto flex flex-col items-center justify-center min-h-[300px]">
+        <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-primary"></div>
+        <p className="mt-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Featured Modules...</p>
+      </div>
+    )
+  }
+
+  if (courses.length === 0) return null;
+
   return (
     <section className="w-full max-w-7xl py-12 px-4 mx-auto">
       <div className="mb-4 flex items-center gap-3 w-full justify-center">
@@ -23,31 +55,14 @@ export function Courses() {
         </Link>
       </PageHeader>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-8">
-        {FEATURED_COURSES.map((course, i) => (
-          <div key={i} className="group flex flex-col bg-white border border-slate-200 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.05)] transition-all relative z-1 hover:z-10">
-            <div className="w-full aspect-video bg-slate-100 relative overflow-hidden">
-              <img src={course.img} alt={course.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-            </div>
-            <div className="flex flex-col p-4 flex-1">
-              <div className="mb-2">
-                <h3 className="text-xl font-bold text-slate-900 leading-tight mb-2">{course.title}</h3>
-                <p className="text-sm text-slate-500 line-clamp-2 font-light">{course.description}</p>
-              </div>
-              <div className="mt-auto pt-2 flex items-center justify-between border-t border-slate-100">
-                <div className="flex items-center gap-1.5 text-slate-500 font-bold text-[10px] uppercase tracking-widest">
-                  <Clock className="w-3.5 h-3.5 text-primary" />
-                  {course.duration}
-                </div>
-                <Link
-                  to="/courses/$courseId"
-                  params={{ courseId: course.id }}
-                  className="inline-flex items-center justify-center bg-slate-100 hover:bg-primary hover:text-white text-slate-900 px-3 py-1.5 font-black text-[10px] tracking-widest uppercase transition-all duration-300"
-                >
-                  View &rsaquo;
-                </Link>
-              </div>
-            </div>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${courses.length < 4 ? 'lg:flex lg:justify-center' : 'lg:grid-cols-4'} gap-8 my-12`}>
+        {courses.map((course) => (
+          <div key={course._id} className={courses.length < 4 ? 'w-full sm:max-w-[340px]' : ''}>
+            <CourseCard
+              course={course}
+              linkTo="/courses/$courseId"
+              params={{ courseId: course._id }}
+            />
           </div>
         ))}
       </div>
