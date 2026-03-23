@@ -10,7 +10,9 @@ const {
 } = require("../controllers/course.controller");
 const { verifyJWT, authorizeRoles } = require("../middleware/auth.middleware");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const os = require("os");
+const upload = multer({ dest: os.tmpdir() });
+
 
 const router = Router();
 
