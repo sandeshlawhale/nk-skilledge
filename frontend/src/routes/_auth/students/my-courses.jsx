@@ -19,18 +19,18 @@ function MyCourses() {
   const [enrollments, setEnrollments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedLevel, setSelectedLevel] = useState('All')
-  const [categories, setCategories] = useState(['All'])
 
   const levels = ['All', 'Beginner', 'Intermediate', 'Advanced']
 
   const fetchEnrollments = async () => {
-    if (!user?._id) return
+    if (!user?._id) {
+      setIsLoading(false)
+      return
+    }
     setIsLoading(true)
     try {
       const queryParams = new URLSearchParams()
-      if (selectedCategory !== 'All') queryParams.append('category', selectedCategory)
       if (selectedLevel !== 'All') queryParams.append('levels', selectedLevel)
       if (searchQuery) queryParams.append('search', searchQuery)
 
@@ -38,11 +38,6 @@ function MyCourses() {
       const data = await response.json()
       if (data.success) {
         setEnrollments(data.data)
-        // Update categories only on initial load or when no filters are applied
-        if (selectedCategory === 'All' && selectedLevel === 'All' && !searchQuery) {
-          const cats = ['All', ...new Set(data.data.map(e => e.courseId?.category).filter(Boolean))]
-          setCategories(cats)
-        }
       }
     } catch (error) {
       console.error('Error fetching enrollments:', error)
@@ -56,7 +51,7 @@ function MyCourses() {
       fetchEnrollments()
     }, 400)
     return () => clearTimeout(timer)
-  }, [user?._id, searchQuery, selectedCategory, selectedLevel])
+  }, [user?._id, searchQuery, selectedLevel])
 
   if (isLoading) {
     return (
@@ -127,14 +122,14 @@ function MyCourses() {
 
           {/* Completed or Not Started Section */}
           {enrollments.filter(e => e.progress === 0 || e.progress === 100).length > 0 && (
-            <div className="space-y-2">
-              {enrollments.length == 0 && <div className="flex items-center gap-3 px-1">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 px-1">
                 <div className="h-5 w-1 bg-slate-300 rounded-full"></div>
-                <h2 className="text-lg font-semibold text-slate-900 capitalize tracking-wide">Courses</h2>
-                <Badge variant="outline" className="ml-2 text-[10px] font-bold border-slate-200 text-slate-400 rounded-none uppercase tracking-widest">
-                  {enrollments.filter(e => e.progress === 0 || e.progress === 100).length} Modules
+                <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Modules</h2>
+                <Badge variant="outline" className="ml-2 text-[10px] font-bold border-slate-200 text-slate-400 rounded-none uppercase tracking-widest bg-white">
+                  {enrollments.filter(e => e.progress === 0 || e.progress === 100).length}
                 </Badge>
-              </div>}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {enrollments
                   .filter(e => e.progress === 0 || e.progress === 100)

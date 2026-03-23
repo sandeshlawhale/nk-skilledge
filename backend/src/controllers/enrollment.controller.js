@@ -1,5 +1,6 @@
 const Enrollment = require("../models/enrollment.model");
 const Course = require("../models/course.model");
+const Lesson = require("../models/lesson.model");
 const { ApiError, ApiResponse, asyncHandler } = require("../utils/apiHandler");
 
 const enrollUser = asyncHandler(async (req, res) => {
@@ -24,38 +25,40 @@ const enrollUser = asyncHandler(async (req, res) => {
 
 const getUserEnrollments = asyncHandler(async (req, res) => {
   const { search, category, levels } = req.query;
-  const courseFilter = { status: "published" };
+  const userId = req.params.userId;
 
-  if (category && category !== "All") courseFilter.category = category;
-  if (levels && levels !== "All") courseFilter.levels = levels;
-  if (search) {
-    courseFilter.$or = [
-      { title: { $regex: search, $options: "i" } },
-      { category: { $regex: search, $options: "i" } }
-    ];
-  }
+  // 1. Fetch user's enrollments with course details
+  // Note: We don't filter by "published" here because if a user is enrolled, 
+  // they should have access regardless of current catalog status.
+  const enrollments = await Enrollment.find({ userId }).populate("courseId");
 
-  const matchingCourses = await Course.find(courseFilter).select("_id");
-  const matchingCourseIds = matchingCourses.map(c => c._id);
+  // 2. Filter enrollments by search, category, and level in memory
+  const filteredEnrollments = enrollments.filter(enrollment => {
+    if (!enrollment.courseId) return false;
+    
+    const course = enrollment.courseId;
+    
+    const matchesCategory = !category || category === "All" || course.category === category;
+    const matchesLevel = !levels || levels === "All" || course.levels === levels;
+    const matchesSearch = !search || 
+      course.title.toLowerCase().includes(search.toLowerCase()) || 
+      (course.category && course.category.toLowerCase().includes(search.toLowerCase()));
 
-  const enrollments = await Enrollment.find({ 
-    userId: req.params.userId,
-    courseId: { $in: matchingCourseIds }
-  }).populate("courseId");
-  
+    return matchesCategory && matchesLevel && matchesSearch;
+  });
+
+  // 3. Add lessonsCount to each enrollment
   const enrollmentsWithCount = await Promise.all(
-    enrollments
-      .filter(enrollment => enrollment.courseId)
-      .map(async (enrollment) => {
-        const eObj = enrollment.toObject();
-        if (eObj.courseId) {
-          eObj.courseId.lessonsCount = await require("../models/lesson.model").countDocuments({ 
-            courseId: eObj.courseId._id, 
-            status: "published" 
-          });
-        }
-        return eObj;
-      })
+    filteredEnrollments.map(async (enrollment) => {
+      const eObj = enrollment.toObject();
+      if (eObj.courseId) {
+        eObj.courseId.lessonsCount = await Lesson.countDocuments({ 
+          courseId: eObj.courseId._id, 
+          status: "published" 
+        });
+      }
+      return eObj;
+    })
   );
 
   return res

@@ -112,6 +112,12 @@ function CourseManager() {
     fetchData()
   }, [courseId])
 
+  useEffect(() => {
+    if (tab === 'enrollments' && !enrollmentsFetched) {
+      fetchEnrollments()
+    }
+  }, [tab, enrollmentsFetched, courseId])
+
   const handleUpdateCourse = async () => {
     setIsSaving(true)
     try {
@@ -346,7 +352,7 @@ function CourseManager() {
           <TabsTrigger value="settings" className="rounded-xl px-8 py-2.5 font-bold">
             <Edit className="w-4 h-4 mr-2" /> Course Info
           </TabsTrigger>
-          <TabsTrigger value="enrollments" className="rounded-xl px-8 py-2.5 font-bold" onClick={() => { if (!enrollmentsFetched) fetchEnrollments() }}>
+          <TabsTrigger value="enrollments" className="rounded-xl px-8 py-2.5 font-bold">
             <Users className="w-4 h-4 mr-2" /> Enrollments
           </TabsTrigger>
         </TabsList>
