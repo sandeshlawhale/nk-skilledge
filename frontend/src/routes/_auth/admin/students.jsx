@@ -49,25 +49,25 @@ function AdminStudents() {
   const [roleFilter, setRoleFilter] = useState('all')
   const [sortBy, setSortBy] = useState('recent')
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [usersRes, coursesRes] = await Promise.all([
-          authFetch(`${API_BASE_URL}/users`),
-          authFetch(`${API_BASE_URL}/courses`)
-        ])
-        const usersData = await usersRes.json()
-        const coursesData = await coursesRes.json()
+  const fetchData = async () => {
+    try {
+      const [usersRes, coursesRes] = await Promise.all([
+        authFetch(`${API_BASE_URL}/users`),
+        authFetch(`${API_BASE_URL}/courses`)
+      ])
+      const usersData = await usersRes.json()
+      const coursesData = await coursesRes.json()
 
-        if (usersData.success) setUsers(usersData.data)
-        if (coursesData.success) setCourses(coursesData.data)
-      } catch (error) {
-        console.error('Error fetching admin data:', error)
-      } finally {
-        setIsLoading(false)
-      }
+      if (usersData.success) setUsers(usersData.data)
+      if (coursesData.success) setCourses(coursesData.data)
+    } catch (error) {
+      console.error('Error fetching admin data:', error)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -75,18 +75,17 @@ function AdminStudents() {
     if (!selectedUser || !selectedCourse) return
 
     try {
-      const response = await authFetch(`${API_BASE_URL}/enrollments/enroll`, {
+      const response = await authFetch(`${API_BASE_URL}/enrollments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: selectedUser._id, courseId: selectedCourse })
       })
       const data = await response.json()
       if (data.success) {
-        // Success feedback
         setIsEnrollDialogOpen(false)
         setSelectedUser(null)
         setSelectedCourse('')
-        // Optionally refresh user data to show updated enrollment count
+        fetchData()
       }
     } catch (error) {
       console.error('Error enrolling user:', error)
