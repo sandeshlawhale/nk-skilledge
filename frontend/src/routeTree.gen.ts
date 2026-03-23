@@ -13,7 +13,9 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
 import { Route as AuthStudentsIndexRouteImport } from './routes/_auth/students/index'
 import { Route as AuthAdminIndexRouteImport } from './routes/_auth/admin/index'
 import { Route as AuthStudentsMyCoursesRouteImport } from './routes/_auth/students/my-courses'
@@ -44,10 +46,20 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursesIndexRoute = CoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRoute,
+} as any)
+const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
+  id: '/courses/$courseId',
+  path: '/courses/$courseId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthStudentsIndexRoute = AuthStudentsIndexRouteImport.update({
   id: '/students/',
@@ -113,6 +125,8 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/courses/': typeof CoursesIndexRoute
   '/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/admin/students': typeof AuthAdminStudentsRoute
   '/students/all-courses': typeof AuthStudentsAllCoursesRoute
@@ -129,6 +143,8 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/courses': typeof CoursesIndexRoute
   '/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/admin/students': typeof AuthAdminStudentsRoute
   '/students/all-courses': typeof AuthStudentsAllCoursesRoute
@@ -147,7 +163,9 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/courses/$courseId': typeof CoursesCourseIdRoute
   '/_public/': typeof PublicIndexRoute
+  '/courses/': typeof CoursesIndexRoute
   '/_auth/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/_auth/admin/students': typeof AuthAdminStudentsRoute
   '/_auth/students/all-courses': typeof AuthStudentsAllCoursesRoute
@@ -166,6 +184,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/courses/$courseId'
+    | '/courses/'
     | '/admin/all-courses'
     | '/admin/students'
     | '/students/all-courses'
@@ -182,6 +202,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/courses/$courseId'
+    | '/courses'
     | '/admin/all-courses'
     | '/admin/students'
     | '/students/all-courses'
@@ -199,7 +221,9 @@ export interface FileRouteTypes {
     | '/_public'
     | '/login'
     | '/register'
+    | '/courses/$courseId'
     | '/_public/'
+    | '/courses/'
     | '/_auth/admin/all-courses'
     | '/_auth/admin/students'
     | '/_auth/students/all-courses'
@@ -218,6 +242,8 @@ export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  CoursesCourseIdRoute: typeof CoursesCourseIdRoute
+  CoursesIndexRoute: typeof CoursesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -250,12 +276,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courses/': {
+      id: '/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof CoursesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public/': {
       id: '/_public/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/courses/$courseId': {
+      id: '/courses/$courseId'
+      path: '/courses/$courseId'
+      fullPath: '/courses/$courseId'
+      preLoaderRoute: typeof CoursesCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_auth/students/': {
       id: '/_auth/students/'
@@ -399,6 +439,8 @@ const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  CoursesCourseIdRoute: CoursesCourseIdRoute,
+  CoursesIndexRoute: CoursesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

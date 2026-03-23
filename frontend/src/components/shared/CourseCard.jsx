@@ -1,13 +1,15 @@
 import { Link } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 
-export function CourseCard({ course, progress, linkTo, extraActions, metadata }) {
+export function CourseCard({ course, progress, linkTo, params, extraActions, metadata }) {
   if (!course) return null;
+
+  const linkProps = params ? { to: linkTo, params } : { to: linkTo };
 
   return (
     <div className="group block space-y-3">
       <Link 
-        to={linkTo}
+        {...linkProps}
         className="block cursor-pointer"
       >
         {/* Thumbnail Container */}
