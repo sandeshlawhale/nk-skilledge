@@ -47,7 +47,8 @@ function CourseManager() {
     duration: '',
     instructorName: '',
     whatYouWillLearn: [],
-    requirements: []
+    requirements: [],
+    askForPrice: false
   })
 
   // New Lesson State
@@ -95,7 +96,8 @@ function CourseManager() {
           duration: courseData.data.duration || '',
           instructorName: courseData.data.instructorName || '',
           whatYouWillLearn: courseData.data.whatYouWillLearn || [],
-          requirements: courseData.data.requirements || []
+          requirements: courseData.data.requirements || [],
+          askForPrice: courseData.data.askForPrice || false
         })
       }
       if (lessonsData.success) setLessons(lessonsData.data)
@@ -119,7 +121,8 @@ function CourseManager() {
         tags: editData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
         whatYouWillLearn: editData.whatYouWillLearn.map(item => item.trim()).filter(item => item),
         requirements: editData.requirements.map(item => item.trim()).filter(item => item),
-        price: editData.isFree ? 0 : editData.price
+        price: editData.askForPrice ? 0 : editData.price,
+        askForPrice: editData.askForPrice
       }
 
       const res = await authFetch(`${API_BASE_URL}/courses/${courseId}`, {

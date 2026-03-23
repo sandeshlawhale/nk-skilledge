@@ -26,6 +26,10 @@ const courseSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    askForPrice: {
+      type: Boolean,
+      default: false,
+    },
     category: {
       type: String,
       trim: true,

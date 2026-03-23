@@ -1,6 +1,7 @@
 import { createFileRoute, useParams, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { API_BASE_URL } from '@/utils/api'
+import { API_BASE_URL, authFetch } from '@/utils/api'
+import { useAuthStore } from '@/store/auth'
 import {
   CheckCircle2, Lock, LayoutList, MessageSquare,
   PhoneCall, Award, ArrowLeft, Loader2
@@ -22,6 +23,8 @@ function PublicCourseDetails() {
   const [course, setCourse] = useState(null)
   const [lessons, setLessons] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isEnrolled, setIsEnrolled] = useState(false)
+  const { user, isAuthenticated } = useAuthStore()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +39,19 @@ function PublicCourseDetails() {
 
         if (cData.success) setCourse(cData.data)
         if (lData.success) setLessons(lData.data)
+
+        // Check enrollment if logged in
+        if (isAuthenticated && user?._id) {
+          const enrollRes = await authFetch(`${API_BASE_URL}/enrollments/user/${user._id}`)
+          const eData = await enrollRes.json()
+          if (eData.success) {
+            const hasEnrollment = eData.data.some(e => {
+              const id = typeof e.courseId === 'object' ? e.courseId._id : e.courseId
+              return id === courseId
+            })
+            setIsEnrolled(hasEnrollment)
+          }
+        }
       } catch (err) {
         console.error('Error fetching data:', err)
       } finally {
@@ -43,7 +59,7 @@ function PublicCourseDetails() {
       }
     }
     fetchData()
-  }, [courseId])
+  }, [courseId, isAuthenticated, user?._id])
 
   if (isLoading) {
     return (
@@ -71,25 +87,25 @@ function PublicCourseDetails() {
           {/* Main Content: Course Details */}
           <div className="flex-1 space-y-8">
             <div className="space-y-4">
-              <button 
-                onClick={() => navigate({ to: '/courses' })} 
+              <button
+                onClick={() => navigate({ to: '/courses' })}
                 className="flex items-center gap-1.5 text-slate-400 hover:text-slate-900 transition-colors font-bold uppercase text-[9px] tracking-widest"
               >
                 <ArrowLeft className="h-3 w-3" /> Back to Catalog
               </button>
 
               <div className="relative aspect-video rounded-none overflow-hidden bg-slate-100 shadow-md">
-                <img 
-                  src={course?.thumbnail || 'https://placehold.co/1200x600/e2e8f0/4f46e5?text=Course'} 
-                  className="w-full h-full object-cover" 
-                  alt={course?.title} 
+                <img
+                  src={course?.thumbnail || 'https://placehold.co/1200x600/e2e8f0/4f46e5?text=Course'}
+                  className="w-full h-full object-cover"
+                  alt={course?.title}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 right-6 flex flex-col items-start gap-4">
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-primary text-white font-black px-3 py-1 rounded-none border-0 uppercase text-[9px] tracking-widest">
+                    {course?.category && <Badge className="bg-primary text-white font-black px-3 py-1 rounded-none border-0 uppercase text-[9px] tracking-widest">
                       {course?.category || 'Professional Level'}
-                    </Badge>
+                    </Badge>}
                     <Badge variant="outline" className="bg-white/10 text-white border-white/20 font-black px-3 py-1 rounded-none uppercase text-[9px] tracking-widest backdrop-blur-sm">
                       {course?.levels || 'All Levels'}
                     </Badge>
@@ -148,32 +164,36 @@ function PublicCourseDetails() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
-                      <div className="h-3 w-1 bg-primary"></div> Goals
-                    </h3>
-                    <ul className="space-y-3">
-                      {course?.whatYouWillLearn?.map((item, i) => (
-                        <li key={i} className="text-sm text-slate-600 font-medium flex items-start gap-3">
-                          <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-                          {item}
-                        </li>
-                      )) || <li className="text-sm text-slate-400 italic">No specific goals listed.</li>}
-                    </ul>
-                  </div>
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
-                      <div className="h-3 w-1 bg-slate-400"></div> Requirements
-                    </h3>
-                    <ul className="space-y-3">
-                      {course?.requirements?.map((item, i) => (
-                        <li key={i} className="text-sm text-slate-600 font-medium flex items-start gap-3">
-                          <div className="h-1.5 w-1.5 rounded-full bg-slate-300 mt-2 shrink-0"></div>
-                          {item}
-                        </li>
-                      )) || <li className="text-sm text-slate-400 italic">No special requirements.</li>}
-                    </ul>
-                  </div>
+                  {course?.whatYouWillLearn?.length > 0 && (
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
+                        <div className="h-3 w-1 bg-primary"></div> Goals
+                      </h3>
+                      <ul className="space-y-3">
+                        {course.whatYouWillLearn.map((item, i) => (
+                          <li key={i} className="text-sm text-slate-600 font-medium flex items-start gap-3">
+                            <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {course?.requirements?.length > 0 && (
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
+                        <div className="h-3 w-1 bg-slate-400"></div> Requirements
+                      </h3>
+                      <ul className="space-y-3">
+                        {course.requirements.map((item, i) => (
+                          <li key={i} className="text-sm text-slate-600 font-medium flex items-start gap-3">
+                            <div className="h-1.5 w-1.5 rounded-full bg-slate-300 mt-2 shrink-0"></div>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 {course?.tags?.length > 0 && (
@@ -189,28 +209,29 @@ function PublicCourseDetails() {
                 )}
               </div>
 
-              <div className="space-y-4 pt-4">
-                <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight flex items-center gap-3">
-                  <LayoutList className="h-6 w-6 text-primary" /> Curriculum Preview
-                </h2>
-                <div className="grid gap-3">
-                  {lessons.map((lesson, idx) => (
-                    <div key={lesson._id} className="flex items-center gap-4 p-4 bg-slate-50/50 border border-slate-100 rounded-none group hover:bg-white hover:border-slate-200 transition-all">
-                      <div className="h-8 w-8 rounded-none bg-slate-200 flex items-center justify-center text-[10px] font-black text-slate-400 shrink-0">
-                        {(idx + 1).toString().padStart(2, '0')}
+              {lessons?.length > 0 && (
+                <div className="space-y-4 pt-4">
+                  <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight flex items-center gap-3">
+                    <LayoutList className="h-6 w-6 text-primary" /> Curriculum Preview
+                  </h2>
+                  <div className="grid gap-3">
+                    {lessons.map((lesson, idx) => (
+                      <div key={lesson._id} className="flex items-center gap-4 p-4 bg-slate-50/50 border border-slate-100 rounded-none group hover:bg-white hover:border-slate-200 transition-all">
+                        <div className="h-8 w-8 rounded-none bg-slate-200 flex items-center justify-center text-[10px] font-black text-slate-400 shrink-0">
+                          {(idx + 1).toString().padStart(2, '0')}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-bold text-slate-700 uppercase italic leading-tight group-hover:text-primary transition-colors">
+                            {lesson.title}
+                          </h3>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide mt-0.5">Lesson {idx + 1}</p>
+                        </div>
+                        <Lock className="h-3.5 w-3.5 text-slate-300" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-bold text-slate-700 uppercase italic leading-tight group-hover:text-primary transition-colors">
-                          {lesson.title}
-                        </h3>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide mt-0.5">Lesson {idx + 1}</p>
-                      </div>
-                      <Lock className="h-3.5 w-3.5 text-slate-300" />
-                    </div>
-                  ))}
-                  {lessons.length === 0 && <p className="text-sm text-slate-400 italic p-4 text-center border border-dashed border-slate-200">Curriculum details are being updated.</p>}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -222,9 +243,9 @@ function PublicCourseDetails() {
                   <span className="text-[10px] font-black text-primary uppercase tracking-widest italic">Lifetime Enrollment</span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-black italic tracking-tighter text-slate-900">
-                      {course?.price ? `₹${course.price}` : 'Price TBD'}
+                      {course?.askForPrice ? 'Contact for Price' : (course?.price === 0 ? 'FREE' : `₹${course?.price}`)}
                     </span>
-                    {course?.price > 0 && <span className="text-slate-400 text-xs line-through font-bold">₹{(course.price * 1.5).toFixed(0)}</span>}
+                    {!course?.askForPrice && course?.price > 0 && <span className="text-slate-400 text-xs line-through font-bold">₹{(course.price * 1.5).toFixed(0)}</span>}
                   </div>
                 </div>
 
@@ -243,21 +264,28 @@ function PublicCourseDetails() {
                   </div>
                 </div>
 
-                {!course?.price ? (
+                {isEnrolled ? (
+                  <Button
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none"
+                    onClick={() => navigate({ to: `/students/course/${courseId}` })}
+                  >
+                    Go to Course
+                  </Button>
+                ) : course?.askForPrice ? (
                   <div className="bg-slate-50 border border-slate-100 p-5 rounded-none space-y-3">
                     <p className="text-[10px] font-bold text-center text-slate-500 uppercase tracking-widest leading-relaxed">
-                      Course price is not yet decided. Please contact our admissions team to enroll.
+                      This course requires manual enrollment. Please contact our admissions team to proceed.
                     </p>
-                    <Button 
-                      className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" 
+                    <Button
+                      className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none"
                       onClick={() => navigate({ to: '/login', search: { redirect: window.location.pathname } })}
                     >
                       <PhoneCall className="h-4 w-4 mr-2" /> Contact Admin
                     </Button>
                   </div>
                 ) : (
-                  <Button 
-                    className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" 
+                  <Button
+                    className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none"
                     onClick={() => navigate({ to: '/login', search: { redirect: window.location.pathname } })}
                   >
                     Enroll Now

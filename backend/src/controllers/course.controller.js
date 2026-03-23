@@ -86,6 +86,7 @@ const createCourse = asyncHandler(async (req, res) => {
     duration, 
     instructorName, 
     featured,
+    askForPrice,
   } = req.body;
 
   // Handle arrays from FormData which might have [] suffix
@@ -129,6 +130,7 @@ const createCourse = asyncHandler(async (req, res) => {
     createdBy: req.user._id,
     status: "draft",
     featured: featured === "true" || featured === true,
+    askForPrice: askForPrice === "true" || askForPrice === true,
   });
 
   return res
@@ -146,6 +148,7 @@ const updateCourse = asyncHandler(async (req, res) => {
     duration,
     instructorName,
     featured,
+    askForPrice,
   } = req.body;
 
   // Handle arrays from FormData
@@ -163,10 +166,11 @@ const updateCourse = asyncHandler(async (req, res) => {
     levels,
     tags: tagsUpdate !== undefined ? (Array.isArray(tagsUpdate) ? tagsUpdate : [tagsUpdate]) : undefined,
     duration,
-    instructorName,
+    instructorName: instructorName,
     whatYouWillLearn: whatYouWillLearnUpdate !== undefined ? (Array.isArray(whatYouWillLearnUpdate) ? whatYouWillLearnUpdate : [whatYouWillLearnUpdate]) : undefined,
     requirements: requirementsUpdate !== undefined ? (Array.isArray(requirementsUpdate) ? requirementsUpdate : [requirementsUpdate]) : undefined,
-    featured: featured !== undefined ? (featured === "true" || featured === true) : undefined
+    featured: featured !== undefined ? (featured === "true" || featured === true) : undefined,
+    askForPrice: askForPrice !== undefined ? (askForPrice === "true" || askForPrice === true) : undefined
   };
 
   // If price is updated, adjust isFree

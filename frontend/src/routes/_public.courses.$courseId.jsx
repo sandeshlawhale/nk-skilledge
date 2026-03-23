@@ -1,6 +1,7 @@
 import { createFileRoute, useParams, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { API_BASE_URL } from '@/utils/api'
+import { API_BASE_URL, authFetch } from '@/utils/api'
+import { useAuthStore } from '@/store/auth'
 import {
   CheckCircle2, Lock, LayoutList, MessageSquare,
   PhoneCall, Award, ArrowLeft, Loader2
@@ -20,6 +21,8 @@ function PublicCourseDetails() {
   const [course, setCourse] = useState(null)
   const [lessons, setLessons] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isEnrolled, setIsEnrolled] = useState(false)
+  const { user, isAuthenticated } = useAuthStore()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +37,19 @@ function PublicCourseDetails() {
 
         if (cData.success) setCourse(cData.data)
         if (lData.success) setLessons(lData.data)
+
+        // Check enrollment if logged in
+        if (isAuthenticated && user?._id) {
+          const enrollRes = await authFetch(`${API_BASE_URL}/enrollments/user/${user._id}`)
+          const eData = await enrollRes.json()
+          if (eData.success) {
+            const hasEnrollment = eData.data.some(e => {
+              const id = typeof e.courseId === 'object' ? e.courseId._id : e.courseId
+              return id === courseId
+            })
+            setIsEnrolled(hasEnrollment)
+          }
+        }
       } catch (err) {
         console.error('Error fetching data:', err)
       } finally {
@@ -41,7 +57,7 @@ function PublicCourseDetails() {
       }
     }
     fetchData()
-  }, [courseId])
+  }, [courseId, isAuthenticated, user?._id])
 
   if (isLoading) {
     return (
@@ -76,9 +92,9 @@ function PublicCourseDetails() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
               <div className="absolute bottom-6 left-6 right-6 flex flex-col items-start gap-4">
                 <div className="flex flex-wrap gap-2">
-                  <Badge className="bg-primary text-white font-black px-3 py-1 rounded-none border-0 uppercase text-[9px] tracking-widest">
-                    {course?.category || 'Professional Level'}
-                  </Badge>
+                  {course?.category && <Badge className="bg-primary text-white font-black px-3 py-1 rounded-none border-0 uppercase text-[9px] tracking-widest">
+                    {course?.category}
+                  </Badge>}
                   <Badge variant="outline" className="bg-white/10 text-white border-white/20 font-black px-3 py-1 rounded-none uppercase text-[9px] tracking-widest backdrop-blur-sm">
                     {course?.levels || 'All Levels'}
                   </Badge>
@@ -232,17 +248,24 @@ function PublicCourseDetails() {
                 </div>
               </div>
 
-              {!course?.price ? (
+              {isEnrolled ? (
+                <Button
+                  className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none"
+                  onClick={() => navigate({ to: `/students/course/${courseId}` })}
+                >
+                  Go to Course
+                </Button>
+              ) : !course?.price ? (
                 <div className="bg-slate-50 border border-slate-100 p-5 rounded-none space-y-3">
                   <p className="text-[10px] font-bold text-center text-slate-500 uppercase tracking-widest leading-relaxed">
                     Course price is not yet decided. Please contact our admissions team to enroll.
                   </p>
-                  <Button className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" onClick={() => navigate({ to: "/login" })}>
+                  <Button className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" onClick={() => navigate({ to: "/login", search: { redirect: window.location.pathname } })}>
                     <PhoneCall className="h-4 w-4 mr-2" /> Contact Admin
                   </Button>
                 </div>
               ) : (
-                <Button className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" onClick={() => navigate({ to: "/login" })}>
+                <Button className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" onClick={() => navigate({ to: "/login", search: { redirect: window.location.pathname } })}>
                   Enroll Now
                 </Button>
               )}

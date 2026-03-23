@@ -317,9 +317,9 @@ function LearningHub() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 right-6 flex flex-col items-start gap-4">
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-primary text-white font-black px-3 py-1 rounded-none border-0 uppercase text-[9px] tracking-widest">
-                      {course?.category || 'Professional Level'}
-                    </Badge>
+                    {course?.category && <Badge className="bg-primary text-white font-black px-3 py-1 rounded-none border-0 uppercase text-[9px] tracking-widest">
+                      {course?.category}
+                    </Badge>}
                     <Badge variant="outline" className="bg-white/10 text-white border-white/20 font-black px-3 py-1 rounded-none uppercase text-[9px] tracking-widest backdrop-blur-sm">
                       {course?.levels || 'All Levels'}
                     </Badge>
@@ -532,7 +532,7 @@ function LearningHub() {
             </h1>
           </div>
 
-          <Tabs defaultValue="course-details" className="space-y-3">
+          <Tabs defaultValue="modules" className="space-y-3">
             <div className="px-1">
               <TabsList className="bg-slate-100/50 p-1 rounded-xl h-12 border border-slate-200/50 w-full md:w-auto">
                 <TabsTrigger value="modules" className="rounded-lg px-8 font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-white data-[state=active]:shadow-sm flex-1 md:flex-none cursor-pointer">
@@ -675,9 +675,9 @@ function LearningHub() {
                         {course?.title}
                       </h1>
                       <div className='flex  gap-2'>
-                        <Badge className="">
-                          {course?.category || 'Professional Level'}
-                        </Badge>
+                        {course?.category && <Badge className="">
+                          {course?.category}
+                        </Badge>}
                         <Badge className="" variant="secondary">
                           {course?.levels || 'Advanced'}
                         </Badge>
@@ -732,34 +732,6 @@ function LearningHub() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 px-1">
-                      <div className="h-4 w-1 bg-slate-300 rounded-full"></div>
-                      <h2 className="text-base font-bold text-slate-900 capitalize tracking-wide">Key Outcomes</h2>
-                    </div>
-                    <ul className="space-y-1 px-1">
-                      {course?.whatYouWillLearn?.map((item, i) => (
-                        <li key={i} className="text-base text-slate-600 font-medium flex items-start gap-3">
-                          <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-                          {item}
-                        </li>
-                      )) || <li className="text-base text-slate-400 italic">Objectives coming soon.</li>}
-                    </ul>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 px-1">
-                      <div className="h-4 w-1 bg-slate-300 rounded-full"></div>
-                      <h2 className="text-base font-bold text-slate-900 capitalize tracking-wide">Requirements</h2>
-                    </div>
-                    <ul className="space-y-1 px-1">
-                      {course?.requirements?.map((item, i) => (
-                        <li key={i} className="text-base text-slate-600 font-medium flex items-start gap-3">
-                          <div className="h-1.5 w-1.5 rounded-full bg-slate-300 mt-2 shrink-0"></div>
-                          {item}
-                        </li>
-                      )) || <li className="text-base text-slate-400 italic">No special requirements.</li>}
-                    </ul>
-                  </div>
                 </div>
               </div>
             </TabsContent>

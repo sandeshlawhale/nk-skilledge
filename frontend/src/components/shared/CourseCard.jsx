@@ -46,8 +46,12 @@ export function CourseCard({ course, progress, linkTo, params, extraActions, met
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                 {course.instructorName || course.instructor || 'Elite Instructor'}
               </span>
-              {course.isFree && (
-                <Badge className="bg-green-100 text-green-700 border-0 text-[8px] h-4 font-black uppercase tracking-widest px-1">FREE</Badge>
+              {course.askForPrice ? (
+                <Badge className="bg-amber-100 text-amber-700 border-0 text-[8px] h-4 font-black uppercase tracking-widest px-1">Contact for Price</Badge>
+              ) : (
+                course.price === 0 && (
+                  <Badge className="bg-green-100 text-green-700 border-0 text-[8px] h-4 font-black uppercase tracking-widest px-1">FREE</Badge>
+                )
               )}
             </div>
             <div className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-widest">

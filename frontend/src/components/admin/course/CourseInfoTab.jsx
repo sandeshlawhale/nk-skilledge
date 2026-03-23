@@ -263,18 +263,18 @@ const CourseInfoTab = ({
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        id="isFree"
-                        checked={editData.isFree}
+                        id="askForPrice"
+                        checked={editData.askForPrice}
                         disabled={!isEditingInfo}
-                        onChange={(e) => setEditData({ ...editData, isFree: e.target.checked })}
+                        onChange={(e) => setEditData({ ...editData, askForPrice: e.target.checked })}
                         className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary"
                       />
-                      <label htmlFor="isFree" className="text-xs font-bold text-slate-700 cursor-pointer">This is a Free Course</label>
+                      <label htmlFor="askForPrice" className="text-xs font-bold text-slate-700 cursor-pointer">Ask for Price (Contact Admin)</label>
                     </div>
                   </div>
-                  {!editData.isFree && (
-                    <div className="w-24">
-                      <label className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Price (₹)</label>
+                  {!editData.askForPrice && (
+                    <div className="w-32">
+                      <label className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Price (₹) <span className="text-[7px] italic text-slate-400">(0 = Free)</span></label>
                       <Input
                         type="number"
                         disabled={!isEditingInfo}
