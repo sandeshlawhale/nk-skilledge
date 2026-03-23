@@ -7,9 +7,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useEffect } from 'react'
 
 export const Route = createFileRoute('/login')({
-  beforeLoad: ({ context }) => {
+  validateSearch: (search) => {
+    return {
+      redirect: search.redirect || undefined,
+    }
+  },
+  beforeLoad: ({ context, search }) => {
     if (context.auth.isAuthenticated) {
       const { user } = context.auth
+      if (search.redirect) {
+        throw redirect({ to: search.redirect })
+      }
       if (user?.role === 'admin') {
         throw redirect({ to: '/admin' })
       } else {
@@ -22,17 +30,20 @@ export const Route = createFileRoute('/login')({
 
 function Login() {
   const navigate = useNavigate()
+  const { redirect: redirectPath } = Route.useSearch()
   const { login, isLoading, error, isAuthenticated, user } = useAuthStore()
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (user?.role === 'admin') {
+      if (redirectPath) {
+        navigate({ to: redirectPath, replace: true })
+      } else if (user?.role === 'admin') {
         navigate({ to: '/admin', replace: true })
       } else {
         navigate({ to: '/students/my-courses', replace: true })
       }
     }
-  }, [isAuthenticated, user, navigate])
+  }, [isAuthenticated, user, navigate, redirectPath])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -43,7 +54,9 @@ function Login() {
     if (result.success) {
       // Get role from the store after login
       const user = useAuthStore.getState().user
-      if (user?.role === 'admin') {
+      if (redirectPath) {
+        navigate({ to: redirectPath })
+      } else if (user?.role === 'admin') {
         navigate({ to: '/admin' })
       } else {
         navigate({ to: '/students/my-courses' })
@@ -87,7 +100,11 @@ function Login() {
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-center text-slate-500">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-primary hover:underline">
+            <Link 
+              to="/register" 
+              search={{ redirect: redirectPath }}
+              className="font-semibold text-primary hover:underline"
+            >
               Sign up
             </Link>
           </div>

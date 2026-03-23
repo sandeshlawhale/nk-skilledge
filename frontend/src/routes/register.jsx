@@ -7,9 +7,17 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const Route = createFileRoute('/register')({
-  beforeLoad: ({ context }) => {
+  validateSearch: (search) => {
+    return {
+      redirect: search.redirect || undefined,
+    }
+  },
+  beforeLoad: ({ context, search }) => {
     if (context.auth.isAuthenticated) {
       const { user } = context.auth
+      if (search.redirect) {
+        throw redirect({ to: search.redirect })
+      }
       if (user?.role === 'admin') {
         throw redirect({ to: '/admin' })
       } else {
@@ -22,17 +30,20 @@ export const Route = createFileRoute('/register')({
 
 function Register() {
   const navigate = useNavigate()
+  const { redirect: redirectPath } = Route.useSearch()
   const { register, isLoading, error, isAuthenticated, user } = useAuthStore()
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (user?.role === 'admin') {
+      if (redirectPath) {
+        navigate({ to: redirectPath, replace: true })
+      } else if (user?.role === 'admin') {
         navigate({ to: '/admin', replace: true })
       } else {
         navigate({ to: '/students/my-courses', replace: true })
       }
     }
-  }, [isAuthenticated, user, navigate])
+  }, [isAuthenticated, user, navigate, redirectPath])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -48,7 +59,11 @@ function Register() {
     })
 
     if (result.success) {
-      navigate({ to: '/students/my-courses' })
+      if (redirectPath) {
+        navigate({ to: redirectPath })
+      } else {
+        navigate({ to: '/students/my-courses' })
+      }
     }
   }
 
@@ -93,7 +108,11 @@ function Register() {
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-center text-slate-500">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-primary hover:underline">
+            <Link 
+              to="/login" 
+              search={{ redirect: redirectPath }}
+              className="font-semibold text-primary hover:underline"
+            >
               Log in
             </Link>
           </div>

@@ -250,7 +250,7 @@ function PublicCourseDetails() {
                     </p>
                     <Button 
                       className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" 
-                      onClick={() => navigate({ to: '/login' })}
+                      onClick={() => navigate({ to: '/login', search: { redirect: window.location.pathname } })}
                     >
                       <PhoneCall className="h-4 w-4 mr-2" /> Contact Admin
                     </Button>
@@ -258,7 +258,7 @@ function PublicCourseDetails() {
                 ) : (
                   <Button 
                     className="w-full bg-slate-900 hover:bg-primary text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none" 
-                    onClick={() => navigate({ to: '/login' })}
+                    onClick={() => navigate({ to: '/login', search: { redirect: window.location.pathname } })}
                   >
                     Enroll Now
                   </Button>
