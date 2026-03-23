@@ -1,13 +1,95 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { API_BASE_URL } from '@/utils/api'
 
 export const useAuthStore = create(
   persist(
     (set) => ({
       user: null,
+      accessToken: null,
       isAuthenticated: false,
-      login: (userData) => set({ user: userData, isAuthenticated: true }),
-      logout: () => set({ user: null, isAuthenticated: false }),
+      isLoading: false,
+      error: null,
+
+      login: async (credentials) => {
+        set({ isLoading: true, error: null })
+        try {
+          const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credentials),
+          })
+          const data = await response.json()
+          if (data.success) {
+            set({ user: data.data.user, accessToken: data.data.accessToken, isAuthenticated: true, isLoading: false })
+            return { success: true }
+          } else {
+            set({ error: data.message, isLoading: false })
+            return { success: false, message: data.message }
+          }
+        } catch (error) {
+          set({ error: 'Login failed. Please try again.', isLoading: false })
+          return { success: false, message: 'Login failed' }
+        }
+      },
+
+      register: async (userData) => {
+        set({ isLoading: true, error: null })
+        try {
+          const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData),
+          })
+          const data = await response.json()
+          if (data.success) {
+            set({ user: data.data.user, accessToken: data.data.accessToken || null, isAuthenticated: true, isLoading: false })
+            return { success: true }
+          } else {
+            set({ error: data.message, isLoading: false })
+            return { success: false, message: data.message }
+          }
+        } catch (error) {
+          set({ error: 'Registration failed. Please try again.', isLoading: false })
+          return { success: false, message: 'Registration failed' }
+        }
+      },
+
+      logout: async () => {
+        try {
+          await fetch(`${API_BASE_URL}/auth/logout`, { method: 'POST' })
+        } catch (error) {
+          console.error('Logout failed', error)
+        } finally {
+          set({ user: null, accessToken: null, isAuthenticated: false })
+          window.location.href = '/login'
+        }
+      },
+
+      checkAuth: async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/auth/me`)
+          
+          if (response.status === 401) {
+            set({ user: null, accessToken: null, isAuthenticated: false })
+            // Only redirect if not already on login or register
+            const path = window.location.pathname
+            if (path !== '/login' && path !== '/register') {
+              window.location.href = '/login'
+            }
+            return
+          }
+
+          const data = await response.json()
+          if (data.success) {
+            set({ user: data.data, isAuthenticated: true })
+          } else {
+            set({ user: null, isAuthenticated: false })
+          }
+        } catch (error) {
+          set({ user: null, isAuthenticated: false })
+        }
+      },
     }),
     {
       name: 'auth-storage',

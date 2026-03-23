@@ -3,25 +3,28 @@ import { Button } from '@/components/ui/button'
 
 export function Hero() {
   return (
-    <section className="w-full max-w-7xl py-16 px-4 overflow-hidden container mx-auto flex flex-col items-center text-center space-y-8">
-      <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tighter max-w-full leading-[1.1]">
-        Transforming Talent Into<br /> Industry-Ready <span className="text-primary italic">Professionals.</span>
-      </h1>
-      <p className="text-xl md:text-2xl text-slate-500 w-full text-center font-light leading-relaxed">
-        Gain hands-on learning, industry insights, and the confidence to succeed.<br />
-        We prepare students with the skills needed for today&apos;s professional world.
-      </p>
-      <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16 w-full sm:w-auto">
-        <Link to="/courses">
-          <Button size="hero" variant="brutal" className="w-full">
-            Explore courses
-          </Button>
-        </Link>
-        <Link to="/services">
-          <Button size="hero" variant="brutal-outline" className="w-full">
-            Get services
-          </Button>
-        </Link>
+    <section className="w-full max-w-7xl pb-16 px-4 overflow-hidden container mx-auto flex flex-col items-center text-center space-y-8">
+      <div className='relative w-full max-w-7xl px-4 pt-16 z-0'>
+        {/* <div className='absolute inset-0 -z-10 bg-radial from-primary/50 from-0% to-transparent to-60%' /> */}
+        <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tighter max-w-full leading-[1.1]">
+          Transforming Talent Into<br /> Industry-Ready <span className="text-primary italic">Professionals.</span>
+        </h1>
+        <p className="text-xl md:text-2xl text-slate-500 w-full text-center font-light leading-relaxed">
+          Gain hands-on learning, industry insights, and the confidence to succeed.<br />
+          We prepare students with the skills needed for today&apos;s professional world.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16 w-full sm:w-auto">
+          <Link to="/courses">
+            <Button size="hero" variant="brutal" className="w-full">
+              Explore courses
+            </Button>
+          </Link>
+          <Link to="/services">
+            <Button size="hero" variant="brutal-outline" className="w-full">
+              Get services
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Hero Image */}

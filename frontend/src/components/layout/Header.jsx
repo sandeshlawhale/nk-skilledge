@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 
 export function Header() {
-  const { isAuthenticated, logout } = useAuthStore()
+  const { isAuthenticated, logout, user } = useAuthStore()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
@@ -15,7 +15,7 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">About</Link>
           <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">Services</Link>
-          <Link to="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">Courses</Link>
+          <Link to="/courses" className="text-sm font-medium text-slate-600 hover:text-slate-900">Courses</Link>
           <span className="text-sm font-medium text-slate-600 cursor-pointer hover:text-slate-900 flex items-center">
             Resources <span className="ml-1 text-[10px]">▼</span>
           </span>
@@ -23,8 +23,11 @@ export function Header() {
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              <Link to="/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50">
-                Dashboard
+              <Link
+                to={user?.role === 'admin' ? '/admin' : '/students/my-courses'}
+                className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50"
+              >
+                {user?.role === 'admin' ? 'Dashboard' : 'My Courses'}
               </Link>
               <button
                 onClick={logout}

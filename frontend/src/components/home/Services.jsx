@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Monitor, Smartphone, Share2, Check } from 'lucide-react'
 import CountUp from '@/components/ui/count-up'
 import { SERVICES, SERVICES_STATS } from '@/constants'
+import { PageHeader } from '../shared/PageHeader'
 
 const ICON_MAP = {
   globe: Monitor,
@@ -18,20 +19,19 @@ export function Services() {
           <div className="h-px w-8 bg-primary"></div>
           <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">Services we provide</p>
         </div>
-        <div className="flex flex-col md:flex-row items-end justify-between mb-8 gap-8">
-          <div className="text-left flex-1 space-y-2">
-            <h2 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight">Solutions We Build for Businesses.</h2>
-            <p className="text-xl text-slate-500 max-w-2xl font-light">
-              We offer professional design and development services to help your business grow in the digital era.
-            </p>
-          </div>
+
+        <PageHeader
+          title="Solutions We Build for Businesses."
+          subtitle="We offer professional design and development services to help your business grow in the digital era."
+        >
           <Link to="/services">
-            <Button variant="brutal-outline" size="hero">
+            <Button variant="brutal-outline" size="xl">
               Browse all services
             </Button>
           </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-slate-200 border border-slate-200">
+        </PageHeader>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-slate-200 border border-slate-200 mt-8">
           {SERVICES.map((service, i) => {
             const Icon = ICON_MAP[service.icon] || Monitor;
             return (
@@ -63,7 +63,7 @@ export function Services() {
                   </ul>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 flex flex-col gap-4">
+                <div className="border-t border-slate-100 flex flex-col gap-4">
                   <Link to="/services" className="block w-full">
                     <Button variant="brutal" className="w-full justify-between h-16 px-6 text-sm font-black group/btn bg-slate-900 hover:bg-primary transition-all duration-300">
                       <span>{service.price}</span>
