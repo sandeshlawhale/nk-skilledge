@@ -45,7 +45,7 @@ function AdminAllCourses() {
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
       <PageHeader
         title="Published Courses"
-        subtitle="Viewing the platform as a student to verify content delivery."
+        subtitle="Manage and oversee active curricula from the central registry."
       >
         <div className="flex flex-col items-end gap-2">
           <Button asChild variant="outline" size='xl' className="">
@@ -59,7 +59,7 @@ function AdminAllCourses() {
           <CourseCard
             key={course._id}
             course={course}
-            linkTo={`/students/course/${course._id}`}
+            linkTo={`/courses/${course._id}`}
             metadata="Registry Listing"
           />
         ))}
