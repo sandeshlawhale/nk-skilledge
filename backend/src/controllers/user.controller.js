@@ -6,7 +6,37 @@ const getAllUsers = asyncHandler(async (req, res) => {
   const filter = email && email.trim().length >= 2
     ? { email: { $regex: email.trim(), $options: "i" } }
     : {};
-  const users = await User.find(filter).select("-password").limit(email ? 10 : undefined);
+  
+  const pipeline = [
+    { $match: filter },
+    {
+      $lookup: {
+        from: "enrollments",
+        localField: "_id",
+        foreignField: "userId",
+        as: "enrollments",
+      },
+    },
+    {
+      $addFields: {
+        courseCount: { $size: "$enrollments" },
+      },
+    },
+    {
+      $project: {
+        password: 0,
+        enrollments: 0,
+      },
+    },
+    { $sort: { createdAt: -1 } },
+  ];
+
+  if (email) {
+    pipeline.push({ $limit: 10 });
+  }
+
+  const users = await User.aggregate(pipeline);
+
   return res
     .status(200)
     .json(new ApiResponse(200, users, "Users fetched successfully"));

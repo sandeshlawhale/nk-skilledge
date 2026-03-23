@@ -11,6 +11,7 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -45,6 +46,8 @@ function AdminStudents() {
   const [selectedUser, setSelectedUser] = useState(null)
   const [selectedCourse, setSelectedCourse] = useState('')
   const [isEnrollDialogOpen, setIsEnrollDialogOpen] = useState(false)
+  const [roleFilter, setRoleFilter] = useState('all')
+  const [sortBy, setSortBy] = useState('recent')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,10 +93,20 @@ function AdminStudents() {
     }
   }
 
-  const filteredUsers = users.filter(user =>
-    user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredUsers = users
+    .filter(user => {
+      const matchesSearch = user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesRole = roleFilter === 'all' || user.role === roleFilter
+      return matchesSearch && matchesRole
+    })
+    .sort((a, b) => {
+      if (sortBy === 'recent') return new Date(b.createdAt) - new Date(a.createdAt)
+      if (sortBy === 'nameAZ') return (a.name || '').localeCompare(b.name || '')
+      if (sortBy === 'nameZA') return (b.name || '').localeCompare(a.name || '')
+      if (sortBy === 'mostCourses') return (b.courseCount || 0) - (a.courseCount || 0)
+      return 0
+    })
 
   if (isLoading) {
     return (
@@ -131,12 +144,38 @@ function AdminStudents() {
             />
           </div>
           <div className="flex gap-2 w-full md:w-auto">
-            <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
-              Role: All
-            </Badge>
-            <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
-              Sort: Recent
-            </Badge>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
+                  Role: {roleFilter}
+                </Badge>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="rounded-xl border-slate-200 shadow-xl p-1">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-[10px] uppercase text-slate-400 font-bold px-3 py-2">Filter by Role</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => setRoleFilter('all')} className="rounded-lg font-medium">All Roles</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRoleFilter('admin')} className="rounded-lg font-medium">Admin</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRoleFilter('student')} className="rounded-lg font-medium">Student</DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
+                  Sort: {sortBy === 'recent' ? 'Recent' : sortBy === 'nameAZ' ? 'Name A-Z' : sortBy === 'nameZA' ? 'Name Z-A' : 'Most Courses'}
+                </Badge>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="rounded-xl border-slate-200 shadow-xl p-1">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-[10px] uppercase text-slate-400 font-bold px-3 py-2">Sort Results</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => setSortBy('recent')} className="rounded-lg font-medium">Recent</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortBy('nameAZ')} className="rounded-lg font-medium">Name A-Z</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortBy('nameZA')} className="rounded-lg font-medium">Name Z-A</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortBy('mostCourses')} className="rounded-lg font-medium">Most Courses</DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -176,7 +215,7 @@ function AdminStudents() {
                   </TableCell>
                   <TableCell className="px-6">
                     <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-                      <BookOpen className="h-4 w-4 text-primary opacity-70" /> 0 Courses
+                      <BookOpen className="h-4 w-4 text-primary opacity-70" /> {user.courseCount || 0} Courses
                     </div>
                   </TableCell>
                   <TableCell className="px-6">
