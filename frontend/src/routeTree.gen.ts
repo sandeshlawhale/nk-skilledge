@@ -18,6 +18,7 @@ import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as ServicesServiceIdRouteImport } from './routes/services/$serviceId'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
+import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
 import { Route as AuthStudentsIndexRouteImport } from './routes/_auth/students/index'
 import { Route as AuthAdminIndexRouteImport } from './routes/_auth/admin/index'
@@ -75,6 +76,11 @@ const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
   id: '/courses/$courseId',
   path: '/courses/$courseId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PublicContactRoute = PublicContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicAboutRoute = PublicAboutRouteImport.update({
   id: '/about',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/about': typeof PublicAboutRoute
+  '/contact': typeof PublicContactRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/courses/': typeof CoursesIndexRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/about': typeof PublicAboutRoute
+  '/contact': typeof PublicContactRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/courses': typeof CoursesIndexRoute
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/_public/about': typeof PublicAboutRoute
+  '/_public/contact': typeof PublicContactRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/_public/': typeof PublicIndexRoute
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/about'
+    | '/contact'
     | '/courses/$courseId'
     | '/services/$serviceId'
     | '/courses/'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/about'
+    | '/contact'
     | '/courses/$courseId'
     | '/services/$serviceId'
     | '/courses'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/_public/about'
+    | '/_public/contact'
     | '/courses/$courseId'
     | '/services/$serviceId'
     | '/_public/'
@@ -373,6 +385,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/courses/$courseId'
       preLoaderRoute: typeof CoursesCourseIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_public/contact': {
+      id: '/_public/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof PublicContactRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/about': {
       id: '/_public/about'
@@ -527,11 +546,13 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 
 interface PublicRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
+  PublicContactRoute: typeof PublicContactRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicAboutRoute: PublicAboutRoute,
+  PublicContactRoute: PublicContactRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
 
