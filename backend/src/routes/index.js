@@ -6,7 +6,8 @@ const lessonRouter = require("./lesson.routes");
 const taskRouter = require("./task.routes");
 const enrollmentRouter = require("./enrollment.routes");
 const progressRouter = require("./progress.routes");
-const serviceRouter = require("./serviceInquiry.routes");
+const serviceInquiryRouter = require("./serviceInquiry.routes");
+const serviceCatalogRouter = require("./service.routes");
 
 const router = Router();
 
@@ -21,6 +22,7 @@ router.use("/lessons", lessonRouter);
 router.use("/tasks", taskRouter);
 router.use("/enrollments", enrollmentRouter);
 router.use("/progress", progressRouter);
-router.use("/services", serviceRouter);
+router.use("/service-inquiries", serviceInquiryRouter);
+router.use("/services", serviceCatalogRouter);
 
 module.exports = router;

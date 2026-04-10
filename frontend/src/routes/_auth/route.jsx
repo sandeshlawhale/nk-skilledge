@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 import { useEffect } from 'react'
-import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users, Briefcase } from 'lucide-react'
 import {
   SidebarProvider,
   Sidebar,
@@ -59,6 +59,7 @@ function DashboardSidebar() {
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'All Courses', href: '/admin/all-courses', icon: Grid },
     { name: 'Manage Courses', href: '/admin/courses', icon: BookOpen },
+    { name: 'Services', href: '/admin/services', icon: Briefcase },
     { name: 'All Users', href: '/admin/students', icon: Users },
   ]
 
