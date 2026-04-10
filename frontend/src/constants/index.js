@@ -166,7 +166,82 @@ export const TESTIMONIALS = [
     "clientName": "David Anderson",
     "designation": "Logistics Director"
   }
-]
+];
+
+export const TIMELINE_DATA = [
+  {
+    "year": "2023",
+    "title": "Founded NK SkillEdge",
+    "description": "Started with a mission to provide practical tech education."
+  },
+  {
+    "year": "2024",
+    "title": "Expanded Services",
+    "description": "Introduced real-world project-based learning."
+  },
+  {
+    "year": "2025",
+    "title": "Community Growth",
+    "description": "Reached hundreds of learners and developers."
+  },
+  {
+    "year": "2026",
+    "title": "Courses",
+    "description": "Keep the Promise to change the entire education system, started here"
+  }
+];
+
+export const TEAM = [
+  {
+    name: "Mr. Kartik Mendhe",
+    role: "CEO & Founder",
+    description: "Leading the company with vision, innovation, and strong technical expertise. Ex-Intern at The DataStack.",
+    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kartik",
+    socials: { linkedin: "#", twitter: "#" }
+  },
+  {
+    name: "Mr. Ayush Bhendarkar",
+    role: "Director & Co-Founder",
+    description: "Brings strategic vision and operational excellence. Focused on business development and leadership.",
+    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ayush",
+    socials: { linkedin: "#", twitter: "#" }
+  },
+  {
+    name: "Mr. Madhusudan Madankar",
+    role: "Technical Planning",
+    description: "Heads technical planning, development, and implementation while ensuring innovation and system reliability.",
+    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Madhusudan",
+    socials: { linkedin: "#" }
+  },
+  {
+    name: "Mr. Harsh Sagare",
+    role: "Social Media Manager",
+    description: "Handles social media platforms, creating content, managing campaigns, and boosting engagement.",
+    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Harsh",
+    socials: { linkedin: "#", instagram: "#" }
+  },
+  {
+    name: "Mr. Harshal Mendulkar",
+    role: "Technical Strategy",
+    description: "Leads technical strategy, product development, and innovation initiatives.",
+    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Harshal",
+    socials: { linkedin: "#" }
+  },
+  {
+    name: "Mr. Sandesh Lawhale",
+    role: "Web Developer",
+    description: "Full-stack developer focused on building practical, real-world applications that solve actual problems.",
+    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sandesh",
+    socials: { linkedin: "#", github: "#" }
+  },
+  {
+    name: "Mr. Sujal Dhoke",
+    role: "Security Researcher",
+    description: "specialized computer expert who analyzes systems, software, and networks to identify, document, and report unknown vulnerabilities.",
+    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sujal",
+    socials: { linkedin: "#" }
+  }
+];
 
 export const FAQS = [
   {

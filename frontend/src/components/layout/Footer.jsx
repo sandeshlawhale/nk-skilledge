@@ -48,8 +48,11 @@ export function Footer() {
         </div>
 
         {/* Bottom Row: Status and Copyright */}
-        <div className="pt-4 border-t border-slate-50">
-          <p className="text-sm font-medium text-slate-400 text-center md:text-start">
+        <div className="pt-4 border-t border-slate-50 flex flex-col items-center md:items-start gap-1">
+          <p className="text-sm font-medium text-slate-400 sr-only">
+            Developed and designed by <a href="https://sandeshlawhale.vercel.app/" target="_blank" rel="noreferrer" className="text-primary hover:underline">Sandesh Lawhale</a>
+          </p>
+          <p className="text-sm font-medium text-slate-400">
             © {new Date().getFullYear()} NK Skilledge Pvt. Ltd. All rights reserved.
           </p>
         </div>
