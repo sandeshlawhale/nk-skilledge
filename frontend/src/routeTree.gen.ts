@@ -22,8 +22,10 @@ import { Route as AuthStudentsMyCoursesRouteImport } from './routes/_auth/studen
 import { Route as AuthStudentsAllCoursesRouteImport } from './routes/_auth/students/all-courses'
 import { Route as AuthAdminStudentsRouteImport } from './routes/_auth/admin/students'
 import { Route as AuthAdminAllCoursesRouteImport } from './routes/_auth/admin/all-courses'
+import { Route as AuthAdminServicesIndexRouteImport } from './routes/_auth/admin/services/index'
 import { Route as AuthAdminCoursesIndexRouteImport } from './routes/_auth/admin/courses/index'
 import { Route as AuthStudentsCourseCourseIdRouteImport } from './routes/_auth/students/course/$courseId'
+import { Route as AuthAdminServicesServiceIdRouteImport } from './routes/_auth/admin/services/$serviceId'
 import { Route as AuthStudentsCourseLessonLessonIdRouteImport } from './routes/_auth/students/course/lesson/$lessonId'
 import { Route as AuthAdminCoursesManageCourseIdRouteImport } from './routes/_auth/admin/courses/manage/$courseId'
 import { Route as AuthAdminCoursesManageCourseIdLessonsLessonIdRouteImport } from './routes/_auth/admin/courses/manage/$courseId/lessons/$lessonId'
@@ -91,6 +93,11 @@ const AuthAdminAllCoursesRoute = AuthAdminAllCoursesRouteImport.update({
   path: '/admin/all-courses',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthAdminServicesIndexRoute = AuthAdminServicesIndexRouteImport.update({
+  id: '/admin/services/',
+  path: '/admin/services/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthAdminCoursesIndexRoute = AuthAdminCoursesIndexRouteImport.update({
   id: '/admin/courses/',
   path: '/admin/courses/',
@@ -100,6 +107,12 @@ const AuthStudentsCourseCourseIdRoute =
   AuthStudentsCourseCourseIdRouteImport.update({
     id: '/students/course/$courseId',
     path: '/students/course/$courseId',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
+const AuthAdminServicesServiceIdRoute =
+  AuthAdminServicesServiceIdRouteImport.update({
+    id: '/admin/services/$serviceId',
+    path: '/admin/services/$serviceId',
     getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthStudentsCourseLessonLessonIdRoute =
@@ -133,8 +146,10 @@ export interface FileRoutesByFullPath {
   '/students/my-courses': typeof AuthStudentsMyCoursesRoute
   '/admin/': typeof AuthAdminIndexRoute
   '/students/': typeof AuthStudentsIndexRoute
+  '/admin/services/$serviceId': typeof AuthAdminServicesServiceIdRoute
   '/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/admin/courses/': typeof AuthAdminCoursesIndexRoute
+  '/admin/services/': typeof AuthAdminServicesIndexRoute
   '/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   '/students/course/lesson/$lessonId': typeof AuthStudentsCourseLessonLessonIdRoute
   '/admin/courses/manage/$courseId/lessons/$lessonId': typeof AuthAdminCoursesManageCourseIdLessonsLessonIdRoute
@@ -151,8 +166,10 @@ export interface FileRoutesByTo {
   '/students/my-courses': typeof AuthStudentsMyCoursesRoute
   '/admin': typeof AuthAdminIndexRoute
   '/students': typeof AuthStudentsIndexRoute
+  '/admin/services/$serviceId': typeof AuthAdminServicesServiceIdRoute
   '/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/admin/courses': typeof AuthAdminCoursesIndexRoute
+  '/admin/services': typeof AuthAdminServicesIndexRoute
   '/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   '/students/course/lesson/$lessonId': typeof AuthStudentsCourseLessonLessonIdRoute
   '/admin/courses/manage/$courseId/lessons/$lessonId': typeof AuthAdminCoursesManageCourseIdLessonsLessonIdRoute
@@ -172,8 +189,10 @@ export interface FileRoutesById {
   '/_auth/students/my-courses': typeof AuthStudentsMyCoursesRoute
   '/_auth/admin/': typeof AuthAdminIndexRoute
   '/_auth/students/': typeof AuthStudentsIndexRoute
+  '/_auth/admin/services/$serviceId': typeof AuthAdminServicesServiceIdRoute
   '/_auth/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/_auth/admin/courses/': typeof AuthAdminCoursesIndexRoute
+  '/_auth/admin/services/': typeof AuthAdminServicesIndexRoute
   '/_auth/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   '/_auth/students/course/lesson/$lessonId': typeof AuthStudentsCourseLessonLessonIdRoute
   '/_auth/admin/courses/manage/$courseId/lessons/$lessonId': typeof AuthAdminCoursesManageCourseIdLessonsLessonIdRoute
@@ -192,8 +211,10 @@ export interface FileRouteTypes {
     | '/students/my-courses'
     | '/admin/'
     | '/students/'
+    | '/admin/services/$serviceId'
     | '/students/course/$courseId'
     | '/admin/courses/'
+    | '/admin/services/'
     | '/admin/courses/manage/$courseId'
     | '/students/course/lesson/$lessonId'
     | '/admin/courses/manage/$courseId/lessons/$lessonId'
@@ -210,8 +231,10 @@ export interface FileRouteTypes {
     | '/students/my-courses'
     | '/admin'
     | '/students'
+    | '/admin/services/$serviceId'
     | '/students/course/$courseId'
     | '/admin/courses'
+    | '/admin/services'
     | '/admin/courses/manage/$courseId'
     | '/students/course/lesson/$lessonId'
     | '/admin/courses/manage/$courseId/lessons/$lessonId'
@@ -230,8 +253,10 @@ export interface FileRouteTypes {
     | '/_auth/students/my-courses'
     | '/_auth/admin/'
     | '/_auth/students/'
+    | '/_auth/admin/services/$serviceId'
     | '/_auth/students/course/$courseId'
     | '/_auth/admin/courses/'
+    | '/_auth/admin/services/'
     | '/_auth/admin/courses/manage/$courseId'
     | '/_auth/students/course/lesson/$lessonId'
     | '/_auth/admin/courses/manage/$courseId/lessons/$lessonId'
@@ -339,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminAllCoursesRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/admin/services/': {
+      id: '/_auth/admin/services/'
+      path: '/admin/services'
+      fullPath: '/admin/services/'
+      preLoaderRoute: typeof AuthAdminServicesIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/admin/courses/': {
       id: '/_auth/admin/courses/'
       path: '/admin/courses'
@@ -351,6 +383,13 @@ declare module '@tanstack/react-router' {
       path: '/students/course/$courseId'
       fullPath: '/students/course/$courseId'
       preLoaderRoute: typeof AuthStudentsCourseCourseIdRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/admin/services/$serviceId': {
+      id: '/_auth/admin/services/$serviceId'
+      path: '/admin/services/$serviceId'
+      fullPath: '/admin/services/$serviceId'
+      preLoaderRoute: typeof AuthAdminServicesServiceIdRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_auth/students/course/lesson/$lessonId': {
@@ -399,8 +438,10 @@ interface AuthRouteRouteChildren {
   AuthStudentsMyCoursesRoute: typeof AuthStudentsMyCoursesRoute
   AuthAdminIndexRoute: typeof AuthAdminIndexRoute
   AuthStudentsIndexRoute: typeof AuthStudentsIndexRoute
+  AuthAdminServicesServiceIdRoute: typeof AuthAdminServicesServiceIdRoute
   AuthStudentsCourseCourseIdRoute: typeof AuthStudentsCourseCourseIdRoute
   AuthAdminCoursesIndexRoute: typeof AuthAdminCoursesIndexRoute
+  AuthAdminServicesIndexRoute: typeof AuthAdminServicesIndexRoute
   AuthAdminCoursesManageCourseIdRoute: typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   AuthStudentsCourseLessonLessonIdRoute: typeof AuthStudentsCourseLessonLessonIdRoute
 }
@@ -412,8 +453,10 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthStudentsMyCoursesRoute: AuthStudentsMyCoursesRoute,
   AuthAdminIndexRoute: AuthAdminIndexRoute,
   AuthStudentsIndexRoute: AuthStudentsIndexRoute,
+  AuthAdminServicesServiceIdRoute: AuthAdminServicesServiceIdRoute,
   AuthStudentsCourseCourseIdRoute: AuthStudentsCourseCourseIdRoute,
   AuthAdminCoursesIndexRoute: AuthAdminCoursesIndexRoute,
+  AuthAdminServicesIndexRoute: AuthAdminServicesIndexRoute,
   AuthAdminCoursesManageCourseIdRoute:
     AuthAdminCoursesManageCourseIdRouteWithChildren,
   AuthStudentsCourseLessonLessonIdRoute: AuthStudentsCourseLessonLessonIdRoute,
