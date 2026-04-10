@@ -3,7 +3,7 @@ const { ApiError, ApiResponse, asyncHandler } = require("../utils/apiHandler");
 const { uploadOnCloudinary } = require("../config/cloudinary");
 
 const getAllServices = asyncHandler(async (req, res) => {
-  const { search, category, featured, active } = req.query;
+  const { search, category, featured, active, limit } = req.query;
   const filter = {};
 
   if (category && category !== "All") {
@@ -26,7 +26,13 @@ const getAllServices = asyncHandler(async (req, res) => {
     filter.isActive = true;
   }
 
-  const services = await Service.find(filter).sort("-createdAt");
+  let query = Service.find(filter).sort("-createdAt");
+  
+  if (limit) {
+    query = query.limit(Number(limit));
+  }
+
+  const services = await query;
 
   return res
     .status(200)

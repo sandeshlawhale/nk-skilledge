@@ -13,8 +13,10 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as ServicesIndexRouteImport } from './routes/services/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as ServicesServiceIdRouteImport } from './routes/services/$serviceId'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
 import { Route as AuthStudentsIndexRouteImport } from './routes/_auth/students/index'
 import { Route as AuthAdminIndexRouteImport } from './routes/_auth/admin/index'
@@ -48,6 +50,11 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -57,6 +64,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRoute,
+} as any)
+const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
+  id: '/services/$serviceId',
+  path: '/services/$serviceId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
   id: '/courses/$courseId',
@@ -139,7 +151,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/services/$serviceId': typeof ServicesServiceIdRoute
   '/courses/': typeof CoursesIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/admin/students': typeof AuthAdminStudentsRoute
   '/students/all-courses': typeof AuthStudentsAllCoursesRoute
@@ -159,7 +173,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/services/$serviceId': typeof ServicesServiceIdRoute
   '/courses': typeof CoursesIndexRoute
+  '/services': typeof ServicesIndexRoute
   '/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/admin/students': typeof AuthAdminStudentsRoute
   '/students/all-courses': typeof AuthStudentsAllCoursesRoute
@@ -181,8 +197,10 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/services/$serviceId': typeof ServicesServiceIdRoute
   '/_public/': typeof PublicIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/_auth/admin/all-courses': typeof AuthAdminAllCoursesRoute
   '/_auth/admin/students': typeof AuthAdminStudentsRoute
   '/_auth/students/all-courses': typeof AuthStudentsAllCoursesRoute
@@ -204,7 +222,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses/$courseId'
+    | '/services/$serviceId'
     | '/courses/'
+    | '/services/'
     | '/admin/all-courses'
     | '/admin/students'
     | '/students/all-courses'
@@ -224,7 +244,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses/$courseId'
+    | '/services/$serviceId'
     | '/courses'
+    | '/services'
     | '/admin/all-courses'
     | '/admin/students'
     | '/students/all-courses'
@@ -245,8 +267,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses/$courseId'
+    | '/services/$serviceId'
     | '/_public/'
     | '/courses/'
+    | '/services/'
     | '/_auth/admin/all-courses'
     | '/_auth/admin/students'
     | '/_auth/students/all-courses'
@@ -268,7 +292,9 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
+  ServicesServiceIdRoute: typeof ServicesServiceIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -301,6 +327,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
@@ -314,6 +347,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/services/$serviceId': {
+      id: '/services/$serviceId'
+      path: '/services/$serviceId'
+      fullPath: '/services/$serviceId'
+      preLoaderRoute: typeof ServicesServiceIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/courses/$courseId': {
       id: '/courses/$courseId'
@@ -483,7 +523,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
+  ServicesServiceIdRoute: ServicesServiceIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

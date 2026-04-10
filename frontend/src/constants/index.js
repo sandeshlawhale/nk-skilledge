@@ -1,5 +1,10 @@
 import { MonitorPlay, Smartphone, BrainCircuit, Code } from 'lucide-react'
 
+export const SITE_SETTINGS = {
+  whatsappNumber: "+918888888888", // placeholder
+  contactEmail: "contact@nkskilledge.com",
+}
+
 export const FEATURED_COURSES = [
   {
     id: 'fullstack-dev',

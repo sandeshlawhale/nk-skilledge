@@ -14,6 +14,10 @@ const serviceSchema = new mongoose.Schema(
     logo: {
       type: String, // cloudinary url
     },
+    icon: {
+      type: String, // icon name (e.g. globe, mobile, megaphone)
+      default: "globe",
+    },
     coverImage: {
       type: String, // cloudinary url
     },

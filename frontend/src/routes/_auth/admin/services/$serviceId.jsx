@@ -522,9 +522,32 @@ function AdminServiceDetail() {
                 </div>
                 <div className="px-1">
                   <p className="text-[10px] font-medium text-slate-500 leading-tight">
-                    <span className="font-black text-slate-900 uppercase italic">{service.isFeatured ? 'YES:' : 'NO:'}</span> {service.isFeatured ? 'Highlighted prominently on the home page stats and carousel.' : 'Visible only in the main services catalog.'}
+                    <span className="font-black text-slate-900 uppercase italic">{service.isFeatured ? 'YES:' : 'NO:'}</span> {service.isFeatured ? 'Highlighted prominently on the home page spotlight section.' : 'Visible only in the main services catalog.'}
                   </p>
                 </div>
+              </div>
+
+              <Separator className="bg-slate-100" />
+
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Display Icon (Homepage)</Label>
+                <Select
+                  value={service.icon || 'globe'}
+                  onValueChange={(val) => setService(p => ({ ...p, icon: val }))}
+                >
+                  <SelectTrigger className="w-full rounded-none h-12 border-2 border-slate-900 font-bold uppercase text-[11px] tracking-wider">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-none border-2 border-slate-900">
+                    <SelectItem value="globe" className="text-[11px] font-bold uppercase tracking-wider">Default (Globe)</SelectItem>
+                    <SelectItem value="mobile" className="text-[11px] font-bold uppercase tracking-wider">Mobile App</SelectItem>
+                    <SelectItem value="megaphone" className="text-[11px] font-bold uppercase tracking-wider">Marketing</SelectItem>
+                    <SelectItem value="code" className="text-[11px] font-bold uppercase tracking-wider">Development</SelectItem>
+                    <SelectItem value="brain" className="text-[11px] font-bold uppercase tracking-wider">AI / Brain</SelectItem>
+                    <SelectItem value="play" className="text-[11px] font-bold uppercase tracking-wider">Tutorial / Play</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-[9px] text-slate-400 px-1 font-bold uppercase tracking-widest leading-relaxed">Choose the icon shown on the homepage service cards.</p>
               </div>
 
               <Separator className="bg-slate-100" />
