@@ -17,9 +17,9 @@ export function Header() {
           <Link to="/services" className="text-sm font-medium text-slate-600 hover:text-slate-900">Services</Link>
           <Link to="/courses" className="text-sm font-medium text-slate-600 hover:text-slate-900">Courses</Link>
           <Link to="/contact" className="text-sm font-medium text-slate-600 hover:text-slate-900">Contact</Link>
-          <span className="text-sm font-medium text-slate-600 cursor-pointer hover:text-slate-900 flex items-center">
+          {/* <span className="text-sm font-medium text-slate-600 cursor-pointer hover:text-slate-900 flex items-center">
             Resources <span className="ml-1 text-[10px]">▼</span>
-          </span>
+          </span> */}
         </nav>
         <div className="flex items-center gap-4">
           {isAuthenticated ? (

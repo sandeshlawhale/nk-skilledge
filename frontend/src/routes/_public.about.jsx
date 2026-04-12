@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { TIMELINE_DATA, SITE_SETTINGS, SERVICES, FEATURED_COURSES } from '@/constants'
+import { TIMELINE_DATA, SERVICES, FEATURED_COURSES } from '@/constants'
+import { CTA } from '@/components/home/CTA'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Linkedin, Rocket, Users, Loader2 } from 'lucide-react'
@@ -265,34 +266,7 @@ function AboutPage() {
       )}
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-primary relative overflow-hidden text-center">
-        <div className="max-w-7xl mx-auto px-4 relative z-10 text-white">
-          <div className="max-w-3xl mx-auto">
-            <h3 className="text-4xl md:text-5xl font-black mb-8 italic underline underline-offset-8 decoration-white/20">
-              Join the Future of Learning
-            </h3>
-            <p className="text-white/90 text-xl font-medium mb-12">
-              Whether you're a student looking for skills or a business looking for solutions, we are here to help you grow.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center">
-              <a href={`https://wa.me/${SITE_SETTINGS.whatsappNumber?.replace('+', '')}`} target="_blank" rel="noreferrer" className="w-full sm:w-auto">
-                <Button size="hero" className="w-full bg-white text-primary hover:bg-slate-100 rounded-none shadow-2xl px-16 py-6 text-lg">
-                  Message on WhatsApp
-                </Button>
-              </a>
-              <Link to='/contact'>
-                <Button
-                  variant="outline"
-                  size="hero"
-                  className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/10 rounded-none px-16 py-6 text-lg"
-                >
-                  Send Inquiry
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTA />
     </div>
   )
 }
