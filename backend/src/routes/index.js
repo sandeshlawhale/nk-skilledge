@@ -8,6 +8,9 @@ const enrollmentRouter = require("./enrollment.routes");
 const progressRouter = require("./progress.routes");
 const serviceInquiryRouter = require("./serviceInquiry.routes");
 const serviceCatalogRouter = require("./service.routes");
+const memberRouter = require("./member.routes");
+const contactRouter = require("./contact.routes");
+
 
 const router = Router();
 
@@ -24,5 +27,8 @@ router.use("/enrollments", enrollmentRouter);
 router.use("/progress", progressRouter);
 router.use("/service-inquiries", serviceInquiryRouter);
 router.use("/services", serviceCatalogRouter);
+router.use("/members", memberRouter);
+router.use("/contact", contactRouter);
+
 
 module.exports = router;

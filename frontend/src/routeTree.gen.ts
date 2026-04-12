@@ -27,6 +27,7 @@ import { Route as AuthStudentsAllCoursesRouteImport } from './routes/_auth/stude
 import { Route as AuthAdminStudentsRouteImport } from './routes/_auth/admin/students'
 import { Route as AuthAdminAllCoursesRouteImport } from './routes/_auth/admin/all-courses'
 import { Route as AuthAdminServicesIndexRouteImport } from './routes/_auth/admin/services/index'
+import { Route as AuthAdminMembersIndexRouteImport } from './routes/_auth/admin/members/index'
 import { Route as AuthAdminCoursesIndexRouteImport } from './routes/_auth/admin/courses/index'
 import { Route as AuthStudentsCourseCourseIdRouteImport } from './routes/_auth/students/course/$courseId'
 import { Route as AuthAdminServicesServiceIdRouteImport } from './routes/_auth/admin/services/$serviceId'
@@ -122,6 +123,11 @@ const AuthAdminServicesIndexRoute = AuthAdminServicesIndexRouteImport.update({
   path: '/admin/services/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthAdminMembersIndexRoute = AuthAdminMembersIndexRouteImport.update({
+  id: '/admin/members/',
+  path: '/admin/members/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthAdminCoursesIndexRoute = AuthAdminCoursesIndexRouteImport.update({
   id: '/admin/courses/',
   path: '/admin/courses/',
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/admin/services/$serviceId': typeof AuthAdminServicesServiceIdRoute
   '/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/admin/courses/': typeof AuthAdminCoursesIndexRoute
+  '/admin/members/': typeof AuthAdminMembersIndexRoute
   '/admin/services/': typeof AuthAdminServicesIndexRoute
   '/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   '/students/course/lesson/$lessonId': typeof AuthStudentsCourseLessonLessonIdRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/admin/services/$serviceId': typeof AuthAdminServicesServiceIdRoute
   '/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/admin/courses': typeof AuthAdminCoursesIndexRoute
+  '/admin/members': typeof AuthAdminMembersIndexRoute
   '/admin/services': typeof AuthAdminServicesIndexRoute
   '/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   '/students/course/lesson/$lessonId': typeof AuthStudentsCourseLessonLessonIdRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/_auth/admin/services/$serviceId': typeof AuthAdminServicesServiceIdRoute
   '/_auth/students/course/$courseId': typeof AuthStudentsCourseCourseIdRoute
   '/_auth/admin/courses/': typeof AuthAdminCoursesIndexRoute
+  '/_auth/admin/members/': typeof AuthAdminMembersIndexRoute
   '/_auth/admin/services/': typeof AuthAdminServicesIndexRoute
   '/_auth/admin/courses/manage/$courseId': typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   '/_auth/students/course/lesson/$lessonId': typeof AuthStudentsCourseLessonLessonIdRoute
@@ -254,6 +263,7 @@ export interface FileRouteTypes {
     | '/admin/services/$serviceId'
     | '/students/course/$courseId'
     | '/admin/courses/'
+    | '/admin/members/'
     | '/admin/services/'
     | '/admin/courses/manage/$courseId'
     | '/students/course/lesson/$lessonId'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/admin/services/$serviceId'
     | '/students/course/$courseId'
     | '/admin/courses'
+    | '/admin/members'
     | '/admin/services'
     | '/admin/courses/manage/$courseId'
     | '/students/course/lesson/$lessonId'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/_auth/admin/services/$serviceId'
     | '/_auth/students/course/$courseId'
     | '/_auth/admin/courses/'
+    | '/_auth/admin/members/'
     | '/_auth/admin/services/'
     | '/_auth/admin/courses/manage/$courseId'
     | '/_auth/students/course/lesson/$lessonId'
@@ -449,6 +461,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminServicesIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/admin/members/': {
+      id: '/_auth/admin/members/'
+      path: '/admin/members'
+      fullPath: '/admin/members/'
+      preLoaderRoute: typeof AuthAdminMembersIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/admin/courses/': {
       id: '/_auth/admin/courses/'
       path: '/admin/courses'
@@ -519,6 +538,7 @@ interface AuthRouteRouteChildren {
   AuthAdminServicesServiceIdRoute: typeof AuthAdminServicesServiceIdRoute
   AuthStudentsCourseCourseIdRoute: typeof AuthStudentsCourseCourseIdRoute
   AuthAdminCoursesIndexRoute: typeof AuthAdminCoursesIndexRoute
+  AuthAdminMembersIndexRoute: typeof AuthAdminMembersIndexRoute
   AuthAdminServicesIndexRoute: typeof AuthAdminServicesIndexRoute
   AuthAdminCoursesManageCourseIdRoute: typeof AuthAdminCoursesManageCourseIdRouteWithChildren
   AuthStudentsCourseLessonLessonIdRoute: typeof AuthStudentsCourseLessonLessonIdRoute
@@ -534,6 +554,7 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthAdminServicesServiceIdRoute: AuthAdminServicesServiceIdRoute,
   AuthStudentsCourseCourseIdRoute: AuthStudentsCourseCourseIdRoute,
   AuthAdminCoursesIndexRoute: AuthAdminCoursesIndexRoute,
+  AuthAdminMembersIndexRoute: AuthAdminMembersIndexRoute,
   AuthAdminServicesIndexRoute: AuthAdminServicesIndexRoute,
   AuthAdminCoursesManageCourseIdRoute:
     AuthAdminCoursesManageCourseIdRouteWithChildren,

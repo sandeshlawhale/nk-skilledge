@@ -1,15 +1,42 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { TEAM, TIMELINE_DATA, SITE_SETTINGS, SERVICES, FEATURED_COURSES } from '@/constants'
+import { TIMELINE_DATA, SERVICES, FEATURED_COURSES } from '@/constants'
+import { CTA } from '@/components/home/CTA'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Linkedin, Rocket, Users } from 'lucide-react'
+import { Linkedin, Rocket, Users, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '@/utils/api'
 
 export const Route = createFileRoute('/_public/about')({
   component: AboutPage,
 })
 
 function AboutPage() {
+  const [team, setTeam] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/members?active=true`)
+        const data = await response.json()
+        if (data.success) {
+          setTeam(data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching team:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchTeam()
+  }, [])
+
+  // Partition team into founders (featured) and regular members
+  const founders = team.filter(m => m.isFeatured)
+  const regularTeam = team.filter(m => !m.isFeatured)
+
   return (
     <div className="flex flex-col w-full bg-white overflow-hidden font-sans">
       {/* Shortened Hero Section - Consistent Width */}
@@ -39,57 +66,68 @@ function AboutPage() {
       </section>
 
       {/* Founders Section - Consistent Width */}
-      <section className="py-20 bg-slate-50 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <Badge className="bg-primary/10 text-primary border-none mb-4">The Visionaries</Badge>
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900">Meet our <span className="text-primary underline decoration-primary/30">Founders</span></h2>
-          </div>
+      {(isLoading || founders.length > 0) && (
+        <section className="py-20 bg-slate-50 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <Badge className="bg-primary/10 text-primary border-none mb-4">The Visionaries</Badge>
+              <h2 className="text-3xl md:text-4xl font-black text-slate-900">Meet our <span className="text-primary underline decoration-primary/30">Founders</span></h2>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {TEAM.slice(0, 2).map((founder, i) => (
-              <div
-                key={i}
-                className="flex flex-col md:flex-row bg-white border-2 border-slate-900 p-6 gap-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,0.05)]"
-              >
-                <div className="shrink-0">
-                  <div className="w-44 h-60 border-4 border-slate-100 overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-500">
-                    <img
-                      src={founder.name.includes("Kartik") ? "/Kartik-CEO.png" : founder.image}
-                      alt={founder.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = founder.image }}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center space-y-4">
-                  <div>
-                    <h3 className="text-xl font-black text-slate-900">{founder.name}</h3>
-                    <p className="text-primary font-bold uppercase tracking-widest text-[10px]">{founder.role}</p>
-                  </div>
-                  <p className="text-slate-600 font-medium leading-relaxed italic text-sm">
-                    "{founder.description}"
-                  </p>
-                  <div className="flex gap-4">
-                    <a href={founder.socials.linkedin} className="text-slate-400 hover:text-primary transition-colors">
-                      <Linkedin className="w-5 h-5" />
-                    </a>
-                  </div>
-                </div>
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary/20" />
               </div>
-            ))}
+            ) : (
+              <div className={`grid grid-cols-1 ${founders.length > 1 ? 'lg:grid-cols-2' : 'lg:grid-cols-1 max-w-2xl mx-auto'} gap-10`}>
+                {founders.map((founder, i) => (
+                  <div
+                    key={founder._id}
+                    className="flex flex-col md:flex-row bg-white border-2 border-slate-900 p-6 gap-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="shrink-0">
+                      <div className="w-44 h-60 border-4 border-slate-100 overflow-hidden relative transition-all duration-500">
+                        <img
+                          src={founder.profileImage?.url}
+                          alt={founder.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col justify-center space-y-4">
+                      <div>
+                        <h3 className="text-xl font-black text-slate-900">
+                          {founder.prefix ? `${founder.prefix}. ` : ''}{founder.name}
+                        </h3>
+                        <p className="text-primary font-bold uppercase tracking-widest text-[10px]">{founder.role}</p>
+                      </div>
+                      <p className="text-slate-600 font-medium leading-relaxed italic text-sm line-clamp-4">
+                        "{founder.bio}"
+                      </p>
+                      <div className="flex gap-4">
+                        {founder.socialLinks?.linkedin && (
+                          <a href={founder.socialLinks.linkedin} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-primary transition-colors">
+                            <Linkedin className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Vision & Mission - Centered, No Cards, Max-width 700px */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="max-w-[700px] mx-auto space-y-16">
+          <div className="max-w-5xl mx-auto space-y-16">
             <div className="space-y-3">
               <h3 className="text-sm font-bold text-primary uppercase tracking-wider">Our Mission</h3>
               <p className="text-xl md:text-3xl font-bold text-slate-900 leading-tight">
-                Empowering students with <span className="text-primary italic">practical skills</span> and real-world exposure that prepares them for modern careers.
+                "Our mission is to bridge the gap between education and employability by providing students with practical, industry-relevant skills and real-world exposure that prepares them for modern careers."
               </p>
               <div className="h-1 w-20 bg-primary/20 mx-auto" />
             </div>
@@ -97,7 +135,7 @@ function AboutPage() {
             <div className="space-y-3">
               <h3 className="text-sm font-bold text-primary uppercase tracking-wider">Our Vision</h3>
               <p className="text-xl md:text-3xl font-bold text-slate-900 leading-tight">
-                To become a global leader in <span className="underline decoration-primary/30">skills-based education</span> and innovative digital solutions.
+                "Our vision is to create a generation of skilled professionals who are not just job seekers but job creators. We believe in empowering youth with practical knowledge that transforms careers and lives."
               </p>
               <div className="h-1 w-20 bg-slate-100 mx-auto" />
             </div>
@@ -189,63 +227,46 @@ function AboutPage() {
       </section>
 
       {/* Team Section */}
-      <section className="py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-xs font-black text-primary uppercase tracking-[0.3em] mb-4">Dedicated Team</h2>
-            <h3 className="text-3xl md:text-5xl font-black text-slate-900">The Powerhouse Behind Us</h3>
-          </div>
+      {(isLoading || regularTeam.length > 0) && (
+        <section className="py-24 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-xs font-black text-primary uppercase tracking-[0.3em] mb-4">Dedicated Team</h2>
+              <h3 className="text-3xl md:text-5xl font-black text-slate-900">The Powerhouse Behind Us</h3>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {TEAM.slice(2).map((member, i) => (
-              <Card key={i} className="rounded-none border-2 border-slate-100 group flex flex-col h-full bg-white shadow-sm hover:shadow-2xl transition-all duration-300">
-                <div className="relative aspect-square overflow-hidden bg-slate-100">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover grayscale transition-all duration-500 scale-100 group-hover:scale-105 group-hover:grayscale-0"
-                  />
-                </div>
-                <CardContent className="p-6 flex-1 flex flex-col justify-end">
-                  <p className="text-primary font-black text-[9px] uppercase tracking-widest mb-1">{member.role}</p>
-                  <h4 className="text-lg font-black text-slate-900 mb-2">{member.name}</h4>
-                  <p className="text-slate-500 text-[11px] font-semibold leading-relaxed line-clamp-3">{member.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary/20" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {regularTeam.map((member, i) => (
+                  <Card key={member._id} className="rounded-none border-2 border-slate-100 group flex flex-col h-full bg-white shadow-sm hover:shadow-2xl transition-all duration-300">
+                    <div className="relative aspect-square overflow-hidden bg-slate-100">
+                      <img
+                        src={member.profileImage?.url}
+                        alt={member.name}
+                        className="w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-105"
+                      />
+                    </div>
+                    <CardContent className="p-6 flex-1 flex flex-col justify-end">
+                      <p className="text-primary font-black text-[9px] uppercase tracking-widest mb-1">{member.role}</p>
+                      <h4 className="text-lg font-black text-slate-900 mb-2">
+                        {member.prefix ? `${member.prefix}. ` : ''}{member.name}
+                      </h4>
+                      <p className="text-slate-500 text-[11px] font-semibold leading-relaxed line-clamp-3">{member.bio}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-primary relative overflow-hidden text-center">
-        <div className="max-w-7xl mx-auto px-4 relative z-10 text-white">
-          <div className="max-w-3xl mx-auto">
-            <h3 className="text-4xl md:text-5xl font-black mb-8 italic underline underline-offset-8 decoration-white/20">
-              Join the Future of Learning
-            </h3>
-            <p className="text-white/90 text-xl font-medium mb-12">
-              Whether you're a student looking for skills or a business looking for solutions, we are here to help you grow.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center">
-              <a href={`https://wa.me/${SITE_SETTINGS.whatsappNumber?.replace('+', '')}`} target="_blank" rel="noreferrer" className="w-full sm:w-auto">
-                <Button size="hero" className="w-full bg-white text-primary hover:bg-slate-100 rounded-none shadow-2xl px-16 py-6 text-lg">
-                  Message on WhatsApp
-                </Button>
-              </a>
-              <Link to='/contact'>
-                <Button
-                  variant="outline"
-                  size="hero"
-                  className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/10 rounded-none px-16 py-6 text-lg"
-                >
-                  Send Inquiry
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTA />
     </div>
   )
 }
