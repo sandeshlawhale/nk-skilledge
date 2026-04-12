@@ -60,7 +60,8 @@ function DashboardSidebar() {
     { name: 'All Courses', href: '/admin/all-courses', icon: Grid },
     { name: 'Manage Courses', href: '/admin/courses', icon: BookOpen },
     { name: 'Services', href: '/admin/services', icon: Briefcase },
-    { name: 'All Users', href: '/admin/students', icon: Users },
+    { name: 'Team', href: '/admin/members', icon: Users },
+    { name: 'All Users', href: '/admin/students', icon: BarChart },
   ]
 
   const navItems = isAdmin ? adminNavigation : studentNavigation
