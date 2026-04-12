@@ -32,7 +32,10 @@ function ContactPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          toEmail: SITE_SETTINGS.contactEmail
+        }),
       })
 
       const data = await response.json()

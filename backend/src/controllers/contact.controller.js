@@ -6,7 +6,7 @@ const { sendContactMail } = require("../utils/resend.js");
  * Validates the fields and sends an email.
  */
 const handleContactFormSubmission = asyncHandler(async (req, res) => {
-  const { name, email, subject, message } = req.body;
+  const { name, email, subject, message, toEmail } = req.body;
 
   // Basic validation
   if (!name || !email || !subject || !message) {
@@ -20,11 +20,11 @@ const handleContactFormSubmission = asyncHandler(async (req, res) => {
   }
 
   try {
-    const emailResponse = await sendContactMail({ name, email, subject, message });
+    const emailResponse = await sendContactMail({ name, email, subject, message, toEmail });
 
     if (emailResponse.error) {
       console.error("Resend API Error details:", emailResponse.error);
-      throw new ApiError(500, "Failed to send email. Please try again later.");
+      throw new ApiError(500, `Failed to send email: ${emailResponse.error.message || "Unknown error"}`);
     }
 
     return res

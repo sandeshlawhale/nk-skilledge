@@ -2,6 +2,7 @@ const { Resend } = require("resend");
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+
 /**
  * Utility to send contact form emails using Resend.
  * @param {Object} details - The contact form details.
@@ -11,11 +12,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  * @param {string} details.message - The message content.
  * @returns {Promise<Object>} The Resend API response.
  */
-const sendContactMail = async ({ name, email, subject, message }) => {
+const sendContactMail = async ({ name, email, subject, message, toEmail }) => {
   try {
     const response = await resend.emails.send({
-      from: "onboarding@resend.dev", // Default for testing; update after domain verification
-      to: "contact@nkskilledge.com", // Recipient email
+      from: "onboarding@resend.dev",
+      to: toEmail || "contact@nkskilledge.com",
+
       subject: `[Contact Form] ${subject} from ${name}`,
       html: `
         <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
