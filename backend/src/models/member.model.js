@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema(
   {
+    prefix: {
+      type: String,
+      enum: ["Mr", "Ms", "Mrs", "Dr", "Prof"],
+      trim: true,
+    },
     name: {
       type: String,
       required: true,

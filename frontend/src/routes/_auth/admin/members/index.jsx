@@ -20,6 +20,13 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from 'sonner'
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export const Route = createFileRoute('/_auth/admin/members/')({
   component: AdminMembersPage,
@@ -34,6 +41,7 @@ function AdminMembersPage() {
   const [imagePreview, setImagePreview] = useState(null)
 
   const [formData, setFormData] = useState({
+    prefix: '',
     name: '',
     role: '',
     bio: '',
@@ -69,6 +77,7 @@ function AdminMembersPage() {
     if (member) {
       setEditingMember(member)
       setFormData({
+        prefix: member.prefix || '',
         name: member.name || '',
         role: member.role || '',
         bio: member.bio || '',
@@ -84,6 +93,7 @@ function AdminMembersPage() {
     } else {
       setEditingMember(null)
       setFormData({
+        prefix: '',
         name: '',
         role: '',
         bio: '',
@@ -127,6 +137,7 @@ function AdminMembersPage() {
     setIsSubmitting(true)
     try {
       const data = new FormData()
+      data.append('prefix', formData.prefix)
       data.append('name', formData.name)
       data.append('role', formData.role)
       data.append('bio', formData.bio)
@@ -251,14 +262,34 @@ function AdminMembersPage() {
               <form id="member-form" onSubmit={handleSubmit} className="space-y-8">
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="flex-1 space-y-6">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Full Name</Label>
-                      <Input
-                        placeholder="E.g. Mr. John Doe"
-                        className="rounded-none border-slate-200 focus:border-slate-900 h-12"
-                        value={formData.name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Prefix</Label>
+                        <Select
+                          value={formData.prefix}
+                          onValueChange={(value) => setFormData(prev => ({ ...prev, prefix: value }))}
+                        >
+                          <SelectTrigger className="rounded-none border-slate-200 focus:border-slate-900 h-12">
+                            <SelectValue placeholder="Prefix" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-none border-2 border-slate-900">
+                            <SelectItem value="Mr">Mr.</SelectItem>
+                            <SelectItem value="Ms">Ms.</SelectItem>
+                            <SelectItem value="Mrs">Mrs.</SelectItem>
+                            <SelectItem value="Dr">Dr.</SelectItem>
+                            <SelectItem value="Prof">Prof.</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="md:col-span-3 space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Full Name</Label>
+                        <Input
+                          placeholder="E.g. John Doe"
+                          className="rounded-none border-slate-200 focus:border-slate-900 h-12"
+                          value={formData.name}
+                          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Role / Designation</Label>

@@ -33,7 +33,7 @@ export function MemberCard({ member, onEdit, onDelete }) {
             {!member.isActive && <Badge variant="outline" className="border-slate-200 text-slate-400 rounded-none text-[8px] font-black uppercase tracking-widest">Inactive</Badge>}
           </div>
         </div>
-        <h4 className="text-xl font-black text-slate-900 mb-2">{member.name}</h4>
+        <h4 className="text-xl font-black text-slate-900 mb-2">{member.prefix ? `${member.prefix}. ` : ''}{member.name}</h4>
         <p className="text-slate-500 text-xs font-semibold leading-relaxed line-clamp-3 mb-4">{member.bio}</p>
         
         {member.skills?.length > 0 && (

@@ -14,7 +14,7 @@ const getAllMembers = asyncHandler(async (req, res) => {
     filter.isActive = true;
   }
 
-  const members = await Member.find(filter).sort("-createdAt");
+  const members = await Member.find(filter).sort("createdAt");
 
   return res
     .status(200)
@@ -34,6 +34,7 @@ const getMemberById = asyncHandler(async (req, res) => {
 
 const createMember = asyncHandler(async (req, res) => {
   const {
+    prefix,
     name,
     role,
     bio,
@@ -61,6 +62,7 @@ const createMember = asyncHandler(async (req, res) => {
   }
 
   const member = await Member.create({
+    prefix,
     name,
     role,
     bio,
@@ -83,6 +85,7 @@ const createMember = asyncHandler(async (req, res) => {
 
 const updateMember = asyncHandler(async (req, res) => {
   const {
+    prefix,
     name,
     role,
     bio,
@@ -100,6 +103,7 @@ const updateMember = asyncHandler(async (req, res) => {
   }
 
   const updateData = {
+    prefix,
     name,
     role,
     bio,
