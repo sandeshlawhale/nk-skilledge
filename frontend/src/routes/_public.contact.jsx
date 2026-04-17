@@ -61,37 +61,6 @@ function ContactPage() {
 
   return (
     <div className="flex flex-col w-full bg-white overflow-hidden font-sans">
-      {/* <div className="relative z-10 max-w-7xl mx-auto text-center px-4">
-          <Badge className="bg-primary/10 text-primary border-none mb-6 px-4 py-1.5 rounded-none font-black text-[10px] uppercase tracking-widest">Get In Touch</Badge>
-          <h1 className="text-4xl md:text-6xl font-black text-slate-900 leading-tight mb-6 italic">
-            Let's Start a <span className="text-primary underline decoration-primary/20">Conversation</span>
-          </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed font-medium italic">
-            If you have anything to talk or discuss about a project or services, please contact us.
-          </p>
-
-
-      <div className="flex justify-center gap-6 mb-4">
-        <a
-          href={`https://wa.me/${SITE_SETTINGS.whatsappNumber?.replace('+', '')}`}
-          target="_blank"
-          rel="noreferrer"
-          className="group flex items-center justify-center p-5 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200"
-          aria-label="WhatsApp Contact"
-        >
-          <MessageSquare className="w-8 h-8 text-slate-900 group-hover:text-primary transition-colors" />
-        </a>
-        <a
-          href={`mailto:${SITE_SETTINGS.contactEmail}`}
-          className="group flex items-center justify-center p-5 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200"
-          aria-label="Email Contact"
-        >
-          <Mail className="w-8 h-8 text-slate-900 group-hover:text-primary transition-colors" />
-        </a>
-      </div>
-    </div> */}
-
-      {/* Main Two-Column Section */}
       <section className="py-24 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -112,7 +81,6 @@ function ContactPage() {
                   <a
                     href={`https://wa.me/${SITE_SETTINGS.whatsappNumber?.replace('+', '')}`}
                     target="_blank"
-
                   >
                     <Button size='xl' variant='outline'>
                       <MessageSquare className="w-8 h-8 text-slate-900 group-hover:text-primary transition-colors" />
@@ -123,7 +91,6 @@ function ContactPage() {
                     href={`mailto:${SITE_SETTINGS.contactEmail}`}
                   >
                     <Button size='xl' variant='secondary'>
-
                       <Mail className="w-8 h-8 text-slate-900 group-hover:text-primary transition-colors" />
                       Mail
                     </Button>

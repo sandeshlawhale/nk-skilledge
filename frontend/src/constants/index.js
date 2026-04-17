@@ -3,7 +3,7 @@ import { MonitorPlay, Smartphone, BrainCircuit, Code } from 'lucide-react'
 export const SITE_SETTINGS = {
   whatsappNumber: "+917498784109",
   phoneNumber: "+919356049629",
-  contactEmail: "contact@nkskilledge.com",
+  contactEmail: "hmendhe72@gmail.com",
   address: "Near Gobade Hospital, Sakoli, Maharashtra, India - 441105",
 }
 

@@ -63,8 +63,8 @@ function PublicServiceDetail() {
     )
   }
 
-  const whatsappUrl = `https://wa.me/${SITE_SETTINGS.whatsappNumber.replace(/\+/g, '')}?text=Hi, I'm interested in your ${service.name} service.`
-  const emailUrl = `mailto:${SITE_SETTINGS.contactEmail}?subject=Inquiry: ${service.name}&body=Hello, I would like to know more about the ${service.name} service.`
+  const whatsappUrl = `https://wa.me/${SITE_SETTINGS.whatsappNumber.replace(/\+/g, '')}?text=${encodeURIComponent(`Hi, I'm interested in your ${service.name} service.`)}`
+  const emailUrl = `mailto:${SITE_SETTINGS.contactEmail}?subject=${encodeURIComponent(`Inquiry: ${service.name}`)}&body=${encodeURIComponent(`Hello, I would like to know more about the ${service.name} service.`)}`
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
