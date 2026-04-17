@@ -175,7 +175,7 @@ function AuthLayout() {
             </div>
           </header> */}
 
-          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
             <Outlet />
           </main>
         </div>

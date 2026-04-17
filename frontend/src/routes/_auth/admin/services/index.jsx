@@ -121,13 +121,12 @@ function AdminServicesIndex() {
         title="Admin Services"
         subtitle="Manage and oversee the professional services offered by NK SkillEdge."
       >
-        <div className="flex flex-col items-end gap-2">
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size='xl' className="bg-slate-900 rounded-none h-12 px-8 font-black uppercase tracking-widest text-[10px]">
-                <Plus className="mr-2 h-4 w-4" /> Add New Service
-              </Button>
-            </DialogTrigger>
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size='xl' className="bg-slate-900 rounded-2xl h-12 md:h-12 px-8 font-black uppercase tracking-[0.2em] text-[10px] w-full md:w-auto shadow-lg shadow-slate-200 hover:shadow-xl hover:scale-[1.02] transition-all active:scale-95">
+              <Plus className="mr-2 h-4 w-4" /> Add New Service
+            </Button>
+          </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] rounded-none border-2 border-slate-900">
               <DialogHeader>
                 <DialogTitle className="text-xl font-black uppercase italic tracking-tight">Create New Service</DialogTitle>
@@ -184,8 +183,7 @@ function AdminServicesIndex() {
                 </DialogFooter>
               </form>
             </DialogContent>
-          </Dialog>
-        </div>
+        </Dialog>
       </DashboardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

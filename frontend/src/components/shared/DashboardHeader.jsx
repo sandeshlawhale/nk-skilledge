@@ -25,10 +25,19 @@ export function DashboardHeader({ title, subtitle, children, className }) {
         </div>
       </div>
 
-      {/* Actions / Right Side Content (passed as children) */}
+      {/* Actions - Desktop Rendering */}
       {children && (
-        <div className="flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-2">
           {children}
+        </div>
+      )}
+
+      {/* Actions - Mobile Floating Bar */}
+      {children && (
+        <div className="fixed bottom-10 left-6 right-6 z-40 md:hidden pointer-events-none">
+          <div className="flex flex-col gap-3 w-full [&>*]:pointer-events-auto [&>*]:w-full [&>*]:shadow-2xl [&>*]:shadow-slate-900/20">
+            {children}
+          </div>
         </div>
       )}
     </div>

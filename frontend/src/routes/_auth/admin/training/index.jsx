@@ -202,7 +202,7 @@ function AdminTraining() {
         title="Training Management"
         subtitle="Create, edit, and organize your educational content."
       >
-        <Button onClick={openModal} size='xl' variant='outline' className="">
+        <Button onClick={openModal} size='xl' className="bg-slate-900 rounded-2xl h-12 px-8 font-black uppercase tracking-[0.2em] text-[10px] w-full md:w-auto shadow-lg shadow-slate-200 hover:shadow-xl hover:scale-[1.02] transition-all active:scale-95 text-white">
           <Plus className="mr-2 h-4 w-4" /> Create New Training
         </Button>
       </DashboardHeader>

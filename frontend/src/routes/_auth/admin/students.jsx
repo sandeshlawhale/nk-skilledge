@@ -121,14 +121,14 @@ function AdminStudents() {
         title="Student Directory"
         subtitle="Manage and oversee all registered students across the platform."
       >
-        {/* <div className="flex items-center gap-3">
-          <Button variant="outline" className="rounded-xl border-slate-200 font-bold h-11 px-6 text-slate-600">
-             Export Data
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <Button variant="outline" className="rounded-2xl border-slate-200 font-black uppercase tracking-[0.15em] text-[10px] h-12 md:h-11 px-6 text-slate-600 w-full md:w-auto hover:bg-slate-50 transition-all">
+            Export Data
           </Button>
-          <Button className="bg-slate-900 hover:bg-primary rounded-xl font-bold h-11 px-6 shadow-lg shadow-indigo-100">
-             <UserPlus className="mr-2 h-4 w-4" /> Add New User
+          <Button className="bg-slate-900 hover:bg-slate-800 rounded-2xl font-black uppercase tracking-[0.15em] text-[10px] h-12 md:h-11 px-6 shadow-lg shadow-slate-200 w-full md:w-auto text-white transition-all active:scale-95">
+            <UserPlus className="mr-2 h-4 w-4" /> Add New User
           </Button>
-        </div> */}
+        </div>
       </DashboardHeader>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
