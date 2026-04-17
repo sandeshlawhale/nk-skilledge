@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/auth'
 import { Badge } from '@/components/ui/badge'
 import { BookOpen, Search } from 'lucide-react'
 import { TrainingCard } from '@/components/shared/TrainingCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
@@ -90,10 +90,10 @@ function AllTraining() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
       <div className="flex flex-col gap-6 px-1">
-        <PageHeader
-          title="Elite Curriculum"
-          subtitle={`${filteredCourses.length} Modules available`}
-        >
+        <DashboardHeader
+        title="Training Registry"
+        subtitle="Explore all available curricula and choose your next learning milestone."
+      >
           <div className="flex items-stretch gap-2 w-full md:w-auto">
             <div className="relative w-full md:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -117,7 +117,7 @@ function AllTraining() {
               </SelectContent>
             </Select>
           </div>
-        </PageHeader>
+        </DashboardHeader>
 
         {/* Filters */}
         <div className="space-y-2 bg-slate-50/50 p-2 border border-slate-200 rounded-none">

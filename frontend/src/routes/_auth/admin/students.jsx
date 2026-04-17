@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { MoreHorizontal, Search, UserPlus, Mail, Calendar, BookOpen, ChevronRight, UserCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,9 +117,9 @@ function AdminStudents() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto font-geist">
-      <PageHeader
-        title="User Management"
-        subtitle="View all registered users and manage their training access."
+      <DashboardHeader
+        title="Student Directory"
+        subtitle="Manage and oversee all registered students across the platform."
       >
         {/* <div className="flex items-center gap-3">
           <Button variant="outline" className="rounded-xl border-slate-200 font-bold h-11 px-6 text-slate-600">
@@ -129,7 +129,7 @@ function AdminStudents() {
              <UserPlus className="mr-2 h-4 w-4" /> Add New User
           </Button>
         </div> */}
-      </PageHeader>
+      </DashboardHeader>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="p-6 border-b flex flex-col md:flex-row items-center justify-between gap-6 bg-slate-50/30">

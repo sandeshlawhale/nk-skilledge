@@ -9,7 +9,7 @@ import ModulesTab from '@/components/admin/training/ModulesTab'
 import TrainingInfoTab from '@/components/admin/training/TrainingInfoTab'
 import EnrollmentsTab from '@/components/admin/training/EnrollmentsTab'
 import AddLessonModal from '@/components/admin/training/AddLessonModal'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import { Button } from '@/components/ui/button'
 
 
@@ -333,11 +333,11 @@ function TrainingManager() {
         >
           <ArrowLeft className="h-3 w-3" /> Back to Training
         </Button>
-        <PageHeader
+        <DashboardHeader
           title={course?.title}
           subtitle="Manage your training content and settings."
         >
-        </PageHeader>
+        </DashboardHeader>
       </div>
 
       <Tabs

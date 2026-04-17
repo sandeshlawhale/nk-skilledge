@@ -8,7 +8,7 @@ import { Plus, PlusCircle, Search, Edit, Trash2, Upload, Image, BookOpen, Users,
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrainingCard } from '@/components/shared/TrainingCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 
 export const Route = createFileRoute('/_auth/admin/training/')({
   component: AdminTraining,
@@ -198,14 +198,14 @@ function AdminTraining() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto font-geist">
-      <PageHeader
+      <DashboardHeader
         title="Training Management"
         subtitle="Create, edit, and organize your educational content."
       >
         <Button onClick={openModal} size='xl' variant='outline' className="">
           <Plus className="mr-2 h-4 w-4" /> Create New Training
         </Button>
-      </PageHeader>
+      </DashboardHeader>
 
       <div className="bg-white p-3 rounded-none border border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center px-4">
         <div className="relative w-full sm:w-80">

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Briefcase, Loader2, Plus, Trash2, Pencil } from 'lucide-react'
 import { ServiceCard } from '@/components/admin/ServiceCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import {
   Dialog,
   DialogContent,
@@ -110,9 +110,9 @@ function AdminServicesIndex() {
 
   return (
     <div className="space-y-6 max-w-full px-6 mx-auto font-geist">
-      <PageHeader
-        title="Services Catalog"
-        subtitle="Manage professional offerings and service registries."
+      <DashboardHeader
+        title="Admin Services"
+        subtitle="Manage and oversee the professional services offered by NK SkillEdge."
       >
         <div className="flex flex-col items-end gap-2">
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -161,7 +161,7 @@ function AdminServicesIndex() {
             </DialogContent>
           </Dialog>
         </div>
-      </PageHeader>
+      </DashboardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => (

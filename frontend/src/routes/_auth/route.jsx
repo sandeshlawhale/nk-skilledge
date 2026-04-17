@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState, redirect } from '@tanstack/react-router'
+import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth'
 import { useEffect } from 'react'
 import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users, Briefcase } from 'lucide-react'
@@ -45,7 +46,7 @@ export const Route = createFileRoute('/_auth')({
 
 function DashboardSidebar() {
   const { user, logout } = useAuthStore()
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, isMobile, setOpenMobile } = useSidebar()
   const navigate = useNavigate()
   const router = useRouterState()
   const isAdmin = user?.role === 'admin'
@@ -57,7 +58,7 @@ function DashboardSidebar() {
 
   const adminNavigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'All Training', href: '/admin/all-training', icon: Grid },
+    // { name: 'All Training', href: '/admin/all-training', icon: Grid },
     { name: 'Manage Training', href: '/admin/training', icon: BookOpen },
     { name: 'Services', href: '/admin/services', icon: Briefcase },
     { name: 'Team', href: '/admin/members', icon: Users },
@@ -86,17 +87,26 @@ function DashboardSidebar() {
             {isAdmin ? 'Administration' : 'Learning'}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className={cn(isMobile && "gap-2")}>
               {navItems.map((item) => {
                 const isActive = (item.href === '/students' || item.href === '/admin')
                   ? router.location.pathname === item.href
                   : router.location.pathname === item.href || (item.href !== '/' && router.location.pathname.startsWith(item.href + '/'))
                 return (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.name}
+                      className={cn(isMobile && "h-11 px-4")}
+                      onClick={() => isMobile && setOpenMobile(false)}
+                    >
                       <Link to={item.href} className="flex items-center gap-3 w-full">
-                        <item.icon className={`h-4 w-4 ${isActive ? (isAdmin ? 'text-orange-500' : 'text-primary') : 'text-slate-500'}`} />
-                        <span className="font-medium">{item.name}</span>
+                        <item.icon className={cn(
+                          isActive ? (isAdmin ? 'text-orange-500' : 'text-primary') : 'text-slate-500',
+                          isMobile ? "h-5 w-5" : "h-4 w-4"
+                        )} />
+                        <span className={cn("font-medium", isMobile ? "text-base" : "text-sm")}>{item.name}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -110,19 +120,19 @@ function DashboardSidebar() {
       <SidebarFooter className="border-t border-slate-200 p-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg" className="w-full justify-start data-[state=open]:bg-slate-100 px-2">
-              <Avatar className="h-8 w-8 shrink-0">
+            <SidebarMenuButton size="lg" className={cn("w-full justify-start data-[state=open]:bg-slate-100 px-2", isMobile ? "h-14" : "h-12")}>
+              <Avatar className={cn("shrink-0", isMobile ? "h-10 w-10" : "h-8 w-8")}>
                 <AvatarFallback className="bg-primary/10 text-primary font-bold">
                   {user?.name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex flex-col items-start text-sm group-data-[collapsible=icon]:hidden ml-3 overflow-hidden text-left">
+              <div className={cn("flex flex-col items-start group-data-[collapsible=icon]:hidden ml-3 overflow-hidden text-left", isMobile ? "text-base" : "text-sm")}>
                 <span className="font-bold text-slate-900 truncate w-full">{user?.name}</span>
-                <span className="text-xs text-slate-500 truncate w-full">{user?.email}</span>
+                <span className={cn("truncate w-full", isMobile ? "text-sm text-slate-500" : "text-xs text-slate-500")}>{user?.email}</span>
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56" side="right">
+          <DropdownMenuContent align="start" className="w-56" side={isMobile ? "top" : "right"}>
             <DropdownMenuItem onClick={() => { logout(); navigate({ to: '/login' }) }} className="text-red-600 focus:text-red-600 cursor-pointer font-bold">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>

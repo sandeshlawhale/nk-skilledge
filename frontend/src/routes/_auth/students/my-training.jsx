@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { BookOpen, Loader2, Search } from 'lucide-react'
 import { TrainingCard } from '@/components/shared/TrainingCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
@@ -63,9 +63,9 @@ function MyTraining() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
-      <PageHeader
-        title="My training"
-        subtitle={`${enrollments.length} Modules available`}
+      <DashboardHeader
+        title="My Training"
+        subtitle="Access and manage your enrolled curricula and learning progress."
       >
         <div className="flex items-stretch gap-2 w-full md:w-auto">
           <div className="relative w-full md:w-64">
@@ -90,7 +90,7 @@ function MyTraining() {
             </SelectContent>
           </Select>
         </div>
-      </PageHeader>
+      </DashboardHeader>
 
       {enrollments.length > 0 ? (
         <div className="space-y-12 pb-10">

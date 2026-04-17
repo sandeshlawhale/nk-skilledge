@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { BookOpen, Loader2 } from 'lucide-react'
 import { TrainingCard } from '@/components/shared/TrainingCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 
 export const Route = createFileRoute('/_auth/admin/all-training')({
   component: AdminAllTraining,
@@ -43,7 +43,7 @@ function AdminAllTraining() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
-      <PageHeader
+      <DashboardHeader
         title="Published Training"
         subtitle="Manage and oversee active curricula from the central registry."
       >
@@ -52,7 +52,7 @@ function AdminAllTraining() {
             <Link to="/admin/training">Management Mode</Link>
           </Button>
         </div>
-      </PageHeader>
+      </DashboardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.filter(c => c.status === 'published').map((course) => (
