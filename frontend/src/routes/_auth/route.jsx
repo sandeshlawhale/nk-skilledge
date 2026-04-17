@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useRouterState, redirect } 
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth'
 import { useEffect } from 'react'
-import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users, Briefcase } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users, Briefcase, X } from 'lucide-react'
 import {
   SidebarProvider,
   Sidebar,
@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/sidebar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_auth')({
   beforeLoad: ({ context, location }) => {
@@ -71,14 +72,25 @@ function DashboardSidebar() {
     <Sidebar collapsible="icon" className="border-r border-slate-200 relative">
       <SidebarNotch />
       <SidebarHeader className="h-16 flex items-center border-b border-slate-200 p-0">
-        <button
-          onClick={() => toggleSidebar()}
-          className="cursor-pointer flex items-center gap-2 px-4 group-data-[state=collapsed]:justify-center group-data-[state=collapsed]:px-0 w-full h-full hover:bg-slate-50 transition-colors"
-        >
-          {/* Minimal Logo matching wireframe styling */}
-          <img src="/logo.png" alt="NK Skilledge" className="h-6 w-6 shrink-0" />
-          <span className="font-bold text-xl tracking-tight group-data-[state=collapsed]:hidden truncate">NK SKILLEDGE</span>
-        </button>
+        <div className="flex items-center justify-between w-full p-4">
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="NK Skilledge" className="h-8 w-auto" />
+            <span className="font-bold text-xl tracking-tight">NK SKILLEDGE</span>
+          </div>
+          {isMobile && (
+            <div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-10 w-10 text-slate-500"
+                onClick={() => setOpenMobile(false)}
+              >
+                <X className="h-8 w-8" />
+                <span className="sr-only">Close menu</span>
+              </Button>
+            </div>
+          )}
+        </div>
       </SidebarHeader>
 
       <SidebarContent>
