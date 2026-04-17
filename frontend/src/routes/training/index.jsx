@@ -9,6 +9,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { TrustedBy } from '@/components/home/TrustedBy'
 
 export const Route = createFileRoute('/training/')({
   component: TrainingPage,
@@ -69,7 +70,7 @@ function TrainingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
-      <main className="flex-1 w-full max-w-7xl py-12 px-4 mx-auto space-y-4">
+      <main className="flex-1 w-full max-w-7xl pt-12 px-4 mx-auto space-y-4">
         <div className="flex flex-col gap-6 px-1">
           <PageHeader
             title="Elite Curriculums"
@@ -148,6 +149,7 @@ function TrainingPage() {
           </div>
         )}
       </main>
+      <TrustedBy />
       <Footer />
     </div>
   )
