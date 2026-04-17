@@ -46,7 +46,7 @@ function AdminTraining() {
       const response = await authFetch(`${API_BASE_URL}/courses?status=all`)
       const data = await response.json()
       if (data.success) {
-        setCourses(data.data)
+        setTrainingList(data.data)
       }
     } catch (error) {
       console.error('Error fetching courses:', error)
@@ -59,7 +59,7 @@ function AdminTraining() {
     fetchCourses()
   }, [])
 
-  const filteredCourses = courses.filter(course =>
+  const filteredCourses = trainingList.filter(course =>
     course.title.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
@@ -135,7 +135,7 @@ function AdminTraining() {
       await authFetch(`${API_BASE_URL}/courses/${courseId}`, {
         method: 'DELETE',
       })
-      setCourses(prev => prev.filter(c => c._id !== courseId))
+      setTrainingList(prev => prev.filter(c => c._id !== courseId))
     } catch (err) {
       console.error('Delete failed', err)
     }
@@ -219,10 +219,10 @@ function AdminTraining() {
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
           <Badge variant="outline" className="h-9 px-3 rounded-none border-slate-200 text-slate-500 font-black uppercase tracking-widest text-[9px]">
-            {courses.length} Units
+            {trainingList.length} Units
           </Badge>
           <Badge variant="outline" className="h-9 px-3 rounded-none border-slate-200 text-green-600 font-black uppercase tracking-widest text-[9px]">
-            {courses.filter(c => c.status === 'published').length} Active
+            {trainingList.filter(c => c.status === 'published').length} Active
           </Badge>
         </div>
       </div>
