@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Hero } from '@/components/home/Hero'
 import { TrustedBy } from '@/components/home/TrustedBy'
-import { Courses } from '@/components/home/Courses'
+import { Training } from '@/components/home/Training'
 import { Services } from '@/components/home/Services'
 import { About } from '@/components/home/About'
 import { Testimonials } from '@/components/home/Testimonials'
@@ -17,7 +17,7 @@ function HomePage() {
     <div className="flex flex-col min-h-screen bg-white w-full">
       <Hero />
       <TrustedBy />
-      <Courses />
+      <Training />
       <Services />
       <About />
       <Testimonials />

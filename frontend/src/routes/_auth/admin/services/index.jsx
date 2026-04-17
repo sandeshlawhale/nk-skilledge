@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Briefcase, Loader2, Plus, Trash2, Pencil } from 'lucide-react'
 import { ServiceCard } from '@/components/admin/ServiceCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_auth/admin/services/')({
@@ -29,7 +36,7 @@ function AdminServicesIndex() {
   const [isLoading, setIsLoading] = useState(true)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [newService, setNewService] = useState({ name: '', description: '' })
+  const [newService, setNewService] = useState({ name: '', description: '', category: 'other' })
   const navigate = useNavigate()
 
   const fetchServices = async () => {
@@ -69,7 +76,7 @@ function AdminServicesIndex() {
       if (data.success) {
         toast.success('Service created successfully')
         setIsCreateDialogOpen(false)
-        setNewService({ name: '', description: '' })
+        setNewService({ name: '', description: '', category: 'other' })
         // Redirect to detail page to fill more details
         navigate({ to: '/admin/services/$serviceId', params: { serviceId: data.data._id } })
       } else {
@@ -110,17 +117,16 @@ function AdminServicesIndex() {
 
   return (
     <div className="space-y-6 max-w-full px-6 mx-auto font-geist">
-      <PageHeader
-        title="Services Catalog"
-        subtitle="Manage professional offerings and service registries."
+      <DashboardHeader
+        title="Admin Services"
+        subtitle="Manage and oversee the professional services offered by NK SkillEdge."
       >
-        <div className="flex flex-col items-end gap-2">
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size='xl' className="bg-slate-900 rounded-none h-12 px-8 font-black uppercase tracking-widest text-[10px]">
-                <Plus className="mr-2 h-4 w-4" /> Add New Service
-              </Button>
-            </DialogTrigger>
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size='xl' className="bg-slate-900 rounded-2xl h-12 md:h-12 px-8 font-black uppercase tracking-[0.2em] text-[10px] w-full md:w-auto shadow-lg shadow-slate-200 hover:shadow-xl hover:scale-[1.02] transition-all active:scale-95">
+              <Plus className="mr-2 h-4 w-4" /> Add New Service
+            </Button>
+          </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] rounded-none border-2 border-slate-900">
               <DialogHeader>
                 <DialogTitle className="text-xl font-black uppercase italic tracking-tight">Create New Service</DialogTitle>
@@ -151,6 +157,24 @@ function AdminServicesIndex() {
                     disabled={isSubmitting}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-[10px] font-black uppercase tracking-widest text-slate-500">Category</Label>
+                  <Select
+                    value={newService.category}
+                    onValueChange={(value) => setNewService(prev => ({ ...prev, category: value }))}
+                    disabled={isSubmitting}
+                  >
+                    <SelectTrigger id="category" className="rounded-none border-slate-200 focus:border-slate-900 h-10 font-bold uppercase text-[10px] tracking-wider">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-none border-2 border-slate-900">
+                      <SelectItem value="development" className="text-[10px] font-bold uppercase tracking-wider">Development</SelectItem>
+                      <SelectItem value="design" className="text-[10px] font-bold uppercase tracking-wider">Design</SelectItem>
+                      <SelectItem value="digital_marketing" className="text-[10px] font-bold uppercase tracking-wider">Digital Marketing</SelectItem>
+                      <SelectItem value="other" className="text-[10px] font-bold uppercase tracking-wider">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <DialogFooter className="pt-4">
                   <Button type="submit" disabled={isSubmitting} className="w-full bg-slate-900 rounded-none h-12 font-black uppercase tracking-widest text-[10px]">
                     {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
@@ -159,9 +183,8 @@ function AdminServicesIndex() {
                 </DialogFooter>
               </form>
             </DialogContent>
-          </Dialog>
-        </div>
-      </PageHeader>
+        </Dialog>
+      </DashboardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => (

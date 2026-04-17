@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { TIMELINE_DATA, SERVICES, FEATURED_COURSES } from '@/constants'
+import { TIMELINE_DATA, SERVICES, FEATURED_TRAINING } from '@/constants'
 import { CTA } from '@/components/home/CTA'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -161,11 +161,11 @@ function AboutPage() {
                 <h4 className="text-2xl font-black text-slate-900 mb-4">Education & Training</h4>
               </div>
               <p className="text-slate-500 font-medium leading-relaxed">
-                We offer industry-led courses in {FEATURED_COURSES.slice(0, 3).map(c => c.title).join(", ")}. Our approach is 100% practical, focusing on project-based learning.
+                We offer industry-led training in {FEATURED_TRAINING.slice(0, 3).map(c => c.title).join(", ")}. Our approach is 100% practical, focusing on project-based learning.
               </p>
-              <Link to="/courses">
+              <Link to="/training">
                 <Button variant="default" size="xl" className="mt-4">
-                  Explore Courses
+                  Explore Training
                 </Button>
               </Link>
             </div>
@@ -186,87 +186,95 @@ function AboutPage() {
             </div>
           </div>
 
-          <div className="max-w-2xl mx-auto text-center">
-            <h4 className="text-xl font-black text-slate-900 mb-4 italic tracking-tight">How it all started</h4>
-            <p className="text-slate-500 font-medium leading-relaxed">
-              The journey began with a simple idea: What if we could create an ecosystem where students learn by building things that businesses actually need? This synergy has made us a youth-led powerhouse of innovation.
-            </p>
-          </div>
+
         </div>
       </section>
 
-      {/* Timeline Section - Consistent Width */}
-      <section className="py-24 bg-white">
+      {/* Timeline Section - 1:2 Sticky Layout */}
+      <section className="py-24 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900">Our <span className="text-primary underline decoration-primary/30">Journey</span></h2>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-24 relative">
+            {/* Sticky Content Area (1 part) */}
+            <div className="lg:col-span-2">
+              <div className="lg:sticky lg:top-32">
+                <Badge className="bg-primary/20 text-primary border-none mb-6 rounded-none px-4 py-1 font-bold text-xs uppercase">The Journey</Badge>
+                <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-8 leading-tight">
+                  How it all <br />
+                  <span className="text-primary underline underline-offset-8 decoration-4 decoration-primary/20 italic">started</span>
+                </h2>
+                <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-sm">
+                  The journey began with a simple idea:<br /> What if we could create an ecosystem where students learn by building things that businesses actually need? This synergy has made us a youth-led powerhouse of innovation.
+                </p>
+              </div>
+            </div>
 
-          <div className="relative max-w-4xl mx-auto">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-slate-100" />
-            <div className="space-y-16 relative">
-              {TIMELINE_DATA.map((item, i) => (
-                <div
-                  key={i}
-                  className={`flex items-center w-full ${i % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
-                >
-                  <div className="w-1/2 px-8 flex justify-end">
-                    <div className={`text-right w-full ${i % 2 === 0 ? '' : 'text-left!'}`}>
+            {/* Timeline Data area (2 parts) */}
+            <div className="lg:col-span-3 relative">
+              {/* Vertical lineage line */}
+              <div className="absolute left-0 top-0 h-full w-[1px] bg-slate-200 ml-3 lg:ml-0" />
+
+              <div className="space-y-16 relative">
+                {TIMELINE_DATA.map((item, i) => (
+                  <div key={i} className="relative pl-12 lg:pl-16">
+                    {/* Timeline Node */}
+                    <div className="absolute left-[-6px] top-1.5 z-10 w-3 h-3 rounded-full bg-primary ring-4 ring-white shadow-sm shadow-primary/40 lg:-left-[6px]" />
+
+                    <div>
                       <h4 className="text-3xl font-black text-slate-900 mb-1">{item.year}</h4>
-                      <h5 className="text-base font-bold text-primary mb-2 uppercase tracking-wide">{item.title}</h5>
-                      <p className="text-slate-500 font-medium text-sm leading-relaxed">{item.description}</p>
+                      <h5 className="text-base font-bold text-primary mb-3 uppercase tracking-wide">{item.title}</h5>
+                      <p className="text-slate-500 font-medium text-lg leading-relaxed max-w-2xl">{item.description}</p>
                     </div>
                   </div>
-                  <div className="relative z-10 w-6 h-6 shrink-0 rounded-full border-4 border-white bg-primary shadow-xl ring-4 ring-primary/10" />
-                  <div className="w-1/2 px-8" />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Team Section */}
-      {(isLoading || regularTeam.length > 0) && (
-        <section className="py-24 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-xs font-black text-primary uppercase tracking-[0.3em] mb-4">Dedicated Team</h2>
-              <h3 className="text-3xl md:text-5xl font-black text-slate-900">The Powerhouse Behind Us</h3>
-            </div>
+      {
+        (isLoading || regularTeam.length > 0) && (
+          <section className="py-24 bg-slate-50">
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="text-center mb-16">
+                <h2 className="text-xs font-black text-primary uppercase tracking-[0.3em] mb-4">Dedicated Team</h2>
+                <h3 className="text-3xl md:text-5xl font-black text-slate-900">The Powerhouse Behind Us</h3>
+              </div>
 
-            {isLoading ? (
-              <div className="flex justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-primary/20" />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {regularTeam.map((member, i) => (
-                  <Card key={member._id} className="rounded-none border-2 border-slate-100 group flex flex-col h-full bg-white shadow-sm hover:shadow-2xl transition-all duration-300">
-                    <div className="relative aspect-square overflow-hidden bg-slate-100">
-                      <img
-                        src={member.profileImage?.url}
-                        alt={member.name}
-                        className="w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-105"
-                      />
-                    </div>
-                    <CardContent className="p-6 flex-1 flex flex-col justify-end">
-                      <p className="text-primary font-black text-[9px] uppercase tracking-widest mb-1">{member.role}</p>
-                      <h4 className="text-lg font-black text-slate-900 mb-2">
-                        {member.prefix ? `${member.prefix}. ` : ''}{member.name}
-                      </h4>
-                      <p className="text-slate-500 text-[11px] font-semibold leading-relaxed line-clamp-3">{member.bio}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+              {isLoading ? (
+                <div className="flex justify-center py-20">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary/20" />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {regularTeam.map((member, i) => (
+                    <Card key={member._id} className="rounded-none border-2 border-slate-100 group flex flex-col h-full bg-white shadow-sm hover:shadow-2xl transition-all duration-300">
+                      <div className="relative aspect-square overflow-hidden bg-slate-100">
+                        <img
+                          src={member.profileImage?.url}
+                          alt={member.name}
+                          className="w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-105"
+                        />
+                      </div>
+                      <CardContent className="p-6 flex-1 flex flex-col justify-end">
+                        <p className="text-primary font-black text-[9px] uppercase tracking-widest mb-1">{member.role}</p>
+                        <h4 className="text-lg font-black text-slate-900 mb-2">
+                          {member.prefix ? `${member.prefix}. ` : ''}{member.name}
+                        </h4>
+                        <p className="text-slate-500 text-[11px] font-semibold leading-relaxed line-clamp-3">{member.bio}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )
+      }
 
       {/* Final CTA Section */}
       <CTA />
-    </div>
+    </div >
   )
 }

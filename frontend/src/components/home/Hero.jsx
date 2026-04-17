@@ -14,9 +14,9 @@ export function Hero() {
           We prepare students with the skills needed for today&apos;s professional world.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16 w-full sm:w-auto">
-          <Link to="/courses">
+          <Link to="/training">
             <Button size="hero" variant="brutal" className="w-full">
-              Explore courses
+              Explore training
             </Button>
           </Link>
           <Link to="/services">

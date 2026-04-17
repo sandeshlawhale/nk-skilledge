@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { MoreHorizontal, Search, UserPlus, Mail, Calendar, BookOpen, ChevronRight, UserCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,7 +44,7 @@ function AdminStudents() {
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
-  const [selectedCourse, setSelectedCourse] = useState('')
+  const [selectedTraining, setSelectedTraining] = useState('')
   const [isEnrollDialogOpen, setIsEnrollDialogOpen] = useState(false)
   const [roleFilter, setRoleFilter] = useState('all')
   const [sortBy, setSortBy] = useState('recent')
@@ -72,19 +72,19 @@ function AdminStudents() {
   }, [])
 
   const handleEnroll = async () => {
-    if (!selectedUser || !selectedCourse) return
+    if (!selectedUser || !selectedTraining) return
 
     try {
       const response = await authFetch(`${API_BASE_URL}/enrollments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: selectedUser._id, courseId: selectedCourse })
+        body: JSON.stringify({ userId: selectedUser._id, courseId: selectedTraining })
       })
       const data = await response.json()
       if (data.success) {
         setIsEnrollDialogOpen(false)
         setSelectedUser(null)
-        setSelectedCourse('')
+        setSelectedTraining('')
         fetchData()
       }
     } catch (error) {
@@ -103,7 +103,7 @@ function AdminStudents() {
       if (sortBy === 'recent') return new Date(b.createdAt) - new Date(a.createdAt)
       if (sortBy === 'nameAZ') return (a.name || '').localeCompare(b.name || '')
       if (sortBy === 'nameZA') return (b.name || '').localeCompare(a.name || '')
-      if (sortBy === 'mostCourses') return (b.courseCount || 0) - (a.courseCount || 0)
+      if (sortBy === 'mostTraining') return (b.courseCount || 0) - (a.courseCount || 0)
       return 0
     })
 
@@ -117,19 +117,19 @@ function AdminStudents() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto font-geist">
-      <PageHeader
-        title="User Management"
-        subtitle="View all registered users and manage their course access."
+      <DashboardHeader
+        title="Student Directory"
+        subtitle="Manage and oversee all registered students across the platform."
       >
-        {/* <div className="flex items-center gap-3">
-          <Button variant="outline" className="rounded-xl border-slate-200 font-bold h-11 px-6 text-slate-600">
-             Export Data
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <Button variant="outline" className="rounded-2xl border-slate-200 font-black uppercase tracking-[0.15em] text-[10px] h-12 md:h-11 px-6 text-slate-600 w-full md:w-auto hover:bg-slate-50 transition-all">
+            Export Data
           </Button>
-          <Button className="bg-slate-900 hover:bg-primary rounded-xl font-bold h-11 px-6 shadow-lg shadow-indigo-100">
-             <UserPlus className="mr-2 h-4 w-4" /> Add New User
+          <Button className="bg-slate-900 hover:bg-slate-800 rounded-2xl font-black uppercase tracking-[0.15em] text-[10px] h-12 md:h-11 px-6 shadow-lg shadow-slate-200 w-full md:w-auto text-white transition-all active:scale-95">
+            <UserPlus className="mr-2 h-4 w-4" /> Add New User
           </Button>
-        </div> */}
-      </PageHeader>
+        </div>
+      </DashboardHeader>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="p-6 border-b flex flex-col md:flex-row items-center justify-between gap-6 bg-slate-50/30">
@@ -162,7 +162,7 @@ function AdminStudents() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Badge variant="outline" className="h-10 px-4 rounded-xl border-slate-200 text-slate-500 font-bold bg-white cursor-pointer hover:bg-slate-50 uppercase tracking-tight">
-                  Sort: {sortBy === 'recent' ? 'Recent' : sortBy === 'nameAZ' ? 'Name A-Z' : sortBy === 'nameZA' ? 'Name Z-A' : 'Most Courses'}
+                  Sort: {sortBy === 'recent' ? 'Recent' : sortBy === 'nameAZ' ? 'Name A-Z' : sortBy === 'nameZA' ? 'Name Z-A' : 'Most Training'}
                 </Badge>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="rounded-xl border-slate-200 shadow-xl p-1">
@@ -171,7 +171,7 @@ function AdminStudents() {
                   <DropdownMenuItem onClick={() => setSortBy('recent')} className="rounded-lg font-medium">Recent</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setSortBy('nameAZ')} className="rounded-lg font-medium">Name A-Z</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setSortBy('nameZA')} className="rounded-lg font-medium">Name Z-A</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSortBy('mostCourses')} className="rounded-lg font-medium">Most Courses</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortBy('mostTraining')} className="rounded-lg font-medium">Most Training</DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -214,7 +214,7 @@ function AdminStudents() {
                   </TableCell>
                   <TableCell className="px-6">
                     <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-                      <BookOpen className="h-4 w-4 text-primary opacity-70" /> {user.courseCount || 0} Courses
+                      <BookOpen className="h-4 w-4 text-primary opacity-70" /> {user.courseCount || 0} Training
                     </div>
                   </TableCell>
                   <TableCell className="px-6">
@@ -248,16 +248,16 @@ function AdminStudents() {
                             <UserCheck className="h-10 w-10 text-primary mb-4" />
                             <DialogTitle className="text-2xl font-bold">Enroll Student</DialogTitle>
                             <DialogDescription className="text-slate-400 mt-2 font-medium">
-                              You are enrolling <span className="text-white font-bold">{user.name}</span> in a new course.
+                              You are enrolling <span className="text-white font-bold">{user.name}</span> in a new training module.
                             </DialogDescription>
                           </div>
 
                           <div className="p-8 space-y-6">
                             <div className="space-y-2">
-                              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Select Course</label>
-                              <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Select Training</label>
+                              <Select value={selectedTraining} onValueChange={setSelectedTraining}>
                                 <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-slate-50 font-bold focus:ring-primary">
-                                  <SelectValue placeholder="Choose a course to assign..." />
+                                  <SelectValue placeholder="Choose a training to assign..." />
                                 </SelectTrigger>
                                 <SelectContent className="rounded-2xl border-slate-200 shadow-xl p-2">
                                   {courses.map(course => (
@@ -273,7 +273,7 @@ function AdminStudents() {
                                 <div className="h-4 w-4 bg-indigo-600 rounded-full flex items-center justify-center text-[8px] text-white">i</div>
                               </div>
                               <p className="text-xs text-indigo-800 leading-relaxed font-medium">
-                                Enrolling a student will grant them immediate access to all lessons and materials in this course.
+                                Enrolling a student will grant them immediate access to all lessons and materials in this training.
                               </p>
                             </div>
                           </div>
@@ -282,7 +282,7 @@ function AdminStudents() {
                             <Button variant="ghost" onClick={() => setIsEnrollDialogOpen(false)} className="rounded-xl font-bold text-slate-500 hover:bg-slate-100 uppercase tracking-tight">
                               Cancel
                             </Button>
-                            <Button onClick={handleEnroll} disabled={!selectedCourse} className="rounded-xl font-bold bg-slate-900 hover:bg-primary shadow-lg shadow-indigo-100 uppercase tracking-tight flex-1 h-12">
+                            <Button onClick={handleEnroll} disabled={!selectedTraining} className="rounded-xl font-bold bg-slate-900 hover:bg-primary shadow-lg shadow-indigo-100 uppercase tracking-tight flex-1 h-12">
                               Confirm Enrollment
                             </Button>
                           </DialogFooter>

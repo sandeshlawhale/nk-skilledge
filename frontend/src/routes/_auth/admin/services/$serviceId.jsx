@@ -271,12 +271,20 @@ function AdminServiceDetail() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Category</Label>
-                  <Input
-                    value={service.category || ''}
-                    placeholder="E.g. Web Design"
-                    onChange={(e) => setService(p => ({ ...p, category: e.target.value }))}
-                    className="rounded-none border-slate-200 focus:border-slate-900 font-bold"
-                  />
+                  <Select
+                    value={service.category || 'other'}
+                    onValueChange={(val) => setService(p => ({ ...p, category: val }))}
+                  >
+                    <SelectTrigger className="rounded-none border-slate-200 focus:border-slate-900 font-bold h-10 uppercase text-[10px] tracking-wider">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-none border-2 border-slate-900">
+                      <SelectItem value="development" className="text-[10px] font-bold uppercase tracking-wider">Development</SelectItem>
+                      <SelectItem value="design" className="text-[10px] font-bold uppercase tracking-wider">Design</SelectItem>
+                      <SelectItem value="digital_marketing" className="text-[10px] font-bold uppercase tracking-wider">Digital Marketing</SelectItem>
+                      <SelectItem value="other" className="text-[10px] font-bold uppercase tracking-wider">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </CardContent>

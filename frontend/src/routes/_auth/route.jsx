@@ -1,7 +1,8 @@
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState, redirect } from '@tanstack/react-router'
+import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth'
 import { useEffect } from 'react'
-import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users, Briefcase } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Settings, LogOut, BarChart, Grid, Users, Briefcase, X } from 'lucide-react'
 import {
   SidebarProvider,
   Sidebar,
@@ -20,6 +21,7 @@ import {
 } from '@/components/ui/sidebar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_auth')({
   beforeLoad: ({ context, location }) => {
@@ -34,7 +36,7 @@ export const Route = createFileRoute('/_auth')({
 
     const { user } = context.auth
     if (location.pathname.startsWith('/admin') && user?.role !== 'admin') {
-      throw redirect({ to: '/students/my-courses' })
+      throw redirect({ to: '/students/my-training' })
     }
     if (location.pathname.startsWith('/students') && user?.role === 'admin') {
       throw redirect({ to: '/admin' })
@@ -45,20 +47,20 @@ export const Route = createFileRoute('/_auth')({
 
 function DashboardSidebar() {
   const { user, logout } = useAuthStore()
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, isMobile, setOpenMobile } = useSidebar()
   const navigate = useNavigate()
   const router = useRouterState()
   const isAdmin = user?.role === 'admin'
 
   const studentNavigation = [
-    { name: 'My Courses', href: '/students/my-courses', icon: BookOpen },
-    { name: 'All Courses', href: '/students/all-courses', icon: Grid },
+    { name: 'My Training', href: '/students/my-training', icon: BookOpen },
+    { name: 'All Training', href: '/students/all-training', icon: Grid },
   ]
 
   const adminNavigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'All Courses', href: '/admin/all-courses', icon: Grid },
-    { name: 'Manage Courses', href: '/admin/courses', icon: BookOpen },
+    // { name: 'All Training', href: '/admin/all-training', icon: Grid },
+    { name: 'Manage Training', href: '/admin/training', icon: BookOpen },
     { name: 'Services', href: '/admin/services', icon: Briefcase },
     { name: 'Team', href: '/admin/members', icon: Users },
     { name: 'All Users', href: '/admin/students', icon: BarChart },
@@ -70,14 +72,25 @@ function DashboardSidebar() {
     <Sidebar collapsible="icon" className="border-r border-slate-200 relative">
       <SidebarNotch />
       <SidebarHeader className="h-16 flex items-center border-b border-slate-200 p-0">
-        <button
-          onClick={() => toggleSidebar()}
-          className="cursor-pointer flex items-center gap-2 px-4 group-data-[state=collapsed]:justify-center group-data-[state=collapsed]:px-0 w-full h-full hover:bg-slate-50 transition-colors"
-        >
-          {/* Minimal Logo matching wireframe styling */}
-          <img src="/logo.png" alt="NK Skilledge" className="h-6 w-6 shrink-0" />
-          <span className="font-bold text-xl tracking-tight group-data-[state=collapsed]:hidden truncate">NK SKILLEDGE</span>
-        </button>
+        <div className="flex items-center justify-between w-full p-4">
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="NK Skilledge" className="h-8 w-auto" />
+            <span className="font-bold text-xl tracking-tight">NK SKILLEDGE</span>
+          </Link>
+          {isMobile && (
+            <div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 text-slate-500"
+                onClick={() => setOpenMobile(false)}
+              >
+                <X className="h-8 w-8" />
+                <span className="sr-only">Close menu</span>
+              </Button>
+            </div>
+          )}
+        </div>
       </SidebarHeader>
 
       <SidebarContent>
@@ -86,17 +99,26 @@ function DashboardSidebar() {
             {isAdmin ? 'Administration' : 'Learning'}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className={cn(isMobile && "gap-2")}>
               {navItems.map((item) => {
                 const isActive = (item.href === '/students' || item.href === '/admin')
                   ? router.location.pathname === item.href
                   : router.location.pathname === item.href || (item.href !== '/' && router.location.pathname.startsWith(item.href + '/'))
                 return (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.name}
+                      className={cn(isMobile && "h-11 px-4")}
+                      onClick={() => isMobile && setOpenMobile(false)}
+                    >
                       <Link to={item.href} className="flex items-center gap-3 w-full">
-                        <item.icon className={`h-4 w-4 ${isActive ? (isAdmin ? 'text-orange-500' : 'text-primary') : 'text-slate-500'}`} />
-                        <span className="font-medium">{item.name}</span>
+                        <item.icon className={cn(
+                          isActive ? (isAdmin ? 'text-orange-500' : 'text-primary') : 'text-slate-500',
+                          isMobile ? "h-5 w-5" : "h-4 w-4"
+                        )} />
+                        <span className={cn("font-medium", isMobile ? "text-base" : "text-sm")}>{item.name}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -110,19 +132,19 @@ function DashboardSidebar() {
       <SidebarFooter className="border-t border-slate-200 p-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg" className="w-full justify-start data-[state=open]:bg-slate-100 px-2">
-              <Avatar className="h-8 w-8 shrink-0">
+            <SidebarMenuButton size="lg" className={cn("w-full justify-start data-[state=open]:bg-slate-100 px-2", isMobile ? "h-14" : "h-12")}>
+              <Avatar className={cn("shrink-0", isMobile ? "h-10 w-10" : "h-8 w-8")}>
                 <AvatarFallback className="bg-primary/10 text-primary font-bold">
                   {user?.name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex flex-col items-start text-sm group-data-[collapsible=icon]:hidden ml-3 overflow-hidden text-left">
+              <div className={cn("flex flex-col items-start group-data-[collapsible=icon]:hidden ml-3 overflow-hidden text-left", isMobile ? "text-base" : "text-sm")}>
                 <span className="font-bold text-slate-900 truncate w-full">{user?.name}</span>
-                <span className="text-xs text-slate-500 truncate w-full">{user?.email}</span>
+                <span className={cn("truncate w-full", isMobile ? "text-sm text-slate-500" : "text-xs text-slate-500")}>{user?.email}</span>
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56" side="right">
+          <DropdownMenuContent align="start" className="w-56" side={isMobile ? "top" : "right"}>
             <DropdownMenuItem onClick={() => { logout(); navigate({ to: '/login' }) }} className="text-red-600 focus:text-red-600 cursor-pointer font-bold">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
@@ -153,7 +175,7 @@ function AuthLayout() {
             </div>
           </header> */}
 
-          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+          <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
             <Outlet />
           </main>
         </div>

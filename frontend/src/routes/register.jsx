@@ -21,7 +21,7 @@ export const Route = createFileRoute('/register')({
       if (user?.role === 'admin') {
         throw redirect({ to: '/admin' })
       } else {
-        throw redirect({ to: '/students/my-courses' })
+        throw redirect({ to: '/students/my-training' })
       }
     }
   },
@@ -40,7 +40,7 @@ function Register() {
       } else if (user?.role === 'admin') {
         navigate({ to: '/admin', replace: true })
       } else {
-        navigate({ to: '/students/my-courses', replace: true })
+        navigate({ to: '/students/my-training', replace: true })
       }
     }
   }, [isAuthenticated, user, navigate, redirectPath])
@@ -62,7 +62,7 @@ function Register() {
       if (redirectPath) {
         navigate({ to: redirectPath })
       } else {
-        navigate({ to: '/students/my-courses' })
+        navigate({ to: '/students/my-training' })
       }
     }
   }

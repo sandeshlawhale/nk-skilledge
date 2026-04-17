@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export const Route = createFileRoute('/_auth/students/course/lesson/$lessonId')({
+export const Route = createFileRoute('/_auth/students/training/lesson/$lessonId')({
   component: StudentLessonView,
 })
 
@@ -239,8 +239,8 @@ function StudentLessonView() {
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-3 text-center">
         <AlertCircle className="h-10 w-10 text-slate-300" />
         <p className="text-slate-600 font-bold">Lesson not found</p>
-        <Button variant="outline" onClick={() => navigate({ to: "/students/course/${courseId}" })}>
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Course
+        <Button variant="outline" onClick={() => navigate({ to: `/students/training/${courseId}` })}>
+          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Training
         </Button>
       </div>
     )
@@ -253,10 +253,10 @@ function StudentLessonView() {
 
       {/* Breadcrumb */}
       <button
-        onClick={() => navigate({ to: `/students/course/${courseId}` })}
+        onClick={() => navigate({ to: `/students/training/${courseId}` })}
         className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-900 transition-colors font-medium"
       >
-        <ArrowLeft className="h-3.5 w-3.5" /> Back to Course
+        <ArrowLeft className="h-3.5 w-3.5" /> Back to Training
       </button>
 
       {/* Lesson Header */}

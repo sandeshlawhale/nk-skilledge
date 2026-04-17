@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Loader2, Plus, Users, X, Image as ImageIcon } from 'lucide-react'
 import { MemberCard } from '@/components/admin/MemberCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 import {
   Sheet,
   SheetContent,
@@ -212,9 +212,9 @@ function AdminMembersPage() {
 
   return (
     <div className="space-y-6 max-w-full px-6 mx-auto font-geist">
-      <PageHeader
-        title="Team Directory"
-        subtitle="Manage your powerhouse - Add, edit or remove team members."
+      <DashboardHeader
+        title="Admin Team"
+        subtitle="Manage and organize the core personnel and personnel data."
       >
         <Button
           size='xl'
@@ -223,7 +223,7 @@ function AdminMembersPage() {
         >
           <Plus className="mr-2 h-4 w-4" /> Add Team Member
         </Button>
-      </PageHeader>
+      </DashboardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {members.map((member) => (

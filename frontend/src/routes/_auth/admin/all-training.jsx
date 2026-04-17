@@ -4,14 +4,14 @@ import { API_BASE_URL, authFetch } from '@/utils/api'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { BookOpen, Loader2 } from 'lucide-react'
-import { CourseCard } from '@/components/shared/CourseCard'
-import { PageHeader } from '@/components/shared/PageHeader'
+import { TrainingCard } from '@/components/shared/TrainingCard'
+import { DashboardHeader } from '@/components/shared/DashboardHeader'
 
-export const Route = createFileRoute('/_auth/admin/all-courses')({
-  component: AdminAllCourses,
+export const Route = createFileRoute('/_auth/admin/all-training')({
+  component: AdminAllTraining,
 })
 
-function AdminAllCourses() {
+function AdminAllTraining() {
   const [courses, setCourses] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -43,23 +43,23 @@ function AdminAllCourses() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-geist">
-      <PageHeader
-        title="Published Courses"
+      <DashboardHeader
+        title="Published Training"
         subtitle="Manage and oversee active curricula from the central registry."
       >
         <div className="flex flex-col items-end gap-2">
           <Button asChild variant="outline" size='xl' className="">
-            <Link to="/admin/courses">Management Mode</Link>
+            <Link to="/admin/training">Management Mode</Link>
           </Button>
         </div>
-      </PageHeader>
+      </DashboardHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.filter(c => c.status === 'published').map((course) => (
-          <CourseCard
+          <TrainingCard
             key={course._id}
-            course={course}
-            linkTo={`/courses/${course._id}`}
+            training={course}
+            linkTo={`/training/${course._id}`}
             metadata="Registry Listing"
           />
         ))}
@@ -71,9 +71,9 @@ function AdminAllCourses() {
             <BookOpen className="h-8 w-8" />
           </div>
           <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Registry Empty</h3>
-          <p className="text-slate-500 font-medium mt-2 italic text-sm">No courses are currently live on the student portal.</p>
+          <p className="text-slate-500 font-medium mt-2 italic text-sm">No training modules are currently live on the student portal.</p>
           <Button asChild className="mt-8 bg-slate-900 rounded-none px-8 h-12 font-black uppercase tracking-widest text-[10px]">
-            <Link to="/admin/courses">Manage Courses</Link>
+            <Link to="/admin/training">Manage Training</Link>
           </Button>
         </div>
       )}

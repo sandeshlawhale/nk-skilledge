@@ -12,12 +12,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 
-export const Route = createFileRoute('/courses/$courseId')({
-  component: PublicCourseDetails,
+export const Route = createFileRoute('/training/$courseId')({
+  component: TrainingDetails,
 })
 
-function PublicCourseDetails() {
-  const { courseId } = useParams({ from: '/courses/$courseId' })
+function TrainingDetails() {
+  const { courseId } = useParams({ from: '/training/$courseId' })
   const navigate = useNavigate()
 
   const [course, setCourse] = useState(null)
@@ -73,8 +73,8 @@ function PublicCourseDetails() {
   if (!course) {
     return (
       <div className="flex flex-col items-center justify-center h-[80vh] gap-4">
-        <h2 className="text-2xl font-black text-slate-900 uppercase italic">Course Not Found</h2>
-        <Button onClick={() => navigate({ to: '/courses' })}>Browse Catalog</Button>
+        <h2 className="text-2xl font-black text-slate-900 uppercase italic">Training Not Found</h2>
+        <Button onClick={() => navigate({ to: '/training' })}>Browse Catalog</Button>
       </div>
     )
   }
@@ -88,7 +88,7 @@ function PublicCourseDetails() {
           <div className="flex-1 space-y-8">
             <div className="space-y-4">
               <button
-                onClick={() => navigate({ to: '/courses' })}
+                onClick={() => navigate({ to: '/training' })}
                 className="flex items-center gap-1.5 text-slate-400 hover:text-slate-900 transition-colors font-bold uppercase text-[9px] tracking-widest"
               >
                 <ArrowLeft className="h-3 w-3" /> Back to Catalog
@@ -127,7 +127,7 @@ function PublicCourseDetails() {
               <div className="bg-white rounded-none p-8 border border-slate-200 shadow-none space-y-8">
                 <div>
                   <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight flex items-center gap-2 mb-4">
-                    <div className="h-1 w-4 bg-primary rounded-none"></div> About this Course
+                    <div className="h-1 w-4 bg-primary rounded-none"></div> About this Training
                   </h2>
                   <div className="space-y-4">
                     {Array.isArray(course?.description) ? (
@@ -267,9 +267,9 @@ function PublicCourseDetails() {
                 {isEnrolled ? (
                   <Button
                     className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs h-12 rounded-none shadow-none"
-                    onClick={() => navigate({ to: `/students/course/${courseId}` })}
+                    onClick={() => navigate({ to: `/students/training/${courseId}` })}
                   >
-                    Go to Course
+                    Go to Training
                   </Button>
                 ) : course?.askForPrice ? (
                   <div className="bg-slate-50 border border-slate-100 p-5 rounded-none space-y-3">

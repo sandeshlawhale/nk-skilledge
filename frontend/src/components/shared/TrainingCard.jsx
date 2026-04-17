@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 
-export function CourseCard({ course, progress, linkTo, params, extraActions, metadata }) {
-  if (!course) return null;
+export function TrainingCard({ training, progress, linkTo, params, extraActions, metadata }) {
+  if (!training) return null;
 
   const linkProps = params ? { to: linkTo, params } : { to: linkTo };
 
@@ -15,14 +15,14 @@ export function CourseCard({ course, progress, linkTo, params, extraActions, met
         {/* Thumbnail Container */}
         <div className="relative aspect-video overflow-hidden bg-slate-100 rounded-none shadow-none transition-shadow group-hover:shadow-lg">
           <img
-            src={course.thumbnail || `https://placehold.co/600x400/e2e8f0/4f46e5?text=${course.title}`}
-            alt={course.title}
+            src={training.thumbnail || `https://placehold.co/600x400/e2e8f0/4f46e5?text=${training.title}`}
+            alt={training.title}
             className="object-cover w-full h-full transition-transform duration-500"
           />
           
           {/* Duration Badge */}
           <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-none uppercase tracking-widest">
-            {course.duration || 'Self-Paced'}
+            {training.duration || 'Self-Paced'}
           </div>
 
           {/* RED PROGRESS BAR */}
@@ -36,28 +36,28 @@ export function CourseCard({ course, progress, linkTo, params, extraActions, met
           )}
         </div>
 
-        {/* Course Info */}
+        {/* Training Info */}
         <div className="space-y-1 px-1 mt-3">
           <h3 className="text-sm font-black text-slate-900 group-hover:text-primary transition-colors line-clamp-2 uppercase italic leading-tight tracking-tight">
-            {course.title}
+            {training.title}
           </h3>
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">
-                {course.instructorName || course.instructor || 'Elite Instructor'}
+                {training.instructorName || training.instructor || 'Elite Instructor'}
               </span>
-              {course.askForPrice ? (
+              {training.askForPrice ? (
                 <Badge className="bg-amber-100 text-amber-700 border-0 text-[8px] h-4 font-black uppercase tracking-widest px-1">Contact for Price</Badge>
               ) : (
-                course.price === 0 && (
+                training.price === 0 && (
                   <Badge className="bg-green-100 text-green-700 border-0 text-[8px] h-4 font-black uppercase tracking-widest px-1">FREE</Badge>
                 )
               )}
             </div>
             <div className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-widest">
-              <span>{course.lessonsCount || 0} Modules</span>
+              <span>{training.lessonsCount || 0} Modules</span>
               <span className="h-1 w-1 bg-slate-300 rounded-none" />
-              <span>{metadata || course.category || course.levels || 'Professional'}</span>
+              <span>{metadata || training.category || training.levels || 'Professional'}</span>
               {progress === 100 && (
                  <>
                    <span className="h-1 w-1 bg-slate-300 rounded-none" />

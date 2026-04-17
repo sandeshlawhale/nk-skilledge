@@ -3,11 +3,11 @@ import { MonitorPlay, Smartphone, BrainCircuit, Code } from 'lucide-react'
 export const SITE_SETTINGS = {
   whatsappNumber: "+917498784109",
   phoneNumber: "+919356049629",
-  contactEmail: "contact@nkskilledge.com",
+  contactEmail: "hmendhe72@gmail.com",
   address: "Near Gobade Hospital, Sakoli, Maharashtra, India - 441105",
 }
 
-export const FEATURED_COURSES = [
+export const FEATURED_TRAINING = [
   {
     id: 'fullstack-dev',
     title: 'Full-Stack Development',
@@ -188,7 +188,7 @@ export const TIMELINE_DATA = [
   },
   {
     "year": "2026",
-    "title": "Courses",
+    "title": "Training",
     "description": "Keep the Promise to change the entire education system, started here"
   }
 ];
@@ -251,11 +251,11 @@ export const FAQS = [
     "answer": "NK SkillEdge provides industry-focused technology training and builds digital solutions for businesses, including websites, mobile applications, and custom software platforms."
   },
   {
-    "question": "Do your courses include practical projects?",
+    "question": "Do your training programs include practical projects?",
     "answer": "Yes. All courses are designed with hands-on learning and real-world projects to help students gain practical experience with modern tools and technologies."
   },
   {
-    "question": "Who can enroll in NK SkillEdge courses?",
+    "question": "Who can enroll in NK SkillEdge training?",
     "answer": "Students, beginners, and professionals who want to build practical tech skills in areas like full-stack development, Android development, UI/UX design, and data science can enroll."
   },
   {
@@ -280,7 +280,7 @@ export const FAQS = [
   }
 ];
 
-export const COURSES_STATS = [
+export const TRAINING_STATS = [
   {
     number: "200+",
     label: "Students Trained",
@@ -321,13 +321,13 @@ export const TRUSTED_COMPANIES = [
 ];
 
 
-export const DASHBOARD_COURSES = [
+export const DASHBOARD_TRAINING = [
   { id: 1, title: 'Advanced React Patterns & Architecture', progress: 65, totalLessons: 42, completedLessons: 27 },
   { id: 2, title: 'Fullstack Next.js and Prisma', progress: 30, totalLessons: 55, completedLessons: 16 },
   { id: 3, title: 'UI/UX Design Fundamentals', progress: 100, totalLessons: 20, completedLessons: 20 },
 ];
 
-export const ENROLLED_COURSES = [
+export const ENROLLED_TRAINING = [
   {
     id: 'course-1',
     title: 'Advanced React Patterns & Architecture',
@@ -368,7 +368,7 @@ export const ADMIN_STUDENTS = [
   { id: 5, name: 'James Wilson', email: 'james@example.com', enrolled: 3, status: 'Active', joined: '2023-09-30' },
 ];
 
-export const ADMIN_COURSES = [
+export const ADMIN_TRAINING = [
   { id: 1, title: 'Advanced React Patterns & Architecture', status: 'Published', students: 342, lessons: 42, price: 99 },
   { id: 2, title: 'Fullstack Next.js Masterclass', status: 'Published', students: 289, lessons: 55, price: 149 },
   { id: 3, title: 'UI/UX Design for Developers', status: 'Draft', students: 0, lessons: 12, price: 79 },

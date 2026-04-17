@@ -67,7 +67,7 @@ const ModulesTab = ({
                   <Trash2 className="h-4 w-4" />
                 </Button>
                 <div
-                  onClick={() => navigate({ to: `/admin/courses/manage/${courseId}/lessons/${lesson._id}` })}
+                  onClick={() => navigate({ to: `/admin/training/manage/${courseId}/lessons/${lesson._id}` })}
                   className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all cursor-pointer"
                 >
                   <ChevronRight className="h-5 w-5" />
@@ -83,7 +83,7 @@ const ModulesTab = ({
               <BookOpen className="h-10 w-10" />
             </div>
             <h3 className="text-xl font-bold text-slate-900">Your curriculum is empty</h3>
-            <p className="text-slate-500 max-w-sm">Every great course starts with a single lesson. Click the button above to begin building.</p>
+            <p className="text-slate-500 max-w-sm">Every great training starts with a single lesson. Click the button above to begin building.</p>
             <Button onClick={() => setShowAddLesson(true)} className="bg-slate-900 rounded-xl px-8 h-12 font-bold uppercase transition-all hover:scale-105">Create First Lesson</Button>
           </div>
         )}

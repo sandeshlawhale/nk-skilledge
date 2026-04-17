@@ -2,27 +2,28 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '@/utils/api'
 import { PageHeader } from '@/components/shared/PageHeader'
-import { CourseCard } from '@/components/shared/CourseCard'
+import { TrainingCard } from '@/components/shared/TrainingCard'
 import { Loader2, BookOpen, Search } from 'lucide-react'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { TrustedBy } from '@/components/home/TrustedBy'
 
-export const Route = createFileRoute('/courses/')({
-  component: PublicCourses,
+export const Route = createFileRoute('/training/')({
+  component: TrainingPage,
 })
 
-function PublicCourses() {
-  const [courses, setCourses] = useState([])
+function TrainingPage() {
+  const [training, setTraining] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedLevel, setSelectedLevel] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [categories, setCategories] = useState(['All'])
 
-  const fetchCourses = async () => {
+  const fetchTraining = async () => {
     setIsLoading(true)
     try {
       const queryParams = new URLSearchParams()
@@ -34,14 +35,14 @@ function PublicCourses() {
       const response = await fetch(`${API_BASE_URL}/courses?${queryParams.toString()}`)
       const data = await response.json()
       if (data.success) {
-        setCourses(data.data)
+        setTraining(data.data)
         if (selectedCategory === 'All' && selectedLevel === 'All' && !searchQuery) {
           const cats = ['All', ...new Set(data.data.map(c => c.category).filter(Boolean))]
           setCategories(cats)
         }
       }
     } catch (error) {
-      console.error('Error fetching courses:', error)
+      console.error('Error fetching training:', error)
     } finally {
       setIsLoading(false)
     }
@@ -49,7 +50,7 @@ function PublicCourses() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchCourses()
+      fetchTraining()
     }, 400)
 
     return () => clearTimeout(timer)
@@ -69,17 +70,17 @@ function PublicCourses() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
-      <main className="flex-1 w-full max-w-7xl py-12 px-4 mx-auto space-y-4">
+      <main className="flex-1 w-full max-w-7xl pt-12 px-4 mx-auto space-y-4">
         <div className="flex flex-col gap-6 px-1">
           <PageHeader
             title="Elite Curriculums"
-            subtitle={`${courses.length} Professional modules available for your growth`}
+            subtitle={`${training.length} Professional modules available for your growth`}
           >
             <div className="flex items-stretch gap-2 w-full md:w-auto">
               <div className="relative w-full md:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <Input
-                  placeholder="Search courses..."
+                  placeholder="Search training..."
                   className="pl-10 h-10 text-xs font-bold rounded-none border-slate-200 bg-white w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -120,14 +121,14 @@ function PublicCourses() {
           </div>
         </div>
 
-        {courses.length > 0 ? (
+        {training.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-1">
-            {courses.map((course) => (
-              <CourseCard
-                key={course._id}
-                course={course}
-                linkTo="/courses/$courseId"
-                params={{ courseId: course._id }}
+            {training.map((item) => (
+              <TrainingCard
+                key={item._id}
+                training={item}
+                linkTo="/training/$courseId"
+                params={{ courseId: item._id }}
               />
             ))}
           </div>
@@ -148,6 +149,7 @@ function PublicCourses() {
           </div>
         )}
       </main>
+      <TrustedBy />
       <Footer />
     </div>
   )
