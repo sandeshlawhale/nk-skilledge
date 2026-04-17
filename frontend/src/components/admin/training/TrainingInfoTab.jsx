@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-const CourseInfoTab = ({
+const TrainingInfoTab = ({
   course,
   editData,
   setEditData,
@@ -61,7 +61,7 @@ const CourseInfoTab = ({
             <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16"></div>
             <div className="space-y-6 relative z-10">
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Course Title</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Training Title</label>
                 {isEditingInfo ? (
                   <Input
                     value={editData.title}
@@ -286,7 +286,7 @@ const CourseInfoTab = ({
                   )}
                 </div>
                 <div className="space-y-2 pt-2 border-t border-slate-50">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Featured Course</label>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Featured Training</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -296,7 +296,7 @@ const CourseInfoTab = ({
                       onChange={(e) => setEditData({ ...editData, featured: e.target.checked })}
                       className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary"
                     />
-                    <label htmlFor="featured" className="text-xs font-bold text-slate-700 cursor-pointer">Show this course on Homepage</label>
+                    <label htmlFor="featured" className="text-xs font-bold text-slate-700 cursor-pointer">Show this training on Homepage</label>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -398,7 +398,7 @@ const CourseInfoTab = ({
                 className="w-full"
                 size="xl"
               >
-                {course?.status === 'published' ? 'Unpublish Course' : 'Publish Course'}
+                {course?.status === 'published' ? 'Unpublish Training' : 'Publish Training'}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[240px] rounded-2xl border-slate-200 p-2 shadow-2xl">
@@ -429,4 +429,4 @@ const CourseInfoTab = ({
   )
 }
 
-export default CourseInfoTab
+export default TrainingInfoTab

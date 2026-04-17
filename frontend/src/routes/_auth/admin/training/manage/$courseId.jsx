@@ -5,25 +5,25 @@ import { ArrowLeft, Layout, Edit, Users } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 // Modular Components
-import ModulesTab from '@/components/admin/course/ModulesTab'
-import CourseInfoTab from '@/components/admin/course/CourseInfoTab'
-import EnrollmentsTab from '@/components/admin/course/EnrollmentsTab'
-import AddLessonModal from '@/components/admin/course/AddLessonModal'
+import ModulesTab from '@/components/admin/training/ModulesTab'
+import TrainingInfoTab from '@/components/admin/training/TrainingInfoTab'
+import EnrollmentsTab from '@/components/admin/training/EnrollmentsTab'
+import AddLessonModal from '@/components/admin/training/AddLessonModal'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { Button } from '@/components/ui/button'
 
 
 
 
-export const Route = createFileRoute('/_auth/admin/courses/manage/$courseId')({
+export const Route = createFileRoute('/_auth/admin/training/manage/$courseId')({
   validateSearch: (search) => ({
     tab: (search.tab) || 'modules',
   }),
-  component: CourseManager,
+  component: TrainingManager,
 })
 
 
-function CourseManager() {
+function TrainingManager() {
   const { courseId } = Route.useParams()
   const { tab } = Route.useSearch()
   const navigate = useNavigate()
@@ -317,7 +317,7 @@ function CourseManager() {
   if (isLoading) return (
     <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      <p className="text-slate-500 font-medium animate-pulse">Loading course architecture...</p>
+      <p className="text-slate-500 font-medium animate-pulse">Loading training architecture...</p>
     </div>
   )
 
@@ -329,13 +329,13 @@ function CourseManager() {
           variant='ghost'
           size='sm'
           className="flex items-center text-slate-400"
-          onClick={() => navigate({ to: '/admin/courses' })}
+          onClick={() => navigate({ to: '/admin/training' })}
         >
-          <ArrowLeft className="h-3 w-3" /> Back to Courses
+          <ArrowLeft className="h-3 w-3" /> Back to Training
         </Button>
         <PageHeader
           title={course?.title}
-          subtitle="Manage your course content and settings."
+          subtitle="Manage your training content and settings."
         >
         </PageHeader>
       </div>
@@ -350,7 +350,7 @@ function CourseManager() {
             <Layout className="w-4 h-4 mr-2" /> Modules
           </TabsTrigger>
           <TabsTrigger value="settings" className="rounded-xl px-8 py-2.5 font-bold">
-            <Edit className="w-4 h-4 mr-2" /> Course Info
+            <Edit className="w-4 h-4 mr-2" /> Training Info
           </TabsTrigger>
           <TabsTrigger value="enrollments" className="rounded-xl px-8 py-2.5 font-bold">
             <Users className="w-4 h-4 mr-2" /> Enrollments
@@ -369,9 +369,9 @@ function CourseManager() {
           />
         </TabsContent>
 
-        {/* Course Info Tab */}
+        {/* Training Info Tab */}
         <TabsContent value="settings">
-          <CourseInfoTab
+          <TrainingInfoTab
             course={course}
             editData={editData}
             setEditData={setEditData}

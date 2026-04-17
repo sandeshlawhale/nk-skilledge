@@ -4,17 +4,17 @@ import { API_BASE_URL, authFetch } from '@/utils/api'
 import { useAuthStore } from '@/store/auth'
 import { Badge } from '@/components/ui/badge'
 import { BookOpen, Search } from 'lucide-react'
-import { CourseCard } from '@/components/shared/CourseCard'
+import { TrainingCard } from '@/components/shared/TrainingCard'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 
-export const Route = createFileRoute('/_auth/students/all-courses')({
-  component: AllCourses,
+export const Route = createFileRoute('/_auth/students/all-training')({
+  component: AllTraining,
 })
 
-function AllCourses() {
+function AllTraining() {
   const [courses, setCourses] = useState([])
   const [enrollments, setEnrollments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -98,7 +98,7 @@ function AllCourses() {
             <div className="relative w-full md:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
-                placeholder="Search courses..."
+                placeholder="Search training..."
                 className="pl-10 h-10 text-xs font-bold rounded-none border-slate-200 bg-white w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -147,11 +147,11 @@ function AllCourses() {
           const progress = enrollment?.progress || 0
 
           return (
-            <CourseCard
+            <TrainingCard
               key={course._id}
-              course={course}
+              training={course}
               progress={progress}
-              linkTo={`/students/course/${course._id}`}
+              linkTo={`/students/training/${course._id}`}
             />
           )
         })}

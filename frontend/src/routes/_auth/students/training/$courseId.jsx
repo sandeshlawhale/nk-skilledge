@@ -25,7 +25,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-export const Route = createFileRoute('/_auth/students/course/$courseId')({
+export const Route = createFileRoute('/_auth/students/training/$courseId')({
   component: LearningHub,
 })
 
@@ -176,7 +176,8 @@ function TaskItem({ task, courseId, lessonId, userId, initialProgress, onComplet
     )
   }
 
-  return ( // Assignment
+  return (
+    // Assignment
     <div className="space-y-4">
       {task.description && <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-5 text-indigo-900 text-sm leading-relaxed italic">{task.description}</div>}
       <Button onClick={handleCompleteAssignment} disabled={submitted || isSubmitting} variant={submitted ? "outline" : "default"} className={`w-full h-12 rounded-xl font-black uppercase tracking-widest ${!submitted ? 'bg-slate-900 hover:bg-primary' : 'border-slate-200'}`}>
@@ -188,7 +189,7 @@ function TaskItem({ task, courseId, lessonId, userId, initialProgress, onComplet
 }
 
 function LearningHub() {
-  const { courseId } = useParams({ from: '/_auth/students/course/$courseId' })
+  const { courseId } = useParams({ from: '/_auth/students/training/$courseId' })
   const navigate = useNavigate()
   const { user } = useAuthStore()
 
@@ -268,7 +269,7 @@ function LearningHub() {
     return (
       <div className="flex flex-col items-center justify-center h-[80vh] gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-primary/20" />
-        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Assembling Curriculum...</p>
+        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Assembling Training Curriculum...</p>
       </div>
     )
   }
@@ -308,7 +309,7 @@ function LearningHub() {
           {/* Main Content: Course Details */}
           <div className="flex-1 space-y-8">
             <div className="space-y-4">
-              <button onClick={() => navigate({ to: '/students/all-courses' })} className="flex items-center gap-1.5 text-slate-400 hover:text-slate-900 transition-colors font-bold uppercase text-[9px] tracking-widest">
+              <button onClick={() => navigate({ to: '/students/all-training' })} className="flex items-center gap-1.5 text-slate-400 hover:text-slate-900 transition-colors font-bold uppercase text-[9px] tracking-widest">
                 <ArrowLeft className="h-3 w-3" /> Back to Catalog
               </button>
 
@@ -341,7 +342,7 @@ function LearningHub() {
               <div className="bg-white rounded-none p-8 border border-slate-200 shadow-none space-y-8">
                 <div>
                   <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight flex items-center gap-2 mb-4">
-                    <div className="h-1 w-4 bg-primary rounded-none"></div> About this Course
+                    <div className="h-1 w-4 bg-primary rounded-none"></div> About this Training
                   </h2>
                   <div className="space-y-4">
                     {Array.isArray(course?.description) ? (
@@ -522,10 +523,10 @@ function LearningHub() {
         <div className="flex-1 min-w-0 space-y-6">
           <div className="space-y-2 px-1">
             <button
-              onClick={() => navigate({ to: '/students/my-courses' })}
+              onClick={() => navigate({ to: '/students/my-training' })}
               className="flex items-center gap-1.5 text-slate-400 hover:text-slate-900 transition-colors font-black uppercase text-[9px] tracking-widest"
             >
-              <ArrowLeft className="h-3 w-3" /> My courses
+              <ArrowLeft className="h-3 w-3" /> My training
             </button>
             <h1 className="text-lg md:text-xl font-bold text-slate-900 capitalize tracking-wide">
               {course?.title}
@@ -539,7 +540,7 @@ function LearningHub() {
                   Modules
                 </TabsTrigger>
                 <TabsTrigger value="course-details" className="rounded-lg px-8 font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-white data-[state=active]:shadow-sm flex-1 md:flex-none cursor-pointer">
-                  Course Details
+                  Training Details
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -715,7 +716,7 @@ function LearningHub() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 px-1">
                       <div className="h-5 w-1 bg-slate-300 rounded-full"></div>
-                      <h2 className="text-sm font-bold text-slate-900 capitalize tracking-wide">Course Overview</h2>
+                      <h2 className="text-sm font-bold text-slate-900 capitalize tracking-wide">Training Overview</h2>
                     </div>
                     <div className="space-y-2 px-1">
                       {Array.isArray(course?.description) ? (
@@ -743,7 +744,7 @@ function LearningHub() {
           {/* Simple Progress Bar */}
           <div className="space-y-2 px-1">
             <div className="flex justify-between items-end font-black text-[9px] uppercase tracking-widest">
-              <span className="text-slate-400">Course Progress <span className="text-slate-300 ml-1">(Overall)</span></span>
+              <span className="text-slate-400">Training Progress <span className="text-slate-300 ml-1">(Overall)</span></span>
               <span className="text-green-600">{overallProgress}%</span>
             </div>
             <Progress value={overallProgress} className="h-1 bg-slate-100 rounded-none [&>div]:bg-green-600 transition-all duration-700" />

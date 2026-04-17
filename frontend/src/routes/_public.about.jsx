@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { TIMELINE_DATA, SERVICES, FEATURED_COURSES } from '@/constants'
+import { TIMELINE_DATA, SERVICES, FEATURED_TRAINING } from '@/constants'
 import { CTA } from '@/components/home/CTA'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -161,11 +161,11 @@ function AboutPage() {
                 <h4 className="text-2xl font-black text-slate-900 mb-4">Education & Training</h4>
               </div>
               <p className="text-slate-500 font-medium leading-relaxed">
-                We offer industry-led courses in {FEATURED_COURSES.slice(0, 3).map(c => c.title).join(", ")}. Our approach is 100% practical, focusing on project-based learning.
+                We offer industry-led training in {FEATURED_TRAINING.slice(0, 3).map(c => c.title).join(", ")}. Our approach is 100% practical, focusing on project-based learning.
               </p>
-              <Link to="/courses">
+              <Link to="/training">
                 <Button variant="default" size="xl" className="mt-4">
-                  Explore Courses
+                  Explore Training
                 </Button>
               </Link>
             </div>

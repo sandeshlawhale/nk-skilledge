@@ -18,7 +18,7 @@ export function Faqs() {
               Frequently Asked <span className="text-primary italic">Questions.</span>
             </h2>
             <p className="text-lg text-slate-500 font-light leading-relaxed">
-              Find answers to common questions about our courses, services, and how NK SkillEdge helps students and businesses grow.
+              Find answers to common questions about our training, services, and how NK SkillEdge helps students and businesses grow.
             </p>
           </div>
 

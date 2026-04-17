@@ -34,7 +34,7 @@ export const Route = createFileRoute('/_auth')({
 
     const { user } = context.auth
     if (location.pathname.startsWith('/admin') && user?.role !== 'admin') {
-      throw redirect({ to: '/students/my-courses' })
+      throw redirect({ to: '/students/my-training' })
     }
     if (location.pathname.startsWith('/students') && user?.role === 'admin') {
       throw redirect({ to: '/admin' })
@@ -51,14 +51,14 @@ function DashboardSidebar() {
   const isAdmin = user?.role === 'admin'
 
   const studentNavigation = [
-    { name: 'My Courses', href: '/students/my-courses', icon: BookOpen },
-    { name: 'All Courses', href: '/students/all-courses', icon: Grid },
+    { name: 'My Training', href: '/students/my-training', icon: BookOpen },
+    { name: 'All Training', href: '/students/all-training', icon: Grid },
   ]
 
   const adminNavigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'All Courses', href: '/admin/all-courses', icon: Grid },
-    { name: 'Manage Courses', href: '/admin/courses', icon: BookOpen },
+    { name: 'All Training', href: '/admin/all-training', icon: Grid },
+    { name: 'Manage Training', href: '/admin/training', icon: BookOpen },
     { name: 'Services', href: '/admin/services', icon: Briefcase },
     { name: 'Team', href: '/admin/members', icon: Users },
     { name: 'All Users', href: '/admin/students', icon: BarChart },

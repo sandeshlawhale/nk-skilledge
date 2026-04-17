@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
-export const Route = createFileRoute('/_auth/admin/courses/manage/$courseId/lessons/$lessonId')({
+export const Route = createFileRoute('/_auth/admin/training/manage/$courseId/lessons/$lessonId')({
   component: LessonManager,
 })
 
@@ -228,11 +228,11 @@ function LessonManager() {
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-slate-400 font-medium">
         <button
-          onClick={() => navigate({ to: `/admin/courses/manage/${courseId}` })}
+          onClick={() => navigate({ to: `/admin/training/manage/${courseId}` })}
           className="flex items-center gap-1.5 hover:text-slate-900 transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back to Course
+          Back to Training
         </button>
         <span>/</span>
         <span className="text-slate-900 font-bold truncate max-w-xs">{lesson?.title}</span>

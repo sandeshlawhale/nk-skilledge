@@ -3,27 +3,27 @@ import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '@/utils/api'
 import { PageHeader } from '../shared/PageHeader'
-import { CourseCard } from '../shared/CourseCard'
+import { TrainingCard } from '../shared/TrainingCard'
 
-export function Courses() {
-  const [courses, setCourses] = useState([])
+export function Training() {
+  const [training, setTraining] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const fetchFeaturedCourses = async () => {
+    const fetchFeaturedTraining = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/courses?featured=true&limit=4`)
         const data = await response.json()
         if (data.success) {
-          setCourses(data.data)
+          setTraining(data.data)
         }
       } catch (error) {
-        console.error('Error fetching featured courses:', error)
+        console.error('Error fetching featured training:', error)
       } finally {
         setIsLoading(false)
       }
     }
-    fetchFeaturedCourses()
+    fetchFeaturedTraining()
   }, [])
 
   if (isLoading) {
@@ -35,33 +35,33 @@ export function Courses() {
     )
   }
 
-  if (courses.length === 0) return null;
+  if (training.length === 0) return null;
 
   return (
     <section className="w-full max-w-7xl py-12 px-4 mx-auto">
       <div className="mb-4 flex items-center gap-3 w-full justify-center">
         <div className="h-px w-8 bg-primary"></div>
-        <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">Courses</p>
+        <p className="font-bold text-xs tracking-[0.2em] text-primary uppercase">Training</p>
       </div>
 
       <PageHeader
         title="Build Skills That Companies Actually Hire For."
         subtitle="Hands-on training programs designed with real projects, industry tools, and mentorship to help you become job-ready."
       >
-        <Link to="/courses">
+        <Link to="/training">
           <Button variant="brutal-outline" size="xl">
-            Browse all courses
+            Browse all training
           </Button>
         </Link>
       </PageHeader>
 
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${courses.length < 4 ? 'lg:flex lg:justify-center' : 'lg:grid-cols-4'} gap-8 my-12`}>
-        {courses.map((course) => (
-          <div key={course._id} className={courses.length < 4 ? 'w-full sm:max-w-[340px]' : ''}>
-            <CourseCard
-              course={course}
-              linkTo="/courses/$courseId"
-              params={{ courseId: course._id }}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${training.length < 4 ? 'lg:flex lg:justify-center' : 'lg:grid-cols-4'} gap-8 my-12`}>
+        {training.map((item) => (
+          <div key={item._id} className={training.length < 4 ? 'w-full sm:max-w-[340px]' : ''}>
+            <TrainingCard
+              training={item}
+              linkTo="/training/$courseId"
+              params={{ courseId: item._id }}
             />
           </div>
         ))}

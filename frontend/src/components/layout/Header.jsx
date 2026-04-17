@@ -15,7 +15,7 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-slate-900">About</Link>
           <Link to="/services" className="text-sm font-medium text-slate-600 hover:text-slate-900">Services</Link>
-          <Link to="/courses" className="text-sm font-medium text-slate-600 hover:text-slate-900">Courses</Link>
+          <Link to="/training" className="text-sm font-medium text-slate-600 hover:text-slate-900">Training</Link>
           <Link to="/contact" className="text-sm font-medium text-slate-600 hover:text-slate-900">Contact</Link>
           {/* <span className="text-sm font-medium text-slate-600 cursor-pointer hover:text-slate-900 flex items-center">
             Resources <span className="ml-1 text-[10px]">▼</span>
@@ -25,10 +25,10 @@ export function Header() {
           {isAuthenticated ? (
             <>
               <Link
-                to={user?.role === 'admin' ? '/admin' : '/students/my-courses'}
+                to={user?.role === 'admin' ? '/admin' : '/students/my-training'}
                 className="text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2 transition-colors hover:bg-slate-50"
               >
-                {user?.role === 'admin' ? 'Dashboard' : 'My Courses'}
+                {user?.role === 'admin' ? 'Dashboard' : 'My Training'}
               </Link>
               <button
                 onClick={logout}

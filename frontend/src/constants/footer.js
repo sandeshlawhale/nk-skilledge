@@ -25,7 +25,7 @@ export const FOOTER_SOCIALS = [
 ]
 
 export const FOOTER_LINKS = [
-  { label: 'Courses', href: '/courses' },
+  { label: 'Training', href: '/training' },
   { label: 'Services', href: '/services' },
   // { label: 'Pricing', href: '/' },
   { label: 'About', href: '/about' },

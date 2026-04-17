@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { PlayCircle, Clock, Loader2, BookOpen, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { CourseCard } from '@/components/shared/CourseCard'
+import { TrainingCard } from '@/components/shared/TrainingCard'
 
 export const Route = createFileRoute('/_auth/students/')({
   component: Dashboard,
@@ -20,7 +20,7 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    navigate({ to: '/students/my-courses', replace: true })
+    navigate({ to: '/students/my-training', replace: true })
   }, [navigate])
 
   useEffect(() => {
@@ -72,7 +72,7 @@ function Dashboard() {
             <div className="text-3xl font-black text-slate-900 mb-1 italic">
               {isLoading ? <Loader2 className="h-5 w-5 animate-spin text-slate-200" /> : String(enrollments.length).padStart(2, '0')}
             </div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enrolled Courses</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enrolled Training</p>
           </CardContent>
         </Card>
 
@@ -108,7 +108,7 @@ function Dashboard() {
                     <Progress value={enrollments[0].progress || 0} className="h-1 bg-white/10 [&>div]:bg-primary rounded-none" />
                   </div>
                   <Button asChild size="icon" className="h-10 w-10 rounded-none bg-white text-slate-900 hover:bg-primary hover:text-white transition-all shadow-none">
-                    <Link to={`/students/course/${enrollments[0].courseId?._id}`}>
+                    <Link to={`/students/training/${enrollments[0].courseId?._id}`}>
                       <PlayCircle className="h-5 w-5" />
                     </Link>
                   </Button>
@@ -119,7 +119,7 @@ function Dashboard() {
                 <h3 className="text-xl font-black italic tracking-tight uppercase mb-1">No Active Units</h3>
                 <p className="text-slate-400 text-[10px] mb-6 font-bold uppercase tracking-widest italic">Explore our catalog to start learning.</p>
                 <Button asChild className="bg-white text-slate-900 hover:bg-primary hover:text-white rounded-none font-black h-10 px-6 uppercase tracking-widest text-[9px] shadow-none">
-                  <Link to="/students/all-courses">Browse Catalog</Link>
+                  <Link to="/students/all-training">Browse Catalog</Link>
                 </Button>
               </>
             )}
@@ -134,7 +134,7 @@ function Dashboard() {
             Continuum
           </h2>
           <Button asChild variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary">
-            <Link to="/students/my-courses">Deep Dive <ChevronRight className="h-3 w-3 ml-1" /></Link>
+            <Link to="/students/my-training">Deep Dive <ChevronRight className="h-3 w-3 ml-1" /></Link>
           </Button>
         </div>
 
@@ -147,16 +147,16 @@ function Dashboard() {
             <div className="col-span-full text-center py-20 bg-slate-50/50 rounded-none border border-dashed border-slate-200">
               <p className="text-slate-400 font-black uppercase tracking-widest text-[10px]">Zero active enrollments found.</p>
               <Button asChild variant="link" className="text-primary mt-2 uppercase text-[10px] font-black tracking-widest">
-                <Link to="/students/all-courses">Browse Catalog</Link>
+                <Link to="/students/all-training">Browse Catalog</Link>
               </Button>
             </div>
           ) : (
             enrollments.slice(0, 3).map((enrollment) => (
-              <CourseCard
+              <TrainingCard
                 key={enrollment._id}
-                course={enrollment.courseId}
+                training={enrollment.courseId}
                 progress={enrollment.progress}
-                linkTo={`/students/course/${enrollment.courseId?._id}`}
+                linkTo={`/students/training/${enrollment.courseId?._id}`}
                 metadata="Last Accessed"
               />
             ))

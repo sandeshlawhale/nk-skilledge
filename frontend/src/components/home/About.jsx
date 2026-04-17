@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import CountUp from '@/components/ui/count-up'
-import { COURSES_STATS } from '@/constants'
+import { TRAINING_STATS } from '@/constants'
 
 export function About() {
   return (
@@ -62,7 +62,7 @@ export function About() {
             </div>
 
             <div className="grid grid-cols-2 md:flex md:flex-row gap-8 md:gap-12 w-full md:w-auto">
-              {COURSES_STATS.map((stat, i) => (
+              {TRAINING_STATS.map((stat, i) => (
                 <div key={i} className="">
                   <p className="text-4xl font-black text-slate-900 mb-1">
                     <CountUp

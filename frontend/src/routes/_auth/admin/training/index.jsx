@@ -7,15 +7,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Plus, PlusCircle, Search, Edit, Trash2, Upload, Image, BookOpen, Users, X, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { CourseCard } from '@/components/shared/CourseCard'
+import { TrainingCard } from '@/components/shared/TrainingCard'
 import { PageHeader } from '@/components/shared/PageHeader'
 
-export const Route = createFileRoute('/_auth/admin/courses/')({
-  component: AdminCourses,
+export const Route = createFileRoute('/_auth/admin/training/')({
+  component: AdminTraining,
 })
 
-function AdminCourses() {
-  const [courses, setCourses] = useState([])
+function AdminTraining() {
+  const [trainingList, setTrainingList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -118,7 +118,7 @@ function AdminCourses() {
       if (data.success) {
         setShowCreateModal(false)
         resetForm()
-        navigate({ to: `/admin/courses/manage/${data.data._id}` })
+        navigate({ to: `/admin/training/manage/${data.data._id}` })
       } else {
         setCreateError(data.message || 'Failed to create course.')
       }
@@ -199,11 +199,11 @@ function AdminCourses() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto font-geist">
       <PageHeader
-        title="Course Management"
+        title="Training Management"
         subtitle="Create, edit, and organize your educational content."
       >
         <Button onClick={openModal} size='xl' variant='outline' className="">
-          <Plus className="mr-2 h-4 w-4" /> Create New Course
+          <Plus className="mr-2 h-4 w-4" /> Create New Training
         </Button>
       </PageHeader>
 
@@ -229,10 +229,10 @@ function AdminCourses() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredCourses.map((course) => (
-          <CourseCard
+          <TrainingCard
             key={course._id}
-            course={course}
-            linkTo={`/admin/courses/manage/${course._id}`}
+            training={course}
+            linkTo={`/admin/training/manage/${course._id}`}
             metadata={course.status === 'published' ? 'Active' : 'Draft'}
             extraActions={
               <button
@@ -268,7 +268,7 @@ function AdminCourses() {
             {/* Header */}
             <div className="bg-slate-900 text-white px-8 py-5 flex justify-between items-center">
               <div>
-                <h2 className="text-xl font-black uppercase italic tracking-tight">Create New Course</h2>
+                <h2 className="text-xl font-black uppercase italic tracking-tight">Create New Training</h2>
                 <p className="text-slate-400 text-xs font-medium mt-0.5">A draft will be created — you can publish later.</p>
               </div>
               <Button variant="ghost" size="icon" onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-white hover:bg-white/10 rounded-xl">
@@ -304,7 +304,7 @@ function AdminCourses() {
                   </div>
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleThumbnailChange} />
                   <p className="text-[10px] text-slate-400 leading-relaxed">
-                    This image will be the course cover on the student portal.
+                    This image will be the training cover on the student portal.
                   </p>
                 </div>
 
@@ -312,7 +312,7 @@ function AdminCourses() {
                 <div className="flex-1 p-6 flex flex-col max-h-[70vh]">
                   <div className="overflow-y-auto pr-2 space-y-4 custom-scrollbar">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Course Title</label>
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Training Title</label>
                       <Input
                         required
                         placeholder="e.g. Advanced JavaScript Mastery"

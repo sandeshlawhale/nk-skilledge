@@ -16,12 +16,12 @@ export function CTA() {
             <span className="text-white italic">Your Journey?</span>
           </h2>
           <p className="text-lg md:text-xl text-slate-300 font-light max-w-xl">
-            Join our industry-focused courses or partner with us to build innovative digital solutions.
+            Join our industry-focused training or partner with us to build innovative digital solutions.
           </p>
           <div className="pt-4 flex flex-row gap-6">
-            <Link to="/courses">
+            <Link to="/training">
               <Button size="xl" variant="secondary" className="border border-background">
-                View Courses
+                View Training
               </Button>
             </Link>
             <Link to="/contact">

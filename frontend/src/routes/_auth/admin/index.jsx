@@ -54,7 +54,7 @@ function AdminOverview() {
 
   const statCards = [
     { label: 'Total Students', value: stats.users.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Active Courses', value: stats.courses.length, icon: BookOpen, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Active Training', value: stats.courses.length, icon: BookOpen, color: 'text-indigo-600', bg: 'bg-indigo-50' },
     { label: 'Total Revenue', value: '₹0', icon: CreditCard, color: 'text-green-600', bg: 'bg-green-50' },
     { label: 'New Signups', value: stats.users.filter(u => new Date(u.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length, icon: UserPlus, color: 'text-amber-600', bg: 'bg-amber-50' },
   ]
@@ -136,7 +136,7 @@ function AdminOverview() {
         <Card className="border-0 shadow-sm rounded-3xl overflow-hidden bg-white/50 backdrop-blur-sm">
           <CardHeader className="p-8 border-b border-slate-50">
             <CardTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-indigo-600" /> Active Courses
+              <BookOpen className="h-5 w-5 text-indigo-600" /> Active Training
             </CardTitle>
           </CardHeader>
           <CardContent className="p-8">
@@ -154,7 +154,7 @@ function AdminOverview() {
               ))}
               {stats.courses.length === 0 && (
                 <div className="text-center py-10 italic text-slate-400 uppercase text-[10px] font-bold tracking-widest">
-                  No active courses yet.
+                  No active training yet.
                 </div>
               )}
             </div>
