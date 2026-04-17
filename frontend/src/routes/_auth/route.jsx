@@ -73,15 +73,15 @@ function DashboardSidebar() {
       <SidebarNotch />
       <SidebarHeader className="h-16 flex items-center border-b border-slate-200 p-0">
         <div className="flex items-center justify-between w-full p-4">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <img src="/logo.png" alt="NK Skilledge" className="h-8 w-auto" />
             <span className="font-bold text-xl tracking-tight">NK SKILLEDGE</span>
-          </div>
+          </Link>
           {isMobile && (
             <div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 className="h-10 w-10 text-slate-500"
                 onClick={() => setOpenMobile(false)}
               >
