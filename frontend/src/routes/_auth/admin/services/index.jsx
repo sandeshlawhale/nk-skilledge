@@ -18,6 +18,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_auth/admin/services/')({
@@ -29,7 +36,7 @@ function AdminServicesIndex() {
   const [isLoading, setIsLoading] = useState(true)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [newService, setNewService] = useState({ name: '', description: '' })
+  const [newService, setNewService] = useState({ name: '', description: '', category: 'other' })
   const navigate = useNavigate()
 
   const fetchServices = async () => {
@@ -69,7 +76,7 @@ function AdminServicesIndex() {
       if (data.success) {
         toast.success('Service created successfully')
         setIsCreateDialogOpen(false)
-        setNewService({ name: '', description: '' })
+        setNewService({ name: '', description: '', category: 'other' })
         // Redirect to detail page to fill more details
         navigate({ to: '/admin/services/$serviceId', params: { serviceId: data.data._id } })
       } else {
@@ -150,6 +157,24 @@ function AdminServicesIndex() {
                     onChange={(e) => setNewService(prev => ({ ...prev, description: e.target.value }))}
                     disabled={isSubmitting}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-[10px] font-black uppercase tracking-widest text-slate-500">Category</Label>
+                  <Select
+                    value={newService.category}
+                    onValueChange={(value) => setNewService(prev => ({ ...prev, category: value }))}
+                    disabled={isSubmitting}
+                  >
+                    <SelectTrigger id="category" className="rounded-none border-slate-200 focus:border-slate-900 h-10 font-bold uppercase text-[10px] tracking-wider">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-none border-2 border-slate-900">
+                      <SelectItem value="development" className="text-[10px] font-bold uppercase tracking-wider">Development</SelectItem>
+                      <SelectItem value="design" className="text-[10px] font-bold uppercase tracking-wider">Design</SelectItem>
+                      <SelectItem value="digital_marketing" className="text-[10px] font-bold uppercase tracking-wider">Digital Marketing</SelectItem>
+                      <SelectItem value="other" className="text-[10px] font-bold uppercase tracking-wider">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <DialogFooter className="pt-4">
                   <Button type="submit" disabled={isSubmitting} className="w-full bg-slate-900 rounded-none h-12 font-black uppercase tracking-widest text-[10px]">

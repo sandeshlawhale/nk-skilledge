@@ -51,7 +51,7 @@ const getServiceById = asyncHandler(async (req, res) => {
 });
 
 const createService = asyncHandler(async (req, res) => {
-  const { name, description } = req.body;
+  const { name, description, category } = req.body;
 
   if (!name || !description) {
     throw new ApiError(400, "Name and description are required");
@@ -60,6 +60,7 @@ const createService = asyncHandler(async (req, res) => {
   const service = await Service.create({
     name,
     description,
+    category: category || "other",
     createdBy: req.user._id,
     isActive: false,
     isFeatured: false,

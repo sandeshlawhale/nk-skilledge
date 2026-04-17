@@ -35,6 +35,8 @@ const serviceSchema = new mongoose.Schema(
     },
     category: {
       type: String,
+      enum: ["development", "design", "digital_marketing", "other"],
+      default: "other",
       trim: true,
     },
     tags: [
